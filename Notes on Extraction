@@ -1,0 +1,4 @@
+Notes on Extraction:
+
+Querying for CategoryMembers return not only Titles(Articles) but also related categories, user sandboxes, templates etc 
+Watch out for pageination!
