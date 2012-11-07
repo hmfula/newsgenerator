@@ -1,4 +1,4 @@
-package com.coin2012.wikipulse.karsten.demo;
+package com.coin2012.wikipulse.extraction;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -7,23 +7,33 @@ import java.util.List;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
+import com.coin2012.wikipulse.models.Title;
+import com.coin2012.wikipulse.models.WikiEdit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-public class Extractor {
+public class Extractor implements Extractable {
 
-	public String getEditsForCategory(String category) {
+	/* (non-Javadoc)
+	 * @see com.coin2012.wikipulse.extraction.Extractable#getEditsForCategory(java.lang.String)
+	 */
+	@Override
+	public List<Title> getTitlesWithEditsForCategory(String category) {
 		List<Title> titles = getTitlesForCategory(category);
 		for (Title title : titles) {
 			title.setEdits(this.getEditsForPageId(title.getPageid()));
 		}
-		Gson gson = this.createConfiguredGson();
-		String result = gson.toJson(titles);
 
-		return result;
+		return titles;
+	}
+
+	@Override
+	public String getEditsForCategory(String category, int amount) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private List<Title> getTitlesForCategory(String category) {
@@ -35,24 +45,24 @@ public class Extractor {
 		return titles;
 	}
 
-	private List<Edit> getEditsForPageId(String pageId) {
+	private List<WikiEdit> getEditsForPageId(String pageId) {
 		// Todo pageinatation possible?
 		ClientResource resource = buildQueryForRevisions(pageId);
 		String result = executeQueryToResource(resource);
-		List<Edit> edits = parseResultToEdits(result, pageId);
+		List<WikiEdit> edits = parseResultToEdits(result, pageId);
 		return edits;
 	}
 
-	private List<Edit> parseResultToEdits(String result, String pageId) {
+	private List<WikiEdit> parseResultToEdits(String result, String pageId) {
 		JsonParser jsonParser = new JsonParser();
 		JsonArray categorymembers = jsonParser.parse(result).getAsJsonObject()
 				.get("query").getAsJsonObject().get("pages").getAsJsonObject()
 				.get(pageId).getAsJsonObject().getAsJsonArray("revisions");
 
 		Gson gson = this.createConfiguredGson();
-		List<Edit> edits = new LinkedList<Edit>();
+		List<WikiEdit> edits = new LinkedList<WikiEdit>();
 		for (JsonElement jsonElement : categorymembers) {
-			Edit edit = gson.fromJson(jsonElement, Edit.class);
+			WikiEdit edit = gson.fromJson(jsonElement, WikiEdit.class);
 			//edit.setContent(jsonElement.getAsJsonObject().get("*").getAsString());
 			edits.add(edit);
 		}

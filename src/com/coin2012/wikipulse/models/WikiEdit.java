@@ -1,6 +1,6 @@
-package com.coin2012.wikipulse.karsten.demo;
+package com.coin2012.wikipulse.models;
 
-public class Edit {
+public class WikiEdit {
 	private String revid;
 	private String parentid;
 	private String user;

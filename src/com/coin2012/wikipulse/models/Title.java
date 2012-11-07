@@ -1,4 +1,4 @@
-package com.coin2012.wikipulse.karsten.demo;
+package com.coin2012.wikipulse.models;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public class Title {
 	private String ns;
 	private String title;
 	private String timestamp;
-	private List<Edit> edits;
+	private List<WikiEdit> edits;
 
 	public String getPageid() {
 		return pageid;
@@ -42,11 +42,11 @@ public class Title {
 		this.timestamp = timestamp;
 	}
 
-	public List<Edit> getEdits() {
+	public List<WikiEdit> getEdits() {
 		return edits;
 	}
 
-	public void setEdits(List<Edit> edits) {
+	public void setEdits(List<WikiEdit> edits) {
 		this.edits = edits;
 	}
 

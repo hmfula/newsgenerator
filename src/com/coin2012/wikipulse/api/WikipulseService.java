@@ -1,11 +1,15 @@
-package com.coin2012.wikipulse.karsten.demo;
+package com.coin2012.wikipulse.api;
 
 import static spark.Spark.get;
+
+import com.coin2012.wikipulse.identification.Identifiable;
+import com.coin2012.wikipulse.identification.Identifier;
+
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class Service {
+public class WikipulseService {
 
 	public static void main(String[] args) {
 
@@ -13,7 +17,7 @@ public class Service {
 			@Override
 			public Object handle(Request request, Response response) {
 				String category = "Category:United_States_presidential_election,_2012";
-				Identifier identifier = new Identifier();
+				Identifiable identifier = new Identifier();
 				String news = identifier.getNewsForCategory(category);
 
 				return news;
