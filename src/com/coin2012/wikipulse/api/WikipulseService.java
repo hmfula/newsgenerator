@@ -9,8 +9,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 /**
- * 
- * Service class - test
+ * Service class - test comment.
  *
  */
 public class WikipulseService {
