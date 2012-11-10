@@ -7,7 +7,7 @@ package com.coin2012.wikipulse.api;
  * @author karsten packmohr
  * @since 10-11-2012
  */
-public interface WikiPulseService {
+public interface WikipulseService {
 	/**
 	 * Fetches news for a given category.
 	 * 

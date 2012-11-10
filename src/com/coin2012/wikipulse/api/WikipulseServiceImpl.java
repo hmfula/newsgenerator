@@ -10,7 +10,7 @@ import com.coin2012.wikipulse.identification.Identifier;
  * @author karsten packmohr
  * @since  10-11-2012
  */
-public class WikiPulseServiceImpl implements WikiPulseService {
+public class WikipulseServiceImpl implements WikipulseService {
 
 	@Override
 	public String getNewsForCategory(String category) {

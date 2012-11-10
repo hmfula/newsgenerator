@@ -21,7 +21,7 @@ public class Wikipulse {
 			@Override
 			public Object handle(Request request, Response response) {
 				String category = "Category:United_States_presidential_election,_2012";
-				WikiPulseService wikipulseService = new WikiPulseServiceImpl();
+				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				return wikipulseService.getNewsForCategory(category);
 			}
 		});
