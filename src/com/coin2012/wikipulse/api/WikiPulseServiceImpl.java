@@ -4,7 +4,7 @@ import com.coin2012.wikipulse.identification.Identifiable;
 import com.coin2012.wikipulse.identification.Identifier;
 
 /**
- * WikiPulseService Implementation based on the facade design pattern.
+ * WikiPulseService. Implementation based on the facade design pattern.
  * 
  * @author harrison mfula
  * @author karsten packmohr
