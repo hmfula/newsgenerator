@@ -4,7 +4,7 @@ package com.coin2012.wikipulse.api;
  * Defines the business contract of the Wikipulse application.
  * 
  * @author harrison mfula
- * @author Karsten packmohr
+ * @author karsten packmohr
  * @since 10-11-2012
  */
 public interface WikiPulseService {

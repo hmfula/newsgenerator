@@ -10,7 +10,7 @@ import spark.Route;
  * Main class. Defines the entry point into the system.
  * 
  * @author harrison mfula
- * @author Karsten packmohr
+ * @author karsten packmohr
  * @since 10-11-2012
  */
 public class Wikipulse {
