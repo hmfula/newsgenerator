@@ -10,7 +10,7 @@ import spark.Response;
 import spark.Route;
 /**
  * 
- * Service class - test comment.
+ * Service class - test
  *
  */
 public class WikipulseService {
