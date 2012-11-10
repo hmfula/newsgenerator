@@ -9,11 +9,12 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 /**
- * 
- * Service class - test comment.
- *
+ * Main class. Defines the entry point into the system.
+ * @author harrison mfula
+ * @author Karsten packmohr
+ * @since 10-11-2012
  */
-public class WikipulseService {
+public class Wikipulse {
 
 	public static void main(String[] args) {
 
@@ -21,10 +22,8 @@ public class WikipulseService {
 			@Override
 			public Object handle(Request request, Response response) {
 				String category = "Category:United_States_presidential_election,_2012";
-				Identifiable identifier = new Identifier();
-				String news = identifier.getNewsForCategory(category);
-
-				return news;
+				WikiPulseService wikipulseService = new WikiPulseServiceImpl();
+				return  wikipulseService.getNewsForCategory(category);
 			}
 		});
 
