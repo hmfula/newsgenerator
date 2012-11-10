@@ -1,7 +1,11 @@
 package com.coin2012.wikipulse.identification;
 
+import java.util.List;
+
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.models.Title;
+import com.google.gson.Gson;
 
 public class Identifier implements Identifiable {
 	
@@ -12,9 +16,11 @@ public class Identifier implements Identifiable {
 		
 		NewsAlgorithm dummy = new DummyAlgorithm(extractor);
 		
-		dummy.findNews(category);
-		// TODO convert List<Newsitem> to JSON/XML/...	
-		return null;
+		List<Title> edits = dummy.findNews(category);
+		Gson gson = new Gson();
+		
+		
+		return gson.toJson(edits);
 	}
 
 }

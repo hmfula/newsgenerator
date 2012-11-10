@@ -24,9 +24,8 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	}
 	
 	@Override
-	public List<NewsItem> findNews(String category) {
+	public List<Title> findNews(String category) {
 		
-		LinkedList<NewsItem> news = new LinkedList<NewsItem>();
 		List<Title> edits = extractor.getTitlesWithEditsForCategory(category);
 		
 //		for (WikiEdit edit : edits) {
@@ -37,6 +36,6 @@ public class DummyAlgorithm implements NewsAlgorithm {
 //			news.add(tmp);
 //		}
 		
-		return news;
+		return edits;
 	}
 }
