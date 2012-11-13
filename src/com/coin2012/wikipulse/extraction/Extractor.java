@@ -74,7 +74,7 @@ public class Extractor implements Extractable {
 		}
 		float total_views, yesterday_views ;
 		total_views = 0;
-		yesterday_views = Integer.parseInt(viewsPerDay[1][1]);
+		yesterday_views = Integer.parseInt(viewsPerDay[0][1]);
 		
 		for (int i = 0; i < viewsPerDay.length; i++) {
 			total_views += Integer.parseInt(viewsPerDay[i][1]);
