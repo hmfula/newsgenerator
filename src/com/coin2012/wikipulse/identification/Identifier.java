@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
-import com.coin2012.wikipulse.models.Title;
+import com.coin2012.wikipulse.models.Page;
 import com.google.gson.Gson;
 
 public class Identifier implements Identifiable {
@@ -16,7 +16,7 @@ public class Identifier implements Identifiable {
 		
 		NewsAlgorithm dummy = new DummyAlgorithm(extractor);
 		
-		List<Title> edits = dummy.findNews(category);
+		List<Page> edits = dummy.findNews(category);
 		Gson gson = new Gson();
 		
 		
@@ -27,10 +27,7 @@ public class Identifier implements Identifiable {
 	public String getMostReadTitlesForCategory(String category) {
 		
 		NewsAlgorithm dummy = new DummyAlgorithm(extractor);		
-		List<Title> pages = dummy.findMostReadPages(category);
-		for (Title title : pages) {
-			title.setRelYesterday(dummy.findRelevanceOfPage(title.getTitle()));
-		}
+		List<Page> pages = dummy.findMostReadPages(category);
 		Gson gson = new Gson();		
 		return gson.toJson(pages);
 	}

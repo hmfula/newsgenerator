@@ -2,16 +2,16 @@ package com.coin2012.wikipulse.models;
 
 import java.util.List;
 
-public class Title {
+public class Page {
 
 	private String pageid;
-	private float relevance;
+	private float yesterdaysRelevance;
 	private String ns;
 	private String title;
 	private String timestamp;
 	private List<WikiEdit> edits;
 
-	public String getPageid() {
+	public String getPageId() {
 		return pageid;
 	}
 
@@ -40,10 +40,10 @@ public class Title {
 	}
 	
 	public void setRelYesterday(float relevance) {
-		this.relevance = relevance;
+		this.yesterdaysRelevance = relevance;
 	}
 	public float getRelYesterday() {
-		return this.relevance;
+		return this.yesterdaysRelevance;
 	}
 
 	public void setTimestamp(String timestamp) {

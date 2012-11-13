@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 //import com.coin2012.wikipulse.models.NewsItem;
-import com.coin2012.wikipulse.models.Title;
+import com.coin2012.wikipulse.models.Page;
 //import com.coin2012.wikipulse.models.WikiEdit;
 
 /**
@@ -23,9 +23,9 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	}
 	
 	@Override
-	public List<Title> findNews(String category) {
+	public List<Page> findNews(String category) {
 		
-		List<Title> edits = extractor.getTitlesWithEditsForCategory(category);
+		List<Page> edits = extractor.getTitlesForCategory(category);
 		
 //		for (WikiEdit edit : edits) {
 //			NewsItem tmp = new NewsItem();
@@ -39,13 +39,8 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	}
 	
 	@Override
-	public List<Title> findMostReadPages(String category) {
-		
-		List<Title> pages = extractor.getRelevantTitlesForCategory(category);	
+	public List<Page> findMostReadPages(String category) {
+		List<Page> pages = extractor.getTitlesForCategory(category);	
 		return pages;
-	}
-	@Override 
-	public float findRelevanceOfPage(String page){
-		return extractor.getRelOfTitleForYesterday(page);
 	}
 }
