@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class Extractor implements Extractable {
@@ -29,12 +30,63 @@ public class Extractor implements Extractable {
 
 		return titles;
 	}
+	
+	@Override
+	public List<Title> getTitlesInCategory(String category) {
+		List<Title> titles = getTitlesForCategory(category);
+		return titles;
+	}
 
 	@Override
 	public String getEditsForCategory(String category, int amount) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public List<Title> getRelevantTitlesForCategory(String category) {
+		List<Title> titles = getTitlesForCategory(category);
+		return titles;
+	}
+	
+	@Override
+	public float getRelOfTitleForYesterday(String pageTitle){
+		pageTitle = pageTitle.replaceAll(" ", "%20");
+		String url = "http://stats.grok.se/json/en/latest30/"+pageTitle;
+		ClientResource resource= new ClientResource(url);
+		//System.out.println(url);
+		String result = executeQueryToResource(resource);
+		JsonParser jsonParser = new JsonParser();
+		JsonObject dailyViews = jsonParser.parse(result).getAsJsonObject()
+				.get("daily_views").getAsJsonObject();				
+		String str_DailyViews = dailyViews.toString().substring(1,dailyViews.toString().length()-1);
+		str_DailyViews = str_DailyViews.trim();
+		str_DailyViews = str_DailyViews.replaceAll("\"", "");
+		System.out.println(pageTitle);
+		if (str_DailyViews == "") {
+			return 0;
+		}
+		
+		String tempArr[] = str_DailyViews.split(",");
+		String viewsPerDay[][] = new String[tempArr.length][2];
+		for (int i = 0; i < tempArr.length; i++) {
+			viewsPerDay[i] = tempArr[i].split(":");
+		}
+		float total_views, yesterday_views ;
+		total_views = 0;
+		yesterday_views = Integer.parseInt(viewsPerDay[1][1]);
+		
+		for (int i = 0; i < viewsPerDay.length; i++) {
+			total_views += Integer.parseInt(viewsPerDay[i][1]);
+		}
+		if (total_views == 0) {
+			return 0;
+		}
+		float relevance_result = yesterday_views/total_views;
+		System.out.println(relevance_result);
+		return relevance_result;
+	}
+	
 
 	private List<Title> getTitlesForCategory(String category) {
 		// TODO include pageination
@@ -78,7 +130,7 @@ public class Extractor implements Extractable {
 		resource.getReference().addQueryParameter("prop", "revisions");
 		//resource.getReference().addQueryParameter("rvprop", "content|ids|timestamp|flags|comment|user");
 		resource.getReference().addQueryParameter("rvprop", "ids|timestamp|flags|comment|user");
-		resource.getReference().addQueryParameter("rvlimit", "5");
+		resource.getReference().addQueryParameter("rvlimit", "1");
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
 	}
@@ -119,9 +171,11 @@ public class Extractor implements Extractable {
 		resource.getReference().addQueryParameter("action", "query");
 		resource.getReference().addQueryParameter("list", "categorymembers");
 		resource.getReference().addQueryParameter("cmtitle", category);
+		resource.getReference().addQueryParameter("cmsort", "timestamp");
+		resource.getReference().addQueryParameter("cmdir", "desc");
 		resource.getReference().addQueryParameter("cmprop",
 				"ids|title|timestamp");
-		resource.getReference().addQueryParameter("cmlimit", "500");
+		resource.getReference().addQueryParameter("cmlimit", "max");
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
 	}

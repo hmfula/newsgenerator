@@ -18,5 +18,12 @@ public class WikipulseServiceImpl implements WikipulseService {
 		String news = identifier.getNewsForCategory(category);
 		return news;
 	}
-
+	
+	@Override
+	public String getMostReadTitlesForCategory(String category){
+		Identifiable identifier = new Identifier();
+		String news = identifier.getMostReadTitlesForCategory(category);
+		return news;		
+	}
 }
+

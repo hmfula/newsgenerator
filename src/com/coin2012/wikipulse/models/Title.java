@@ -5,6 +5,7 @@ import java.util.List;
 public class Title {
 
 	private String pageid;
+	private float relevance;
 	private String ns;
 	private String title;
 	private String timestamp;
@@ -36,6 +37,13 @@ public class Title {
 
 	public String getTimestamp() {
 		return timestamp;
+	}
+	
+	public void setRelYesterday(float relevance) {
+		this.relevance = relevance;
+	}
+	public float getRelYesterday() {
+		return this.relevance;
 	}
 
 	public void setTimestamp(String timestamp) {

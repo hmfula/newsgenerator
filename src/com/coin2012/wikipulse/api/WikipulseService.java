@@ -16,5 +16,14 @@ public interface WikipulseService {
 	 * @return news for a given category
 	 */
 	public String getNewsForCategory(String category);
+	
+	/**
+	 * Fetches pages for a given category.
+	 * 
+	 * @param category
+	 *            of articles
+	 * @return pages for a given category
+	 */	
+	public String getMostReadTitlesForCategory(String category);
 
 }

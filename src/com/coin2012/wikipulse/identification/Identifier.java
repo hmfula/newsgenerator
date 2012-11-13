@@ -22,5 +22,17 @@ public class Identifier implements Identifiable {
 		
 		return gson.toJson(edits);
 	}
+	
+	@Override
+	public String getMostReadTitlesForCategory(String category) {
+		
+		NewsAlgorithm dummy = new DummyAlgorithm(extractor);		
+		List<Title> pages = dummy.findMostReadPages(category);
+		for (Title title : pages) {
+			title.setRelYesterday(dummy.findRelevanceOfPage(title.getTitle()));
+		}
+		Gson gson = new Gson();		
+		return gson.toJson(pages);
+	}
 
 }

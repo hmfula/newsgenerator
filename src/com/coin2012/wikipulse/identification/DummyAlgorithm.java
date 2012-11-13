@@ -1,12 +1,11 @@
 package com.coin2012.wikipulse.identification;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
-import com.coin2012.wikipulse.models.NewsItem;
+//import com.coin2012.wikipulse.models.NewsItem;
 import com.coin2012.wikipulse.models.Title;
-import com.coin2012.wikipulse.models.WikiEdit;
+//import com.coin2012.wikipulse.models.WikiEdit;
 
 /**
  *
@@ -37,5 +36,16 @@ public class DummyAlgorithm implements NewsAlgorithm {
 //		}
 		
 		return edits;
+	}
+	
+	@Override
+	public List<Title> findMostReadPages(String category) {
+		
+		List<Title> pages = extractor.getRelevantTitlesForCategory(category);	
+		return pages;
+	}
+	@Override 
+	public float findRelevanceOfPage(String page){
+		return extractor.getRelOfTitleForYesterday(page);
 	}
 }
