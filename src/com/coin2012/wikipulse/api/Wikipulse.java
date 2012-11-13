@@ -20,9 +20,21 @@ public class Wikipulse {
 		get(new Route("/News") {
 			@Override
 			public Object handle(Request request, Response response) {
+				
 				String category = "Category:United_States_presidential_election,_2012";
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				return wikipulseService.getNewsForCategory(category);
+			}
+		});
+		
+		get(new Route("/MostReadArticlesInCategory") {
+			@Override
+			public Object handle(Request request, Response response) {
+				String category = "Category:" + request.queryParams("category");
+				WikipulseService wikipulseService = new WikipulseServiceImpl();
+				response.type("application/json; charset=utf-8");
+				String return_set = "callback(" +wikipulseService.getMostReadTitlesForCategory(category) + ")";
+				return return_set;
 			}
 		});
 
