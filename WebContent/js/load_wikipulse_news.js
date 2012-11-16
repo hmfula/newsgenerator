@@ -5,7 +5,7 @@ var wp_service_url = "http://localhost:4567/mostreadarticlesincategory?category=
 var wp_service_parameter = search_parameter;
 $.ajax({
     type: 'GET',
-    url: 'http://localhost:4567/mostreadarticlesincategory?category=' + wp_service_parameter,
+    url: wp_service_url + wp_service_parameter,
     dataType: 'jsonp',
     jsonpCallback: 'callback',
     success: function (data) {
