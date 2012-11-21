@@ -49,7 +49,7 @@ public class Wikipulse implements SparkApplication {
 			}
 		});
 		
-		//Example use http://localhost:4567/ExernalLinkSearch?url=www.mitty.romney.com
+		//Example http://localhost:4567/ExernalLinkSearch?url=www.mittromney.com
 		//Example can be used for result verification. http://en.wikipedia.org/w/api.php?action=query&list=exturlusage&euquery=www.mittromney.com&eulimit=30&eunamespace=0&format=json
 		get(new Route("/ExernalLinkSearch") {
 				@Override
