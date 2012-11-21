@@ -48,6 +48,7 @@ public class Wikipulse implements SparkApplication {
 				return return_set;
 			}
 		});
+		
 		//Example use http://localhost:4567/ExernalLinkSearch?url=www.mitty.romney.com
 		//Example can be used for result verification. http://en.wikipedia.org/w/api.php?action=query&list=exturlusage&euquery=www.mittromney.com&eulimit=30&eunamespace=0&format=json
 		get(new Route("/ExernalLinkSearch") {
@@ -56,7 +57,8 @@ public class Wikipulse implements SparkApplication {
 					String url = request.queryParams("url");
 					WikipulseService wikipulseService = new WikipulseServiceImpl();
 					response.type("application/json; charset=utf-8");
-					String externallyLinkePages = "callback(" + wikipulseService.searchForPagesReferencing(url) +")";
+					String externallyLinkePages = wikipulseService.searchForPagesReferencing(url);
+					
 					return externallyLinkePages;
 				}
 			});
@@ -69,7 +71,7 @@ public class Wikipulse implements SparkApplication {
 						String searchText = request.queryParams("srsearch");
 						WikipulseService wikipulseService = new WikipulseServiceImpl();
 						response.type("application/json; charset=utf-8");
-						String  snippetPages ="callback(" + wikipulseService.searchForPagesThatMatch(searchText) + ")";
+						String  snippetPages = wikipulseService.searchForPagesThatMatch(searchText);
 						return snippetPages;
 					}
 

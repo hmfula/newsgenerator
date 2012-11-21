@@ -5,7 +5,6 @@ import java.util.List;
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.models.Page;
-import com.coin2012.wikipulse.models.SnippetPage;
 import com.google.gson.Gson;
 
 public class Identifier implements Identifiable {
@@ -37,15 +36,17 @@ public class Identifier implements Identifiable {
 	
 	
 	@Override
-	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
+	public String searchForPagesThatMatch(String searchText) {
 		
-		return createDummyAlgorithm().searchForPagesThatMatch(searchText);
+		Gson gson = new Gson();		
+		return gson.toJson(createDummyAlgorithm().searchForPagesThatMatch(searchText));
 	}
 	
 	@Override
-	public List<Page> searchForPagesReferencing(String url) {
+	public String  searchForPagesReferencing(String url) {
 	
-		return createDummyAlgorithm().searchForPagesReferencing(url);
+		Gson gson = new Gson();		
+		return gson.toJson(createDummyAlgorithm().searchForPagesReferencing(url));
 		
 	}
 	

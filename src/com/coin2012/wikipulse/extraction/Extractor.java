@@ -8,7 +8,7 @@ import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 
 /**
- * bla test commit
+ * Represents an Extractor component used to interact with Wikipedia API.
  * @author Karsten
  *
  */
