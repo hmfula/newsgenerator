@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.utils.ResultParser;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -47,4 +48,47 @@ public class WikipediaResultParser extends ResultParser {
 
 		return titles;
 	}
+	
+	/**
+	 * TODO  refactor this to create universal parser
+	 * @param result
+	 * @return list of page snippets
+	 */
+	public static List<SnippetPage> parseResultToPageSnippets(String result) {
+		JsonParser jsonParser = new JsonParser();
+		JsonArray matchingSnnipePageArray = jsonParser.parse(result).getAsJsonObject()
+				.get("query").getAsJsonObject()
+				.getAsJsonArray("search");
+
+		Gson gson = createConfiguredGson();
+		List<SnippetPage> pages = new LinkedList<SnippetPage>();
+		for (JsonElement jsonElement : matchingSnnipePageArray) {
+			SnippetPage page  = gson.fromJson(jsonElement, SnippetPage.class);
+			pages.add(page);
+		}
+
+		return pages;
+	}
+	
+/**
+ * TODO  refactor this to create universal parser
+ * @param result
+ * @return pages
+ */
+	public static List<Page> parseResultToMatchingPages(String result) {
+		JsonParser jsonParser = new JsonParser();
+		JsonArray matchingPageArray = jsonParser.parse(result).getAsJsonObject()
+				.get("query").getAsJsonObject()
+				.getAsJsonArray("exturlusage");
+
+		Gson gson = createConfiguredGson();
+		List<Page> pages = new LinkedList<Page>();
+		for (JsonElement jsonElement : matchingPageArray) {
+			Page page  = gson.fromJson(jsonElement, Page.class);
+			pages.add(page);
+		}
+
+		return pages;
+	}
+
 }
