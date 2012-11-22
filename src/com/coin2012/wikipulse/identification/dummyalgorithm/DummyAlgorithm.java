@@ -1,8 +1,9 @@
-package com.coin2012.wikipulse.identification;
+package com.coin2012.wikipulse.identification.dummyalgorithm;
 
 import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
+import com.coin2012.wikipulse.identification.NewsAlgorithm;
 //import com.coin2012.wikipulse.models.NewsItem;
 import com.coin2012.wikipulse.models.Page;
 //import com.coin2012.wikipulse.models.WikiEdit;

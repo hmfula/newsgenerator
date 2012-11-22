@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.identification.dummyalgorithm.DummyAlgorithm;
 import com.coin2012.wikipulse.models.Page;
 import com.google.gson.Gson;
 
