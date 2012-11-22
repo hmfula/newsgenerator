@@ -64,6 +64,7 @@ public class WikipediaResultParser extends ResultParser {
 		List<SnippetPage> pages = new LinkedList<SnippetPage>();
 		for (JsonElement jsonElement : matchingSnnipePageArray) {
 			SnippetPage page  = gson.fromJson(jsonElement, SnippetPage.class);
+			page.setPageUrl(page.getTitle());
 			pages.add(page);
 		}
 
