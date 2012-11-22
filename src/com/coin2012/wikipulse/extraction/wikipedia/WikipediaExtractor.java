@@ -6,6 +6,7 @@ import org.restlet.resource.ClientResource;
 
 import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
 
 public class WikipediaExtractor {
@@ -26,6 +27,20 @@ public class WikipediaExtractor {
 			page.setEdits(edits);
 		}
 		
+	}
+	
+	public static List<SnippetPage> searchForPagesThatMatch(String searchText) {
+		ClientResource resource = WikipediaQueries.buildQuerySearchForPagesThatMatch(searchText);
+		String result = QueryUtils.executeQueryToResource(resource);
+		List<SnippetPage> pages = WikipediaResultParser.parseResultToPageSnippets(result);
+		return pages;
+	}
+	
+	public static List<Page> searchForPagesReferencing(String url) {
+		ClientResource resource = WikipediaQueries.buildQueryToSearchForPagesReferencing(url);
+		String result = QueryUtils.executeQueryToResource(resource);
+		List<Page> pages = WikipediaResultParser.parseResultToMatchingPages(result);
+		return pages;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.coin2012.wikipulse.api;
 
+
+
 /**
  * Defines the business contract of the Wikipulse application.
  * 
@@ -25,5 +27,22 @@ public interface WikipulseService {
 	 * @return pages for a given category
 	 */	
 	public String getMostReadTitlesForCategory(String category);
+	
+	/**
+	 * Searches for pages matching given search text
+	 * 
+	 * @param searchText used during search operation in Wikipedia API
+	 * @return page snippets (SnippetPage extends Page class) which contain matching <code>searchText<code>
+	 */
+	public String searchForPagesThatMatch(String searchText);
+
+	/**
+	 * Lists external pages referencing a given page
+	 * 
+	 * @param url the source url 
+	 * @return pages which externally link to url
+	 * 
+	 */
+	public String searchForPagesReferencing(String url);
 
 }

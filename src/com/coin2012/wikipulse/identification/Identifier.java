@@ -15,7 +15,7 @@ public class Identifier implements Identifiable {
 	@Override
 	public String getNewsForCategory(String category) {
 		
-		NewsAlgorithm dummy = new DummyAlgorithm(extractor);
+		NewsAlgorithm dummy = createDummyAlgorithm();
 		
 		List<Page> edits = dummy.findNews(category);
 		Gson gson = new Gson();
@@ -23,14 +23,37 @@ public class Identifier implements Identifiable {
 		
 		return gson.toJson(edits);
 	}
+
+	
 	
 	@Override
 	public String getMostReadTitlesForCategory(String category) {
 		
-		NewsAlgorithm dummy = new DummyAlgorithm(extractor);		
+		NewsAlgorithm dummy = createDummyAlgorithm();		
 		List<Page> pages = dummy.findMostReadPages(category);
 		Gson gson = new Gson();		
 		return gson.toJson(pages);
+	}
+	
+	
+	@Override
+	public String searchForPagesThatMatch(String searchText) {
+		
+		Gson gson = new Gson();		
+		return gson.toJson(createDummyAlgorithm().searchForPagesThatMatch(searchText));
+	}
+	
+	@Override
+	public String  searchForPagesReferencing(String url) {
+	
+		Gson gson = new Gson();		
+		return gson.toJson(createDummyAlgorithm().searchForPagesReferencing(url));
+		
+	}
+	
+	private NewsAlgorithm createDummyAlgorithm() {
+		NewsAlgorithm dummy = new DummyAlgorithm(extractor);
+		return dummy;
 	}
 
 }

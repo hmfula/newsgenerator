@@ -25,5 +25,19 @@ public class WikipulseServiceImpl implements WikipulseService {
 		String news = identifier.getMostReadTitlesForCategory(category);
 		return news;		
 	}
+	
+	@Override
+	public String searchForPagesThatMatch(String searchText){
+		Identifiable identifier = new Identifier();
+		String snippetPages = identifier.searchForPagesThatMatch(searchText);
+		return snippetPages;	
+	}
+	
+	@Override
+	public String searchForPagesReferencing(String url){
+		Identifiable identifier = new Identifier();
+		String pages = identifier.searchForPagesReferencing(url);
+		return pages;	
+	}
 }
 

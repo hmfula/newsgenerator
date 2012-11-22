@@ -49,5 +49,33 @@ public abstract class WikipediaQueries {
 		System.out.println(dateFormat.format(new Date()));
 		return dateFormat.format(new Date());
 	}
+	
+	public static ClientResource buildQuerySearchForPagesThatMatch(
+			String searchText) {
+		ClientResource resource = new ClientResource(wikipediaApi);
+		resource.getReference().addQueryParameter("action", "query");
+		resource.getReference().addQueryParameter("list", "search");
+		resource.getReference().addQueryParameter("srwhat", "text");
+		resource.getReference().addQueryParameter("srsearch", searchText);
+		resource.getReference().addQueryParameter("format", "json");
+		return resource;
+	}
+	
+	/**
+	 * Builds a query that lists pages referencing a particular url. Useful for finding external links
+	 * @see http://en.wikipedia.org/w/api.php?action=query&list=exturlusage&euquery=httpd.apache.org&eulimit=30&eunamespace=0&format=json
+	 * @param url
+	 * @return resource
+	 */
+	public static ClientResource buildQueryToSearchForPagesReferencing(	String url) {
+		ClientResource resource = new ClientResource(wikipediaApi);
+		resource.getReference().addQueryParameter("action", "query");
+		resource.getReference().addQueryParameter("list", "exturlusage");
+		resource.getReference().addQueryParameter("euquery", url);
+		resource.getReference().addQueryParameter("eulimit", "30");
+		resource.getReference().addQueryParameter("eunamespace", "0");
+		resource.getReference().addQueryParameter("format", "json");
+		return resource;
+	}
 
 }
