@@ -7,6 +7,7 @@ import com.coin2012.wikipulse.identification.NewsAlgorithm;
 //import com.coin2012.wikipulse.models.NewsItem;
 import com.coin2012.wikipulse.models.Page;
 //import com.coin2012.wikipulse.models.WikiEdit;
+import com.coin2012.wikipulse.models.SnippetPage;
 
 /**
  *
@@ -43,5 +44,16 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	public List<Page> findMostReadPages(String category) {
 		List<Page> pages = extractor.getTitlesForCategory(category);	
 		return pages;
+	}
+
+	
+	@Override
+	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
+		return extractor.searchForPagesThatMatch(searchText);
+	}
+	
+	@Override
+	public List<Page> searchForPagesReferencing(String url) {
+		return 	extractor.searchForPagesReferencing(url);
 	}
 }

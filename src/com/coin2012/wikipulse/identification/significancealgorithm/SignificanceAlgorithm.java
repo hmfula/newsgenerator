@@ -4,23 +4,24 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.NewsAlgorithm;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
 
 public class SignificanceAlgorithm implements NewsAlgorithm {
 
-	Extractor ex;
+	Extractable extractor;
 	
-	public SignificanceAlgorithm(Extractor ex) {
-		this.ex = ex;
+	public SignificanceAlgorithm(Extractable extractor) {
+		this.extractor = extractor;
 	}
 	
 	
 	@Override
 	public List<Page> findNews(String category) {
-		List<Page> titleList = ex.getTitlesForCategory(category);
+		List<Page> titleList = extractor.getTitlesForCategory(category);
 		List<NewsItem> newsItems = new LinkedList<NewsItem>();
 		List<Page> newsList = new LinkedList<Page>();
 		
@@ -40,8 +41,19 @@ public class SignificanceAlgorithm implements NewsAlgorithm {
 
 	@Override
 	public List<Page> findMostReadPages(String category) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Page> pages = extractor.getTitlesForCategory(category);	
+		return pages;
+	}
+
+	
+	@Override
+	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
+		return extractor.searchForPagesThatMatch(searchText);
+	}
+	
+	@Override
+	public List<Page> searchForPagesReferencing(String url) {
+		return 	extractor.searchForPagesReferencing(url);
 	}
 
 	
@@ -62,5 +74,5 @@ public class SignificanceAlgorithm implements NewsAlgorithm {
 				}
 			}
 		}
-	}
+	}	
 }
