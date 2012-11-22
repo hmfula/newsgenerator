@@ -5,6 +5,7 @@ import java.util.List;
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.identification.dummyalgorithm.DummyAlgorithm;
+import com.coin2012.wikipulse.identification.significancealgorithm.SignificanceAlgorithm;
 import com.coin2012.wikipulse.models.Page;
 import com.google.gson.Gson;
 
@@ -15,7 +16,7 @@ public class Identifier implements Identifiable {
 	@Override
 	public String getNewsForCategory(String category) {
 		
-		NewsAlgorithm dummy = createDummyAlgorithm();
+		NewsAlgorithm dummy = createSignificanceAlgorithm();
 		
 		List<Page> edits = dummy.findNews(category);
 		Gson gson = new Gson();
@@ -54,6 +55,11 @@ public class Identifier implements Identifiable {
 	private NewsAlgorithm createDummyAlgorithm() {
 		NewsAlgorithm dummy = new DummyAlgorithm(extractor);
 		return dummy;
+	}
+	
+	private NewsAlgorithm createSignificanceAlgorithm() {
+		NewsAlgorithm alg = new SignificanceAlgorithm(extractor);
+		return alg;
 	}
 
 
