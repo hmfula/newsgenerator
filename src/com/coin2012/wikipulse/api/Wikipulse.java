@@ -76,5 +76,20 @@ public class Wikipulse implements SparkApplication {
 					}
 
 				});
+			
+			
+			 //Example use  http://localhost:4567/SearchImage?&action=query&list=allimages&aiprop=url|timestamp|user|comment&ailimit=10&format=xml&iprefix=obama
+			get(new Route("/SearchImage") {
+					@Override
+					public Object handle(Request request, Response response) {
+						String imageTitle = request.queryParams("aiprefix");
+						WikipulseService wikipulseService = new WikipulseServiceImpl();
+						response.type("application/json; charset=utf-8");
+						String  pageDetails = wikipulseService.getImageDetailsRelatedTo(imageTitle);
+						return pageDetails;
+					}
+
+				});
+			
 	}
 }

@@ -14,4 +14,6 @@ public interface NewsAlgorithm {
 	public List<SnippetPage> searchForPagesThatMatch(String searchText);
 	
 	public List<Page> searchForPagesReferencing(String url);
+	
+	public List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle);
 }

@@ -39,5 +39,10 @@ public class WikipulseServiceImpl implements WikipulseService {
 		String pages = identifier.searchForPagesReferencing(url);
 		return pages;	
 	}
+
+	@Override
+	public String getImageDetailsRelatedTo(String imageTitle) {
+		return new Identifier().getImageDetailsRelatedTo(imageTitle);
+	}
 }
 

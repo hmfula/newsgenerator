@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
+import com.coin2012.wikipulse.identification.PageImageDetails;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 
@@ -37,6 +38,12 @@ public class Extractor implements Extractable {
 		List<Page> pages = WikipediaExtractor.searchForPagesReferencing(url);
 		return pages;
 		
+	}
+
+
+	@Override
+	public List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle) {
+		return  WikipediaExtractor.getImageDetailsRelatedTo(subjectTitle);
 	}
 	
 }

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.coin2012.wikipulse.extraction.utils.ResultParser;
+import com.coin2012.wikipulse.identification.PageImageDetails;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
@@ -91,5 +92,21 @@ public class WikipediaResultParser extends ResultParser {
 
 		return pages;
 	}
+
+public static List<PageImageDetails> parseResultToMatchingPageImages(String result) {
+	JsonParser jsonParser = new JsonParser();
+	JsonArray matchingPageImageDetailsArray = jsonParser.parse(result).getAsJsonObject()
+			.get("query").getAsJsonObject()
+			.getAsJsonArray("allimages");
+
+	Gson gson = createConfiguredGson();
+	List<PageImageDetails> pageImagesDetailsList = new LinkedList<PageImageDetails>();
+	for (JsonElement jsonElement : matchingPageImageDetailsArray) {
+		PageImageDetails pageImageDetails  = gson.fromJson(jsonElement, PageImageDetails.class);
+		pageImagesDetailsList.add(pageImageDetails);
+	}
+
+	return pageImagesDetailsList;
+}
 
 }

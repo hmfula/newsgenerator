@@ -55,4 +55,9 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	public List<Page> searchForPagesReferencing(String url) {
 		return 	extractor.searchForPagesReferencing(url);
 	}
+
+	@Override
+	public List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle) {
+		return extractor.getImageDetailsRelatedTo(subjectTitle);
+	}
 }

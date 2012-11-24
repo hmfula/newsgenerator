@@ -55,4 +55,12 @@ public class Identifier implements Identifiable {
 		return dummy;
 	}
 
+
+
+	@Override
+	public String getImageDetailsRelatedTo(String subjectTitle) {
+		Gson gson = new Gson();		
+		return gson.toJson(createDummyAlgorithm().getImageDetailsRelatedTo(subjectTitle));
+	}
+
 }
