@@ -13,7 +13,9 @@ public class PageImageDetails {
 	private String descriptionUrl;
 	private String ns;
 	private String timestamp;
-
+	private String comments;
+	private String title;
+	
 	public String getTimestamp() {
 		return timestamp;
 	}
@@ -32,7 +34,6 @@ public class PageImageDetails {
 		this.user = user;
 	}
 
-	private String comments;
 
 	public String getComments() {
 		return comments;
@@ -82,6 +83,5 @@ public class PageImageDetails {
 		this.title = title;
 	}
 
-	private String title;
 
 }
