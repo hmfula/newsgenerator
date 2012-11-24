@@ -78,9 +78,9 @@ public class Wikipulse implements SparkApplication {
 				});
 			
 			
-			// Example: To list 10 obama related images. http://localhost:4567/SearchImage?&iprefix=obama
+			// Example: To list 10 obama related images. http://localhost:4567/SearchForImages?&iprefix=obama
 			//Verification query:http://en.wikipedia.org/w/api.php/?&action=query&list=allimages&aiprop=url|timestamp|user|comment&ailimit=10&format=xml&iprefix=obama
-			get(new Route("/SearchImage") {
+			get(new Route("/SearchForImages") {
 					@Override
 					public Object handle(Request request, Response response) {
 						String imageTitle = request.queryParams("aiprefix");
