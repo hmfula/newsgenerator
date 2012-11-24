@@ -1,7 +1,7 @@
 package com.coin2012.wikipulse.identification;
 
 /**
- * Represents page image  details. Currently used to encapsulated image related
+ * Represents page image  details. Currently used to encapsulate image related
  * information related to a given title.
  * 
  * @author mfula
