@@ -43,4 +43,11 @@ public class WikipediaExtractor {
 		return pages;
 	}
 
+public static List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle) {
+		ClientResource resource = WikipediaQueries.buildQueryToSearchForImagesAbout(subjectTitle);
+		String result = QueryUtils.executeQueryToResource(resource);
+		List<PageImageDetails> pageImages = WikipediaResultParser.parseResultToMatchingPageImages(result);
+		return pageImages;
+	}
+
 }
