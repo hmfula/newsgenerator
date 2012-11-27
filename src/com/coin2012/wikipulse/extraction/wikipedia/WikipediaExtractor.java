@@ -8,6 +8,7 @@ import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
+import com.coin2012.wikipulse.identification.PageImageDetails;
 
 public class WikipediaExtractor {
 	
@@ -41,6 +42,13 @@ public class WikipediaExtractor {
 		String result = QueryUtils.executeQueryToResource(resource);
 		List<Page> pages = WikipediaResultParser.parseResultToMatchingPages(result);
 		return pages;
+	}
+
+        public static List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle) {
+		ClientResource resource = WikipediaQueries.buildQueryToSearchForImagesAbout(subjectTitle);
+		String result = QueryUtils.executeQueryToResource(resource);
+		List<PageImageDetails> pageImages = WikipediaResultParser.parseResultToMatchingPageImages(result);
+		return pageImages;
 	}
 
 }

@@ -168,7 +168,8 @@ body {
 }
 
 a {
-  color: #0088cc;
+  /*color: #0088cc;*/
+  color: #777777;
   text-decoration: none;
 }
 
@@ -4347,7 +4348,7 @@ input[type="submit"].btn.btn-mini {
   margin-bottom: 0;
 }
 
-.navbar-fixed-top .navbar-inner,
+. .navbar-inner,
 .navbar-static-top .navbar-inner {
   border-width: 0 0 1px;
 }
@@ -5890,4 +5891,21 @@ a.badge:hover {
 
 .affix {
   position: fixed;
+}
+
+/* added by TF */
+
+@media (min-width: 860px) { 
+  .sb-fixed{
+    position: fixed;
+  } 
+}
+
+.pull-center{
+	text-align: center;	
+}
+
+.p-small{
+	font-size: 10px;
+	line-height: 12px;
 }

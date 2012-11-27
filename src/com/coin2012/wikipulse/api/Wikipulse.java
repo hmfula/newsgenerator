@@ -44,7 +44,7 @@ public class Wikipulse implements SparkApplication {
 				String category = "Category:" + request.queryParams("category");
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
-				String return_set = wikipulseService.getMostReadTitlesForCategory(category);
+				String return_set = "callback(" + wikipulseService.getMostReadTitlesForCategory(category) + ")";
 				return return_set;
 			}
 		});
@@ -71,7 +71,7 @@ public class Wikipulse implements SparkApplication {
 						String searchText = request.queryParams("srsearch");
 						WikipulseService wikipulseService = new WikipulseServiceImpl();
 						response.type("application/json; charset=utf-8");
-						String  snippetPages = wikipulseService.searchForPagesThatMatch(searchText);
+						String  snippetPages = "callback(" + wikipulseService.searchForPagesThatMatch(searchText) + ")";
 						return snippetPages;
 					}
 
