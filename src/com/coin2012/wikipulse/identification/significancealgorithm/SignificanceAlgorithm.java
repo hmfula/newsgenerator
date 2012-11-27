@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.NewsAlgorithm;
+import com.coin2012.wikipulse.identification.PageImageDetails;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
@@ -55,7 +56,11 @@ public class SignificanceAlgorithm implements NewsAlgorithm {
 	public List<Page> searchForPagesReferencing(String url) {
 		return 	extractor.searchForPagesReferencing(url);
 	}
-
+	
+	@Override
+	public List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle) {
+		return extractor.getImageDetailsRelatedTo(subjectTitle);
+	}
 	
 	private void calculateRanks(List<NewsItem> newsItems) {
 		
@@ -74,5 +79,6 @@ public class SignificanceAlgorithm implements NewsAlgorithm {
 				}
 			}
 		}
-	}	
+	}
+	
 }
