@@ -62,8 +62,6 @@ public class Identifier implements Identifiable {
 		return alg;
 	}
 
-
-
 	@Override
 	public String getImageDetailsRelatedTo(String subjectTitle) {
 		Gson gson = new Gson();		
