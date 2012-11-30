@@ -1,10 +1,8 @@
 package com.coin2012.wikipulse.extraction.wikipedia;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 import org.restlet.resource.ClientResource;
+
+import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 
 public abstract class WikipediaQueries {
 	private final static String wikipediaApi = "http://en.wikipedia.org/w/api.php";
@@ -36,18 +34,10 @@ public abstract class WikipediaQueries {
 		//resource.getReference().addQueryParameter("rvprop", "content|ids|timestamp|flags|comment|user");
 		resource.getReference().addQueryParameter("rvprop", "ids|timestamp|flags|comment|user");
 //		resource.getReference().addQueryParameter("rvlimit", "1");
-		resource.getReference().addQueryParameter("rvend", generateTimestampForToday());
+		resource.getReference().addQueryParameter("rvend", TimestampGenerator.generateTimestampForToday());
 		resource.getReference().addQueryParameter("rvdir", "older");
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
-	}
-	
-	private static String generateTimestampForToday(){
-		String DATE_PATTERN = "yyyyMMdd000000";
-		SimpleDateFormat dateFormat=new SimpleDateFormat(DATE_PATTERN);
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		System.out.println(dateFormat.format(new Date()));
-		return dateFormat.format(new Date());
 	}
 	
 	public static ClientResource buildQuerySearchForPagesThatMatch(
@@ -93,6 +83,28 @@ public abstract class WikipediaQueries {
 		resource.getReference().addQueryParameter("aifrom", subjectTitle);
 		resource.getReference().addQueryParameter("aiprefix", subjectTitle);
 		resource.getReference().addQueryParameter("format", "json");
+		return resource;
+	}
+	
+	
+	/**
+	 * http://en.wikipedia.org/w/api.php?action=query&list=recentchanges&rcprop=title|ids|sizes|flags|user|timestamp&rcend=2012113140000&rclimit=500&format=json
+	 * @return
+	 */
+	public static ClientResource buildQueryForRecentChanges() {
+		ClientResource resource = new ClientResource(wikipediaApi);
+		resource.getReference().addQueryParameter("action", "query");
+		resource.getReference().addQueryParameter("list", "recentchanges");
+		resource.getReference().addQueryParameter("rcprop", "title|ids|sizes|flags|user|timestamp");
+		resource.getReference().addQueryParameter("rclimit", "500");
+		resource.getReference().addQueryParameter("rcend", TimestampGenerator.generateTimestampFromTwoHoursAgo());
+		resource.getReference().addQueryParameter("format", "json");
+		return resource;
+	}
+	
+	public static ClientResource buildQueryForRecentChanges(String rcstart){
+		ClientResource resource = buildQueryForRecentChanges();
+		resource.getReference().addQueryParameter("rcstart", rcstart);
 		return resource;
 	}
 

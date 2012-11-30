@@ -1,16 +1,18 @@
 package com.coin2012.wikipulse.extraction.wikipedia;
 
 import java.util.List;
+import java.util.Map;
 
 import org.restlet.resource.ClientResource;
 
 import com.coin2012.wikipulse.extraction.utils.QueryUtils;
+import com.coin2012.wikipulse.identification.PageImageDetails;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
-import com.coin2012.wikipulse.identification.PageImageDetails;
 
 public class WikipediaExtractor {
+	private static Map<String, List<Changes>> recentChanges;
 	
 	public static List<Page> getPagesForCategory(String category) {
 		ClientResource resource = WikipediaQueries.buildQueryForPagesInCategory(category);
@@ -28,6 +30,19 @@ public class WikipediaExtractor {
 			page.setEdits(edits);
 		}
 		
+	}
+	
+	/**
+	 * Returns a list Pages changes within the last 2 hours
+	 * @return
+	 */
+	private static Map<String, List<Changes>> getRecentChanges(){
+		if(recentChanges == null){
+			ClientResource resource = WikipediaQueries.buildQueryForRecentChanges();
+			String result = QueryUtils.executeQueryToResource(resource);
+			
+		};
+		return recentChanges;
 	}
 	
 	public static List<SnippetPage> searchForPagesThatMatch(String searchText) {
