@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.NewsAlgorithm;
-import com.coin2012.wikipulse.identification.PageImageDetails;
 //import com.coin2012.wikipulse.models.NewsItem;
 import com.coin2012.wikipulse.models.Page;
 //import com.coin2012.wikipulse.models.WikiEdit;
@@ -59,7 +58,7 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	}
 
 	@Override
-	public List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle) {
-		return extractor.getImageDetailsRelatedTo(subjectTitle);
+	public List<Page> getPageWithImages(String subjectTitle) {
+		return extractor.getPageWithImages(subjectTitle);
 	}
 }

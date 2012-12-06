@@ -70,21 +70,19 @@ public abstract class WikipediaQueries {
 
 	/**
 	 * Builds a query that used to fetch top 5 images about a given a title
-	 * @param subjectTitle being used to fetch the image
+	 * @param pageTitle being used to fetch the images
 	 * @return a resource
 	 */
 	public static ClientResource buildQueryToSearchForImagesAbout(
-			String subjectTitle) {
+			String pageTitle) {
 		ClientResource resource = new ClientResource(wikipediaApi);
 		resource.getReference().addQueryParameter("action", "query");
-		resource.getReference().addQueryParameter("list", "allimages");
-		resource.getReference().addQueryParameter("aiprop", "url|user|timestamp|comment");
-		resource.getReference().addQueryParameter("ailimit", "5");
-		resource.getReference().addQueryParameter("aifrom", subjectTitle);
-		resource.getReference().addQueryParameter("aiprefix", subjectTitle);
+		resource.getReference().addQueryParameter("titles", pageTitle);
+		resource.getReference().addQueryParameter("prop", "images");
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
 	}
+
 	
 	
 	/**

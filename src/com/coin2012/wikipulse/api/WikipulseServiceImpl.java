@@ -41,8 +41,8 @@ public class WikipulseServiceImpl implements WikipulseService {
 	}
 
 	@Override
-	public String getImageDetailsRelatedTo(String imageTitle) {
-		return new Identifier().getImageDetailsRelatedTo(imageTitle);
+	public String getPageWithImages(String pageTitle) {
+		return new Identifier().getPageWithImages(pageTitle);
 	}
 }
 

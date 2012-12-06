@@ -2,7 +2,6 @@ package com.coin2012.wikipulse.extraction;
 
 import java.util.List;
 
-import com.coin2012.wikipulse.identification.PageImageDetails;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 
@@ -31,9 +30,9 @@ public interface Extractable {
 	public List<Page> searchForPagesReferencing(String url);
 	
 	/**
-	 * Returns a list of ImageDetails objects that encapsulate details of images related to a given topic
-	 * @param subjectTitle use to search for related images details
-	 * @return a list of image details
+	 * Returns a list of Pages that contain images found in a given page
+	 * @param pageTitle used to search the page for images
+	 * @return page (s) with images
 	 */
-	List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle);
+	List<Page> getPageWithImages(String pageTitle);
 }

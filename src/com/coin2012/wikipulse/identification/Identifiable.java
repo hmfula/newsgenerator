@@ -13,5 +13,5 @@ public interface Identifiable {
 
 	public String  searchForPagesReferencing(String url);
 	
-	public String getImageDetailsRelatedTo(String subjectTitle);
+	public String getPageWithImages(String subjectTitle);
 }

@@ -6,7 +6,6 @@ import java.util.Map;
 import org.restlet.resource.ClientResource;
 
 import com.coin2012.wikipulse.extraction.utils.QueryUtils;
-import com.coin2012.wikipulse.identification.PageImageDetails;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
@@ -59,11 +58,11 @@ public class WikipediaExtractor {
 		return pages;
 	}
 
-        public static List<PageImageDetails> getImageDetailsRelatedTo(String subjectTitle) {
-		ClientResource resource = WikipediaQueries.buildQueryToSearchForImagesAbout(subjectTitle);
+        public static List<Page> getPageWithImages(String pageTitle) {
+		ClientResource resource = WikipediaQueries.buildQueryToSearchForImagesAbout(pageTitle);
 		String result = QueryUtils.executeQueryToResource(resource);
-		List<PageImageDetails> pageImages = WikipediaResultParser.parseResultToMatchingPageImages(result);
-		return pageImages;
+		List<Page> pages = WikipediaResultParser.parseResultPages(result);
+		return pages;
 	}
 
 }

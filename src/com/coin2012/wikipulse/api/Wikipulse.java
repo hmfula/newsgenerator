@@ -19,11 +19,15 @@ import spark.servlet.SparkApplication;
 public class Wikipulse implements SparkApplication {
 
 	 public static void main(String[] args) {
+		
 		createRESTRoutes();
 	 }
 
 	public void init() {
+		 
 		createRESTRoutes();
+//		spark.Spark.setPort(8080);
+		
 	}
 
 	private static void createRESTRoutes() {
@@ -78,15 +82,17 @@ public class Wikipulse implements SparkApplication {
 				});
 			
 			
-			// Example: To list 10 obama related images. http://localhost:4567/SearchForImages?&iprefix=obama
-			//Verification query:http://en.wikipedia.org/w/api.php/?&action=query&list=allimages&aiprop=url|timestamp|user|comment&ailimit=10&format=xml&iprefix=obama
-			get(new Route("/SearchForImages") {
+			// Example: To list images on  Albert Einstein page. http://localhost:4567/FetchPageImages?titles=Albert%20Einstein
+			
+			get(new Route("/FetchPageImages") {
+				
 					@Override
 					public Object handle(Request request, Response response) {
-						String imageTitle = request.queryParams("aiprefix");
+						
+						String imageTitle = request.queryParams("titles");
 						WikipulseService wikipulseService = new WikipulseServiceImpl();
 						response.type("application/json; charset=utf-8");
-						String  pageDetails = wikipulseService.getImageDetailsRelatedTo(imageTitle);
+						String  pageDetails = wikipulseService.getPageWithImages(imageTitle);
 						return pageDetails;
 					}
 

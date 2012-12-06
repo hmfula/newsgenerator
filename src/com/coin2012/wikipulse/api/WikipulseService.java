@@ -46,10 +46,10 @@ public interface WikipulseService {
 	public String searchForPagesReferencing(String url);
 	
 	/**
-	 * Returns a list of ImageDetails objects that encapsulate details of images related to a given topic
-	 * @param subjectTitle use to search for related images details
-	 * @return a list of image details
+	 * Returns a list of Pages that contain images found in a given page
+	 * @param pageTitle used to search the page for images
+	 * @return page (s) with images
 	 */
-	public String getImageDetailsRelatedTo(String imageTitle);
+	public String getPageWithImages(String pageTitle);
 
 }

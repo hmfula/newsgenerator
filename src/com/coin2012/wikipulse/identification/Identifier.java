@@ -63,9 +63,9 @@ public class Identifier implements Identifiable {
 	}
 
 	@Override
-	public String getImageDetailsRelatedTo(String subjectTitle) {
+	public String getPageWithImages(String pageTitle) {
 		Gson gson = new Gson();		
-		return gson.toJson(createDummyAlgorithm().getImageDetailsRelatedTo(subjectTitle));
+		return gson.toJson(createDummyAlgorithm().getPageWithImages(pageTitle));
 	}
 
 }
