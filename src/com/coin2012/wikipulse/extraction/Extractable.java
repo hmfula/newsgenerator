@@ -35,4 +35,10 @@ public interface Extractable {
 	 * @return page (s) with images
 	 */
 	List<Page> getPageWithImages(String pageTitle);
+
+	/**
+	 * Returns a list of Changes from the last two hours.
+	 * @return a list of Changes
+	 */
+	List<AggregatedChanges> getRecentChanges();
 }

@@ -2,6 +2,10 @@ package com.coin2012.wikipulse.api;
 
 import static spark.Spark.get;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 
 import spark.Request;
 import spark.Response;
@@ -19,13 +23,13 @@ import spark.servlet.SparkApplication;
 public class Wikipulse implements SparkApplication {
 
 	 public static void main(String[] args) {
-		
 		createRESTRoutes();
+		createInMemDb();
 	 }
 
 	public void init() {
-		 
 		createRESTRoutes();
+		createInMemDb();
 //		spark.Spark.setPort(8080);
 		
 	}
@@ -39,6 +43,15 @@ public class Wikipulse implements SparkApplication {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
 				return wikipulseService.getNewsForCategory(category);
+			}
+		});
+		
+		get(new Route("/Changes") {
+			@Override
+			public Object handle(Request request, Response response) {
+				WikipulseService wikipulseService = new WikipulseServiceImpl();
+				response.type("application/json; charset=utf-8");
+				return wikipulseService.getRecentChanges();
 			}
 		});
 
@@ -98,5 +111,16 @@ public class Wikipulse implements SparkApplication {
 
 				});
 			
+	}
+
+	private static void createInMemDb() {
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			connection.createStatement().execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(50))");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

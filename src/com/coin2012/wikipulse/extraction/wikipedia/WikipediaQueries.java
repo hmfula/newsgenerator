@@ -89,21 +89,15 @@ public abstract class WikipediaQueries {
 	 * http://en.wikipedia.org/w/api.php?action=query&list=recentchanges&rcprop=title|ids|sizes|flags|user|timestamp&rcend=2012113140000&rclimit=500&format=json
 	 * @return
 	 */
-	public static ClientResource buildQueryForRecentChanges() {
+	public static ClientResource buildQueryForRecentChanges(String rcstart,String rcend) {
 		ClientResource resource = new ClientResource(wikipediaApi);
 		resource.getReference().addQueryParameter("action", "query");
 		resource.getReference().addQueryParameter("list", "recentchanges");
 		resource.getReference().addQueryParameter("rcprop", "title|ids|sizes|flags|user|timestamp");
 		resource.getReference().addQueryParameter("rclimit", "500");
-		resource.getReference().addQueryParameter("rcend", TimestampGenerator.generateTimestampFromTwoHoursAgo());
+		resource.getReference().addQueryParameter("rcend", rcend);
+		resource.getReference().addQueryParameter("rcstart", rcstart);
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
 	}
-	
-	public static ClientResource buildQueryForRecentChanges(String rcstart){
-		ClientResource resource = buildQueryForRecentChanges();
-		resource.getReference().addQueryParameter("rcstart", rcstart);
-		return resource;
-	}
-
 }

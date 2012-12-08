@@ -1,7 +1,12 @@
 package com.coin2012.wikipulse.api;
 
+import java.util.List;
+
+import com.coin2012.wikipulse.extraction.AggregatedChanges;
+import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.identification.Identifiable;
 import com.coin2012.wikipulse.identification.Identifier;
+import com.google.gson.Gson;
 
 /**
  * WikiPulseService. Implementation based on the facade design pattern.
@@ -43,6 +48,16 @@ public class WikipulseServiceImpl implements WikipulseService {
 	@Override
 	public String getPageWithImages(String pageTitle) {
 		return new Identifier().getPageWithImages(pageTitle);
+	}
+
+	@Override
+	public String getRecentChanges() {
+		Gson gson = new Gson();
+		Extractor ex = new Extractor();
+		List<AggregatedChanges> list = ex.getRecentChanges();
+		
+		
+		return gson.toJson(list);
 	}
 }
 

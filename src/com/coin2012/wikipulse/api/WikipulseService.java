@@ -52,4 +52,6 @@ public interface WikipulseService {
 	 */
 	public String getPageWithImages(String pageTitle);
 
+	public String getRecentChanges();
+
 }
