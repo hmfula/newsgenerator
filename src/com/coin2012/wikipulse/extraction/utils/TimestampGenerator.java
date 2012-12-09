@@ -13,13 +13,13 @@ public abstract class TimestampGenerator {
 		return generateTimestampForDatePattern(DATE_PATTERN, new Date());
 	}
 	
-	public static String generateTimestampForTodayWithHours(){
-		final String DATE_PATTERN = "yyyyMMddhh0000";
+	public static String generateTimestamp(){
+		final String DATE_PATTERN = "yyyyMMddHHmmss";
 		return generateTimestampForDatePattern(DATE_PATTERN, new Date());
 	}
 	
 	public static String generateTimestampFromTwoHoursAgo(){
-		final String DATE_PATTERN = "yyyyMMddhh0000";
+		final String DATE_PATTERN = "yyyyMMddHmmss";
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -2);
 		return generateTimestampForDatePattern(DATE_PATTERN, cal.getTime());
@@ -33,7 +33,7 @@ public abstract class TimestampGenerator {
 	}
 	
 	public static Date generateDateForTimestamp(String timestamp){
-		final String DATE_PATTERN = "yyyyMMddhhmmss";
+		final String DATE_PATTERN = "yyyyMMddHHmmss";
 		return generateDateForPatternAndTimestamp(timestamp, DATE_PATTERN);
 	}
 

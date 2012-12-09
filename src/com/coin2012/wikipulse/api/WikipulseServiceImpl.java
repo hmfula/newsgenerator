@@ -51,12 +51,11 @@ public class WikipulseServiceImpl implements WikipulseService {
 	}
 
 	@Override
-	public String getRecentChanges() {
+	public String getRecentChanges(int minChanges) {
 		Gson gson = new Gson();
-		Extractor ex = new Extractor();
-		List<AggregatedChanges> list = ex.getRecentChanges();
-		String result = gson.toJson(list);
-		
+		Extractor extractor = new Extractor();
+		List<AggregatedChanges> listOfAggregatedChanges = extractor.getRecentChanges(minChanges);
+		String result = gson.toJson(listOfAggregatedChanges);
 		return result;
 	}
 }

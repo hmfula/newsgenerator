@@ -1,34 +1,31 @@
 package com.coin2012.wikipulse.extraction;
 
 public class AggregatedChanges {
-	
-	private String title;
+
+	private final String title;
+	private final String url;
 	private int count;
-	
+
+	public AggregatedChanges(String title) {
+		this.title = title;
+		url = "en.wikipedia.org/wiki/" + title;
+		count = 1;
+	}
+
 	public int getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public AggregatedChanges(String title) {
-		this.setTitle(title);
-		count = 1;
-	}
-
 	public void addToCount() {
-		count = count++;
-		
+		count = count + 1;
 	}
 
 	public String getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public String getUrl() {
+		return url;
 	}
 
 }

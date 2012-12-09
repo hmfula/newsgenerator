@@ -30,8 +30,6 @@ public class Wikipulse implements SparkApplication {
 	public void init() {
 		createRESTRoutes();
 		createInMemDb();
-//		spark.Spark.setPort(8080);
-		
 	}
 
 	private static void createRESTRoutes() {
@@ -51,7 +49,13 @@ public class Wikipulse implements SparkApplication {
 			public Object handle(Request request, Response response) {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
-				return wikipulseService.getRecentChanges();
+				int minChanges;
+				try {
+					minChanges = Integer.valueOf(request.queryParams("minchanges"));
+				} catch (Exception e) {
+					minChanges = 10;
+				}
+				return wikipulseService.getRecentChanges(minChanges);
 			}
 		});
 

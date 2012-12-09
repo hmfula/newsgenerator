@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +55,8 @@ public class Extractor implements Extractable {
 	}
 
 	@Override
-	public List<AggregatedChanges> getRecentChanges() {
-		String currentTimestamp = TimestampGenerator.generateTimestampForTodayWithHours();
+	public List<AggregatedChanges> getRecentChanges(int minChanges) {
+		String currentTimestamp = TimestampGenerator.generateTimestamp();
 		String timestamp = getTimestampForLastSavedChange();
 		String queryTimestamp = "";
 		if (timestamp != null) {
@@ -72,7 +74,8 @@ public class Extractor implements Extractable {
 		List<Change> changes = WikipediaExtractor.getRecentChanges(currentTimestamp, queryTimestamp);
 		this.saveChangesToMemDB(changes);
 		this.clearOldChangesFromMemDB();
-		List<AggregatedChanges> aggregatedChanges = this.aggregateChangesFromMemDB();
+		List<AggregatedChanges> aggregatedChanges = this.aggregateChangesFromMemDB(minChanges);
+		this.sortAggregatedChanges(aggregatedChanges);
 		return aggregatedChanges;
 		/*
 		 * read last entry from db clear db check if within 2h if then call get
@@ -80,6 +83,8 @@ public class Extractor implements Extractable {
 		 * timestamp) add result to db aggregate return
 		 */
 	}
+
+
 
 	private void clearOldChangesFromMemDB() {
 		// TODO ClearDB
@@ -92,7 +97,8 @@ public class Extractor implements Extractable {
 			PreparedStatement psq = connection.prepareStatement("SELECT * FROM changes");
 			ResultSet rs = psq.executeQuery();
 			while (rs.next()) {
-				if (rs.isLast()) {
+				System.out.println(rs.getString(1));
+				if (rs.isFirst()) {
 					timestamp = rs.getString(1);
 				}
 			}
@@ -119,10 +125,13 @@ public class Extractor implements Extractable {
 		}
 	}
 
-	private List<AggregatedChanges> aggregateChangesFromMemDB() {
+	/**
+	 * Counts the changes for each title and returns a list of AggregatedChanges
+	 * @return list of AggregatedChanges
+	 */
+	private List<AggregatedChanges> aggregateChangesFromMemDB(int minChanges) {
 		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
 		Connection connection;
-
 		try {
 			connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
 			PreparedStatement psq = connection.prepareStatement("SELECT * FROM changes");
@@ -140,10 +149,37 @@ public class Extractor implements Extractable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		List<AggregatedChanges> resultList = new ArrayList<AggregatedChanges>();
-		resultList.addAll(map.values());
+		List<AggregatedChanges> resultList = cleanUpAggregatedChanges(map,minChanges);
 		return resultList;
+	}
+
+	/**
+	 * Includes only AggregatedChanges with a count greater than one
+	 * @param map
+	 * @return
+	 */
+	private List<AggregatedChanges> cleanUpAggregatedChanges(HashMap<String, AggregatedChanges> map, int minChanges) {
+		List<AggregatedChanges> resultList = new ArrayList<AggregatedChanges>();
+		for (String key : map.keySet()) {
+			AggregatedChanges aggregatedChanges = map.get(key);
+			int count = aggregatedChanges.getCount();
+			if(count>= minChanges){
+				resultList.add(aggregatedChanges);
+			}
+		}
+		return resultList;
+	}
+	
+	/**
+	 * Sorts list of AggregatedChanges by counted changes
+	 * @param aggregatedChanges
+	 */
+	private void sortAggregatedChanges(List<AggregatedChanges> aggregatedChanges) {
+		Collections.sort(aggregatedChanges, new Comparator<AggregatedChanges>() {
+		    public int compare(AggregatedChanges s1, AggregatedChanges s2) {
+		        return (new Integer(s1.getCount()).compareTo(new Integer(s2.getCount()))) * -1;
+		    }
+		});
 	}
 
 }
