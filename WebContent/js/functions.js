@@ -2,6 +2,7 @@ var wp_service_url = "http://localhost:4567";
 var wp_service_url_current_events = wp_service_url + "/mostreadarticlesincategory?category=Current_events";
 var wp_service_url_get_articles_from_category = wp_service_url + "/mostreadarticlesincategory?category=";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
+var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
 
 $(document).ready(function() {
 	var dt = new GetDateTime();
@@ -14,9 +15,11 @@ $(document).ready(function() {
 		//alert(dt.formats.pretty.b);
     }, 30000);
 	
-	load_current_Events();
+	//load_current_Events();
+	$("#wait_nav").html('');
 	
-	
+    $('.carousel').carousel();
+		
 });
 
 // catch click event coming from TOP (Home) and BOTTOM navigation (Home AboutUs,ContactUs)
@@ -80,8 +83,64 @@ function load_current_Events(){
 	});	
 }
 
+//load images
+function load_images_for_news_item(page){
+	$.ajax({
+	    type: 'GET',
+	    url: wp_service_url_fetch_images + page,
+	    dataType: 'jsonp',
+	    jsonpCallback: 'pic_callback',
+	    success: function (data) {
+	    	$.each(data,function(i,page){
+	    		var str = page.imageUrlList;
+	    		var clean_pagetitle = page.title.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+	    		var img_slideshow = '<div id="myCarousel_' + clean_pagetitle
+	    						+ '" class="carousel slide"><div class="carousel-inner">';
+	    			
+	    		var img_list = str.toString().split(',');
+	    		for(var j=0;j<img_list.length;j++){
+	    			if(j==1){
+	    				img_slideshow += '<div class="item active">';
+					}
+	    			else {
+	    				img_slideshow += '<div class="item">';
+	    			} 
+	    			img_slideshow += '<img src="'+ img_list[j] +'" alt="">';
+                    //<div class="carousel-caption"></div>
+	    			img_slideshow += '</div>';
+	    	    };   		
+	    	    img_slideshow += '</div>';
+	    	    img_slideshow += '<a class="left carousel-control" href="#myCarousel_'+ clean_pagetitle + '" data-slide="prev">&lsaquo;</a>';
+	    	    img_slideshow += '<a class="right carousel-control" href="#myCarousel_'+ clean_pagetitle + '" data-slide="next">&rsaquo;</a>';
+	    	    img_slideshow += '</div>';
+	    	    alert(img_slideshow);
+	    	    try
+	    	    {
+		    	    $('#'+clean_pagetitle).append(img_slideshow);
+		    	    //alert($('#'+clean_pagetitle).val());
+	    	    }
+	    	  catch(err)
+	    	    {
+		    	    txt="There was an error on this page.\n\n";
+		    	    txt+="Error description: " + err.message + "\n\n";
+		    	    txt+="Click OK to continue.\n\n";
+		    	    alert(txt);
+	    	    }
+	    	});
+	    },
+    jsonp: 'jsonp'	
+	});	
+}
+
 //load category values
 function load_wikipulse_news(url_parameter){
+	
+	var news_template_big = '<h3><a href="url_to_page">page_title</a></h3>' +
+							'<a href="url_to_page"><div id="clean_pagetitle"></div></a>' +
+							'<p>page_title<a href="url_to_page">&nbsp;more information</a></p>';
+	var news_template_small = '<h6><a href="url_to_page">page_title</a></h6>' +
+							'<a href="url_to_page"><div id="clean_pagetitle"></div></a>' +
+							'<p class="p-small">url_to_page<a href="url_to_page">&nbsp;more information</a></p>';
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_get_articles_from_category + url_parameter,
@@ -92,84 +151,85 @@ function load_wikipulse_news(url_parameter){
 	    	data.sort(function(a,b){ return parseInt(b.yesterdaysRelevance*100) - parseInt(a.yesterdaysRelevance*100);});
 	    	var append_str = '';
 	    	var counter = 0;
+	    	var subcounter = 0;
+	    	var news_rows = '';
+	    	var clean_pagetitle = '';
 	    	$.each(data,function(i,page){
-	    		if (Number(page.yesterdaysRelevance) > 0.08 ) {
+	    		if (Number(page.yesterdaysRelevance) > 0.00 ) {
+	    			load_images_for_news_item(page.title);
+	    			clean_pagetitle = page.title.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
 	    			found = false;
 	    			if(counter == 0 && (found == false)){
-	    				append_str = '<h3><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h3>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p>' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
+	    				append_str = news_template_big;
+	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
+	    				append_str = append_str.replace(/page_title/g,page.title);
+	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
 	    				$("#news_1").html(append_str);
+	    				alert(append_str);
 		    			counter += 1;
 		    			found = true;
 	    			}
 	    			if(counter==1 && (found == false)){						
-	    				append_str =  '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
+	    				append_str = news_template_small;
+	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
+	    				append_str = append_str.replace(/page_title/g,page.title);
+	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
 	    				$("#news_2").html(append_str);
 		    			counter += 1;
 		    			found = true;
 	    			}
 	    			if(counter==2 && (found == false)){
-	    				append_str = '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
+	    				append_str = news_template_small;
+	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
+	    				append_str = append_str.replace(/page_title/g,page.title);
+	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
 	    				$("#news_3").html(append_str);
 		    			counter += 1;
 		    			found = true;
 	    			}
-	    			if(counter==3 && (found == false)){
-    					append_str = '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
-	    				$("#news_4").html(append_str);
+	    			if(counter>2 && (found == false) && (subcounter==0)){
+	    				news_rows += '<div class="row-fluid">'; // only for first news item in row
+	    				news_rows += '<div class="span3">';
+	    				append_str = news_template_small;
+	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
+	    				append_str = append_str.replace(/page_title/g,page.title);
+	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
+	    				news_rows += append_str +'</div>';
+	    				subcounter += 1;
 		    			counter += 1;
 		    			found = true;
     				}
-	    			if(counter==4 && (found == false)){
-    					append_str = '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
-	    				$("#news_5").html(append_str);
+	    			if(counter>2 && (found == false) && (subcounter==1)){
+	    				//news_rows += '<div class="row-fluid">'; // only for first news item in row
+	    				news_rows += '<div class="span3">';
+	    				append_str = news_template_small;
+	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
+	    				append_str = append_str.replace(/page_title/g,page.title);
+	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
+	    				news_rows += append_str +'</div>';
+	    				subcounter += 1;
 		    			counter += 1;
 		    			found = true;
     				}	
-	    			if(counter==5 && (found == false)){
-    					append_str = '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
-	    				$("#news_6").html(append_str);
+	    			if(counter>2 && (found == false) && (subcounter==2)){
+	    				//news_rows += '<div class="row-fluid">'; // only for first news item in row
+	    				news_rows += '<div class="span3">';
+	    				append_str = news_template_small;
+	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
+	    				append_str = append_str.replace(/page_title/g,page.title);
+	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
+	    				news_rows += append_str +'</div>';
+	    				news_rows += '</div>'; // only last news item in row
+	    				subcounter = 0; // only 3rd news item
 		    			counter += 1;
 		    			found = true;
     				}
-	    			if(counter==6 && (found == false)){
-    					append_str = '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
-	    				$("#news_7").html(append_str);
-		    			counter += 1;
-		    			found = true;
-    				}
-	    			if(counter==7 && (found == false)){
-    					append_str = '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
-	    				$("#news_8").html(append_str);
-		    			counter += 1;
-		    			found = true;
-    				}	
-	    			if(counter==8 && (found == false)){
-    					append_str = '<h6><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' +  page.title + '</a></h6>';
-	    				append_str += '<a href="http://en.wikipedia.org/wiki/' +  page.title + '"><img class="img-rounded thumbnail" src="img/img_not_found.jpg"/></a>';
-	    				append_str += '<p class="p-small">' + page.title + '<a href="http://en.wikipedia.org/wiki/' +  page.title + '">&nbsp;more information</a></p>';
-	    				$("#news_9").html(append_str);
-		    			counter += 1;
-		    			found = true;
-    				}
-    			}
-	    	});
-	    	//$("#wp_service_news_results").append(append_str);
+    			} // close relevance - if
+	    	}); // close for-each loop
+	    	if(subcounter != 0){
+	    		news_rows += '</div>';	    		
+	    	}
+	    	$("#row2").append(news_rows);
 	    },
 	    jsonp: 'jsonp'
 	});
