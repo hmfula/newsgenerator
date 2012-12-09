@@ -20,8 +20,7 @@ public class WikipediaResultParser extends ResultParser {
 
 	public static List<WikiEdit> parseResultToEdits(String result, String pageId) {
 		JsonParser jsonParser = new JsonParser();
-		JsonArray categorymembers = jsonParser.parse(result).getAsJsonObject()
-				.get("query").getAsJsonObject().get("pages").getAsJsonObject()
+		JsonArray categorymembers = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject()
 				.get(pageId).getAsJsonObject().getAsJsonArray("revisions");
 
 		List<WikiEdit> edits = new LinkedList<WikiEdit>();
@@ -39,9 +38,7 @@ public class WikipediaResultParser extends ResultParser {
 
 	public static List<Page> parseResultToTitles(String result) {
 		JsonParser jsonParser = new JsonParser();
-		JsonArray categorymembers = jsonParser.parse(result).getAsJsonObject()
-				.get("query").getAsJsonObject()
-				.getAsJsonArray("categorymembers");
+		JsonArray categorymembers = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("categorymembers");
 
 		Gson gson = createConfiguredGson();
 		List<Page> titles = new LinkedList<Page>();
@@ -61,9 +58,7 @@ public class WikipediaResultParser extends ResultParser {
 	 */
 	public static List<SnippetPage> parseResultToPageSnippets(String result) {
 		JsonParser jsonParser = new JsonParser();
-		JsonArray matchingSnnipePageArray = jsonParser.parse(result)
-				.getAsJsonObject().get("query").getAsJsonObject()
-				.getAsJsonArray("search");
+		JsonArray matchingSnnipePageArray = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("search");
 
 		Gson gson = createConfiguredGson();
 		List<SnippetPage> pages = new LinkedList<SnippetPage>();
@@ -80,9 +75,7 @@ public class WikipediaResultParser extends ResultParser {
 
 	public static List<Page> parseResultToMatchingPages(String result) {
 		JsonParser jsonParser = new JsonParser();
-		JsonArray matchingPageArray = jsonParser.parse(result)
-				.getAsJsonObject().get("query").getAsJsonObject()
-				.getAsJsonArray("exturlusage");
+		JsonArray matchingPageArray = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("exturlusage");
 
 		Gson gson = createConfiguredGson();
 		List<Page> pages = new LinkedList<Page>();
@@ -101,8 +94,7 @@ public class WikipediaResultParser extends ResultParser {
 		Page page = null;
 		Gson gson = new Gson();
 		JsonParser jsonParser = new JsonParser();
-		Set<Entry<String, JsonElement>> pageEntryMap = jsonParser.parse(result)
-				.getAsJsonObject().get("query").getAsJsonObject().get("pages")
+		Set<Entry<String, JsonElement>> pageEntryMap = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
 				.getAsJsonObject().entrySet();
 		for (Entry<String, JsonElement> entry : pageEntryMap) {
 			// System.out.println("key (page id):" + entry.getKey());
@@ -125,19 +117,16 @@ public class WikipediaResultParser extends ResultParser {
 		RecentChangesQueryResult parsedResult = new RecentChangesQueryResult();
 		JsonParser jsonParser = new JsonParser();
 		Gson gson = createConfiguredGson();
-		JsonArray recentchanges = jsonParser.parse(result).getAsJsonObject()
-				.get("query").getAsJsonObject()
-				.getAsJsonArray("recentchanges");
+		JsonArray recentchanges = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("recentchanges");
 		for (JsonElement jsonElement : recentchanges) {
 			Change change = gson.fromJson(jsonElement, Change.class);
 			parsedResult.getChanges().add(change);
 		}
-		
-		String rcstart = jsonParser.parse(result).getAsJsonObject()
-				.get("query-continue").getAsJsonObject()
-				.get("recentchanges").getAsJsonObject().get("rcstart").getAsString();
-		
-		parsedResult.setRcstart(TimestampGenerator.generateTimestampFromWikipediaTimestamp(rcstart));
+		if (jsonParser.parse(result).getAsJsonObject().has("query-continue")) {
+			String rcstart = jsonParser.parse(result).getAsJsonObject().get("query-continue").getAsJsonObject().get("recentchanges")
+					.getAsJsonObject().get("rcstart").getAsString();
+			parsedResult.setRcstart(TimestampGenerator.generateTimestampFromWikipediaTimestamp(rcstart));
+		}
 		return parsedResult;
 	}
 }

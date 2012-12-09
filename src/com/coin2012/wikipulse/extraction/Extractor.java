@@ -35,8 +35,7 @@ public class Extractor implements Extractable {
 
 	@Override
 	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
-		List<SnippetPage> pages = WikipediaExtractor
-				.searchForPagesThatMatch(searchText);
+		List<SnippetPage> pages = WikipediaExtractor.searchForPagesThatMatch(searchText);
 		return pages;
 
 	}
@@ -55,33 +54,25 @@ public class Extractor implements Extractable {
 
 	@Override
 	public List<AggregatedChanges> getRecentChanges() {
-		String currentTimestamp = TimestampGenerator
-				.generateTimestampForTodayWithHours();
+		String currentTimestamp = TimestampGenerator.generateTimestampForTodayWithHours();
 		String timestamp = getTimestampForLastSavedChange();
 		String queryTimestamp = "";
 		if (timestamp != null) {
-			Date now = TimestampGenerator
-					.generateDateForTimestamp(currentTimestamp);
-			Date lastTimestampDate = TimestampGenerator
-					.generateDateForTimestamp(timestamp);
-			long diffInHours = (lastTimestampDate.getTime() - now.getTime())
-					/ (1000 * 60 * 60);
+			Date now = TimestampGenerator.generateDateForTimestamp(currentTimestamp);
+			Date lastTimestampDate = TimestampGenerator.generateDateForTimestamp(timestamp);
+			long diffInHours = (lastTimestampDate.getTime() - now.getTime()) / (1000 * 60 * 60);
 			if (diffInHours < 2) {
 				queryTimestamp = timestamp;
 			} else {
-				queryTimestamp = TimestampGenerator
-						.generateTimestampFromTwoHoursAgo();
+				queryTimestamp = TimestampGenerator.generateTimestampFromTwoHoursAgo();
 			}
 		} else {
-			queryTimestamp = TimestampGenerator
-					.generateTimestampFromTwoHoursAgo();
+			queryTimestamp = TimestampGenerator.generateTimestampFromTwoHoursAgo();
 		}
-		List<Change> changes = WikipediaExtractor.getRecentChanges(
-				currentTimestamp, queryTimestamp);
+		List<Change> changes = WikipediaExtractor.getRecentChanges(currentTimestamp, queryTimestamp);
 		this.saveChangesToMemDB(changes);
 		this.clearOldChangesFromMemDB();
-		List<AggregatedChanges> aggregatedChanges = this
-				.aggregateChangesFromMemDB();
+		List<AggregatedChanges> aggregatedChanges = this.aggregateChangesFromMemDB();
 		return aggregatedChanges;
 		/*
 		 * read last entry from db clear db check if within 2h if then call get
@@ -97,10 +88,8 @@ public class Extractor implements Extractable {
 	private String getTimestampForLastSavedChange() {
 		String timestamp = null;
 		try {
-			Connection connection = DriverManager.getConnection(
-					"jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-			PreparedStatement psq = connection
-					.prepareStatement("SELECT * FROM changes");
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			PreparedStatement psq = connection.prepareStatement("SELECT * FROM changes");
 			ResultSet rs = psq.executeQuery();
 			while (rs.next()) {
 				if (rs.isLast()) {
@@ -116,15 +105,11 @@ public class Extractor implements Extractable {
 
 	private void saveChangesToMemDB(List<Change> changes) {
 		try {
-			Connection connection = DriverManager.getConnection(
-					"jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-			PreparedStatement prepStatement = connection
-					.prepareStatement("INSERT INTO changes VALUES (?,?)");
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			PreparedStatement prepStatement = connection.prepareStatement("INSERT INTO changes VALUES (?,?)");
 			for (Change change : changes) {
 				prepStatement.clearParameters();
-				prepStatement.setString(1, TimestampGenerator
-						.generateTimestampFromWikipediaTimestamp(change
-								.getTimestamp()));
+				prepStatement.setString(1, TimestampGenerator.generateTimestampFromWikipediaTimestamp(change.getTimestamp()));
 				prepStatement.setString(2, change.getTitle());
 				prepStatement.executeUpdate();
 			}
@@ -139,17 +124,15 @@ public class Extractor implements Extractable {
 		Connection connection;
 
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-			PreparedStatement psq = connection
-					.prepareStatement("SELECT * FROM changes");
+			connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			PreparedStatement psq = connection.prepareStatement("SELECT * FROM changes");
 			ResultSet rs = psq.executeQuery();
 			while (rs.next()) {
 				String title = rs.getString(2);
 				AggregatedChanges change = map.get(rs.getString(2));
 				if (change == null) {
 					map.put(title, new AggregatedChanges(title));
-				}else{
+				} else {
 					change.addToCount();
 				}
 			}
@@ -157,7 +140,7 @@ public class Extractor implements Extractable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		List<AggregatedChanges> resultList = new ArrayList<AggregatedChanges>();
 		resultList.addAll(map.values());
 		return resultList;

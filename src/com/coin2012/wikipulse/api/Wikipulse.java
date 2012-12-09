@@ -116,7 +116,7 @@ public class Wikipulse implements SparkApplication {
 	private static void createInMemDb() {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-			connection.createStatement().execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(50))");
+			connection.createStatement().execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255))");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

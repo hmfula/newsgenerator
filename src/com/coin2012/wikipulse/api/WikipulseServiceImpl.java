@@ -55,9 +55,9 @@ public class WikipulseServiceImpl implements WikipulseService {
 		Gson gson = new Gson();
 		Extractor ex = new Extractor();
 		List<AggregatedChanges> list = ex.getRecentChanges();
+		String result = gson.toJson(list);
 		
-		
-		return gson.toJson(list);
+		return result;
 	}
 }
 

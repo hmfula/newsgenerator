@@ -43,8 +43,12 @@ public class WikipediaExtractor {
 		String result = QueryUtils.executeQueryToResource(resource);
 		RecentChangesQueryResult parsedResult = WikipediaResultParser.parseResultToRecentChangesQueryResult(result);
 		List<Change> changes = parsedResult.getChanges();
-		while(parsedResult.getRcstart() != null){
+		String rcstart = parsedResult.getRcstart();
+		while(rcstart != null){
+			resource = WikipediaQueries.buildQueryForRecentChanges(rcstart, timestamp);
+			result = QueryUtils.executeQueryToResource(resource);
 			parsedResult = WikipediaResultParser.parseResultToRecentChangesQueryResult(result);
+			rcstart = parsedResult.getRcstart();
 			changes.addAll(parsedResult.getChanges());
 		}
 		return changes;
