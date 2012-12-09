@@ -109,7 +109,7 @@ public class Wikipulse implements SparkApplication {
 						String imageTitle = request.queryParams("titles");
 						WikipulseService wikipulseService = new WikipulseServiceImpl();
 						response.type("application/json; charset=utf-8");
-						String  pageDetails = wikipulseService.getPageWithImages(imageTitle);
+						String  pageDetails = "pic_callback(" + wikipulseService.getPageWithImages(imageTitle) + ")";
 						return pageDetails;
 					}
 
