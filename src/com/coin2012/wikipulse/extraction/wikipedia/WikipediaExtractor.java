@@ -1,16 +1,22 @@
 package com.coin2012.wikipulse.extraction.wikipedia;
 
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.restlet.resource.ClientResource;
 
+import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
 import com.coin2012.wikipulse.extraction.utils.QueryUtils;
+import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
 
 public class WikipediaExtractor {
 
+	static Logger logger = Logger.getLogger("WikipediaExtractor.class");
+	
 	public static List<Page> getPagesForCategory(String category) {
 		ClientResource resource = WikipediaQueries
 				.buildQueryForPagesInCategory(category);
@@ -31,15 +37,36 @@ public class WikipediaExtractor {
 		}
 
 	}
+	
+	public static List<Change> getRecentChangesWithinTwoHours(){
+		String currentTimestamp = TimestampGenerator.generateTimestamp();
+		String timestamp = HsqldbManager.getTimestampForLastSavedChange();
+		String queryTimestamp = "";
+		if (timestamp != null) {
+			Date now = TimestampGenerator.generateDateForTimestamp(currentTimestamp);
+			Date lastTimestampDate = TimestampGenerator.generateDateForTimestamp(timestamp);
+			long diffInHours = (lastTimestampDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+			if (diffInHours < 2) {
+				queryTimestamp = timestamp;
+			} else {
+				queryTimestamp = TimestampGenerator.generateTimestampFromTwoHoursAgo();
+			}
+		} else {
+			queryTimestamp = TimestampGenerator.generateTimestampFromTwoHoursAgo();
+		}
+		List<Change> changes = WikipediaExtractor.getRecentChanges(currentTimestamp, queryTimestamp);
+		return changes;
+	}
 
 	/**
-	 * Returns a list Pages changes within the last 2 hours
+	 * Returns a list Pages changes within a given time frame hours
 	 * 
 	 * @return
 	 */
 	public static List<Change> getRecentChanges(String now, String timestamp) {
 
 		ClientResource resource = WikipediaQueries.buildQueryForRecentChanges(now, timestamp);
+		logger.info("Starting extracting recent changes from " + now + " till " + timestamp);
 		String result = QueryUtils.executeQueryToResource(resource);
 		RecentChangesQueryResult parsedResult = WikipediaResultParser.parseResultToRecentChangesQueryResult(result);
 		List<Change> changes = parsedResult.getChanges();
@@ -50,7 +77,9 @@ public class WikipediaExtractor {
 			parsedResult = WikipediaResultParser.parseResultToRecentChangesQueryResult(result);
 			rcstart = parsedResult.getRcstart();
 			changes.addAll(parsedResult.getChanges());
+			logger.info("Currently queried amount of changes: " + changes.size());
 		}
+		logger.info("Extraction done. Total amount of extracted changes: " + changes.size());
 		return changes;
 	}
 

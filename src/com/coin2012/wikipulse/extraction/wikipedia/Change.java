@@ -1,7 +1,7 @@
 package com.coin2012.wikipulse.extraction.wikipedia;
 
 public class Change {
-	
+
 	private String timestamp;
 	private String title;
 

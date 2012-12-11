@@ -19,7 +19,7 @@ public abstract class TimestampGenerator {
 	}
 	
 	public static String generateTimestampFromTwoHoursAgo(){
-		final String DATE_PATTERN = "yyyyMMddHmmss";
+		final String DATE_PATTERN = "yyyyMMddHHmmss";
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -2);
 		return generateTimestampForDatePattern(DATE_PATTERN, cal.getTime());

@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.coin2012.wikipulse.extraction.wikipedia.RecentChangesRunnable;
+
 
 import spark.Request;
 import spark.Response;
@@ -119,10 +121,15 @@ public class Wikipulse implements SparkApplication {
 
 	private static void createInMemDb() {
 		try {
+			Class.forName("org.hsqldb.jdbcDriver");
 			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-			connection.createStatement().execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255))");
+			connection.createStatement().execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255),UNIQUE (timestamp, pageTitle))");
+			new Thread(new RecentChangesRunnable()).start();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			//TODO
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			System.out.println("jdbcDriver not found in classpath");
 			e.printStackTrace();
 		}
 		
