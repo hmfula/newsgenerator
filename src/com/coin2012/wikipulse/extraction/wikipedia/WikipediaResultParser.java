@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.restlet.resource.ClientResource;
+
+import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.extraction.utils.ResultParser;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.models.Page;
@@ -14,6 +17,7 @@ import com.coin2012.wikipulse.models.WikiEdit;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class WikipediaResultParser extends ResultParser {
@@ -104,8 +108,28 @@ public class WikipediaResultParser extends ResultParser {
 			pages.add(page);
 			if (page.getImages() != null) {
 				for (Page.Image image : page.getImages()) {
-					page.setUrl(image.getTitle());
+					// page.setUrl(image.getTitle());
 					// imageTitles.add(image.getTitle());
+					// TODO CLEAN UP!!!
+					ClientResource resource = new ClientResource("http://en.wikipedia.org/w/api.php");
+					resource.getReference().addQueryParameter("action", "query");
+					resource.getReference().addQueryParameter("titles", image.getTitle());
+					resource.getReference().addQueryParameter("prop", "imageinfo");
+					resource.getReference().addQueryParameter("iiprop", "url");
+					resource.getReference().addQueryParameter("format", "json");
+					String result2 = QueryUtils.executeQueryToResource(resource);
+
+					String url = "";
+					Set<Entry<String, JsonElement>> set = jsonParser.parse(result2).getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject().entrySet();
+					for (Entry<String, JsonElement> entry2 : set) {
+						JsonObject obj = entry2.getValue().getAsJsonObject();
+						JsonArray x = obj.get("imageinfo").getAsJsonArray();
+						JsonElement st	= x.get(0);
+								url =st.getAsJsonObject().get("url").getAsString();
+						break;
+					}
+					
+					page.setUrl(url);
 				}
 			}
 

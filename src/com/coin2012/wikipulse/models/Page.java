@@ -102,7 +102,7 @@ public class Page {
 	public void setUrl(String url) {
 		if(url != null){
 			
-			imageUrlList.add(BASE_URL+url);
+			imageUrlList.add(url);
 		}
 		
 	}
