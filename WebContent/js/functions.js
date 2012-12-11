@@ -3,6 +3,7 @@ var wp_service_url_current_events = wp_service_url + "/mostreadarticlesincategor
 var wp_service_url_get_articles_from_category = wp_service_url + "/mostreadarticlesincategory?category=";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
 var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
+var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
 
 $(document).ready(function() {
 	var dt = new GetDateTime();
@@ -15,10 +16,13 @@ $(document).ready(function() {
 		//alert(dt.formats.pretty.b);
     }, 30000);
 	
-	//load_current_Events();
-	$("#wait_nav").html('');
-	
-    $('.carousel').carousel();
+	load_recent_Changes(30);
+	var i = 1;
+	setInterval(function () {
+		//alert(i.toString());
+		load_recent_Changes(30);
+		i += 1;		
+    }, 20000);
 		
 });
 
@@ -63,20 +67,22 @@ function load_s(source) {
 }
 
 //load current events
-function load_current_Events(){
+function load_recent_Changes(minchanges){
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_url_current_events,
+	    url: wp_service_url_changes + minchanges.toString(),
 	    dataType: 'jsonp',
-	    jsonpCallback: 'callback',
+	    jsonpCallback: 'rc_callback',
 	    success: function (data) {
 	    	$("#wait_nav").html('');
-	    	data.sort(function(a,b){ return parseInt(b.yesterdaysRelevance*100) - parseInt(a.yesterdaysRelevance*100);});
+	    	$("#left_navigation ul").html('');
+	    	$("#left_navigation ul").append('<li class="nav-header">Recent Changes</li>');
 	    	$.each(data,function(i,page){
-	    		if (Number(page.yesterdaysRelevance) > 0.08 ) {
-	    			var append_str = '<li><a href="http://en.wikipedia.org/wiki/' +  page.title + '">' + page.title + '</a></li>';
-	      			$("#left_navigation ul").append(append_str);
-	    		}
+    			if(page.title.indexOf(":") < 0)
+    				{
+	    				var append_str = '<li><a href="http://' +  page.url + '">' + page.title + '&nbsp;(&nbsp;' + page.count + '&nbsp;edits)&nbsp;' +'</a></li>';
+		      			$("#left_navigation ul").append(append_str);	    				
+    				}	    			
 	    	});
 	    },
 	    jsonp: 'jsonp'
@@ -113,7 +119,7 @@ function load_images_for_news_item(page){
 	    	    img_slideshow += '<a class="left carousel-control" href="#myCarousel_'+ clean_pagetitle + '" data-slide="prev">&lsaquo;</a>';
 	    	    img_slideshow += '<a class="right carousel-control" href="#myCarousel_'+ clean_pagetitle + '" data-slide="next">&rsaquo;</a>';
 	    	    img_slideshow += '</div>';
-	    	    alert(img_slideshow);
+	    	    //alert(img_slideshow);
 	    	    try
 	    	    {
 		    	    $('#'+clean_pagetitle).append(img_slideshow);
@@ -124,7 +130,7 @@ function load_images_for_news_item(page){
 		    	    txt="There was an error on this page.\n\n";
 		    	    txt+="Error description: " + err.message + "\n\n";
 		    	    txt+="Click OK to continue.\n\n";
-		    	    alert(txt);
+		    	    //alert(txt);
 	    	    }
 	    	});
 	    },
@@ -165,7 +171,7 @@ function load_wikipulse_news(url_parameter){
 	    				append_str = append_str.replace(/page_title/g,page.title);
 	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
 	    				$("#news_1").html(append_str);
-	    				alert(append_str);
+	    				//alert(append_str);
 		    			counter += 1;
 		    			found = true;
 	    			}

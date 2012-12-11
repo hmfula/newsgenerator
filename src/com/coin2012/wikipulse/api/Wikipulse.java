@@ -55,7 +55,7 @@ public class Wikipulse implements SparkApplication {
 				} catch (Exception e) {
 					minChanges = 10;
 				}
-				return wikipulseService.getRecentChanges(minChanges);
+				return "rc_callback(" + wikipulseService.getRecentChanges(minChanges) + ")";
 			}
 		});
 
