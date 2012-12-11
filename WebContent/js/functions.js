@@ -1,4 +1,5 @@
-var wp_service_url = "http://localhost:4567";
+//var wp_service_url = "http://localhost:8080/Wikipulse";
+var wp_service_url = window.location.toString().substring(0, window.location.toString().lastIndexOf('/'));
 var wp_service_url_current_events = wp_service_url + "/mostreadarticlesincategory?category=Current_events";
 var wp_service_url_get_articles_from_category = wp_service_url + "/mostreadarticlesincategory?category=";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
@@ -6,6 +7,7 @@ var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
 var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
 
 $(document).ready(function() {
+	//alert(window.location.toString().substring(0, window.location.toString().lastIndexOf('/')));
 	var dt = new GetDateTime();
 	$("#date").text(dt.formats.pretty.b);
 	load_s('home.html');
@@ -16,11 +18,11 @@ $(document).ready(function() {
 		//alert(dt.formats.pretty.b);
     }, 30000);
 	
-	load_recent_Changes(30);
+	load_recent_Changes(10);
 	var i = 1;
 	setInterval(function () {
 		//alert(i.toString());
-		load_recent_Changes(30);
+		load_recent_Changes(10);
 		i += 1;		
     }, 20000);
 		
