@@ -9,6 +9,7 @@ import java.util.List;
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
 import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
+import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.SnippetPage;
 
@@ -101,6 +102,11 @@ public class Extractor implements Extractable {
 		        return (new Integer(s1.getCount()).compareTo(new Integer(s2.getCount()))) * -1;
 		    }
 		});
+	}
+
+	public void enhanceNewsWithImages(List<News> news) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

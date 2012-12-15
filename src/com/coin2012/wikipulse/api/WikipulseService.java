@@ -1,57 +1,142 @@
 package com.coin2012.wikipulse.api;
 
-
-
 /**
- * Defines the business contract of the Wikipulse application.
+ * Defines the interface for the logic that is offered through the REST routes
+ * in the WikipulseResource class.
  * 
- * @author harrison mfula
- * @author karsten packmohr
- * @since 10-11-2012
+ * 
  */
 public interface WikipulseService {
-	/**
-	 * Fetches news for a given category.
-	 * 
-	 * @param category
-	 *            of news
-	 * @return news for a given category
-	 */
-	public String getNewsForCategory(String category);
-	
-	/**
-	 * Fetches pages for a given category.
-	 * 
-	 * @param category
-	 *            of articles
-	 * @return pages for a given category
-	 */	
-	public String getMostReadTitlesForCategory(String category);
-	
-	/**
-	 * Searches for pages matching given search text
-	 * 
-	 * @param searchText used during search operation in Wikipedia API
-	 * @return page snippets (SnippetPage extends Page class) which contain matching <code>searchText<code>
-	 */
-	public String searchForPagesThatMatch(String searchText);
 
 	/**
-	 * Lists external pages referencing a given page
+	 * Return a list of news as string in JSON format.
 	 * 
-	 * @param url the source url 
-	 * @return pages which externally link to url
-	 * 
+	 * @param nprop
+	 *            - specifies additional content for the returned news sperated
+	 *            by |. img = news includes images
+	 *            relevance rating.
+	 * @return list of news as JSON string.
 	 */
-	public String searchForPagesReferencing(String url);
-	
-	/**
-	 * Returns a list of Pages that contain images found in a given page
-	 * @param pageTitle used to search the page for images
-	 * @return page (s) with images
-	 */
-	public String getPageWithImages(String pageTitle);
+	public String getNews(String nprop);
 
-	public String getRecentChanges(int minChanges);
+	/**
+	 * Returns a list of news for a given category as string in JSON format.
+	 * 
+	 * @param category
+	 *            - category of the returned news.
+	 * @param nprop
+	 *            - specifies additional content for the returned news sperated
+	 *            by |. img = news includes images
+	 * @return list of news as JSON string.
+	 */
+	public String getNewsForCategory(String category, String nprop);
+
+	/**
+	 * Returns a list of pages with changes in the last 2h as string in JSON
+	 * format.
+	 * 
+	 * @param minChanges
+	 *            - amount of changes necessary for a page to added to the
+	 *            return string. Default value is 10.
+	 * @return list of pages with recent changes as JSON string-
+	 */
+	public String getRecentChanges(String minChanges);
+
+	//
+	// /**
+	// * Fetches pages for a given category.
+	// *
+	// * @param category
+	// * of articles
+	// * @return pages for a given category
+	// */
+	// public String getMostReadTitlesForCategory(String category);
+	//
+	// /**
+	// * Searches for pages matching given search text
+	// *
+	// * @param searchText used during search operation in Wikipedia API
+	// * @return page snippets (SnippetPage extends Page class) which contain
+	// matching <code>searchText<code>
+	// */
+	// public String searchForPagesThatMatch(String searchText);
+	//
+	// /**
+	// * Lists external pages referencing a given page
+	// *
+	// * @param url the source url
+	// * @return pages which externally link to url
+	// *
+	// */
+	// public String searchForPagesReferencing(String url);
+	//
+	// /**
+	// * Returns a list of Pages that contain images found in a given page
+	// * @param pageTitle used to search the page for images
+	// * @return page (s) with images
+	// */
+	// public String getPageWithImages(String pageTitle);
+
+	// public String getMostReadTitlesForCategory(String category);
+	//
+	// /**
+	// * Searches for pages matching given search text
+	// *
+	// * @param searchText used during search operation in Wikipedia API
+	// * @return page snippets (SnippetPage extends Page class) which contain
+	// matching <code>searchText<code>
+	// */
+	// public String searchForPagesThatMatch(String searchText);
+	//
+	// /**
+	// * Lists external pages referencing a given page
+	// *
+	// * @param url the source url
+	// * @return pages which externally link to url
+	// *
+	// */
+	// public String searchForPagesReferencing(String url);
+	//
+	// /**
+	// * Returns a list of Pages that contain images found in a given page
+	// * @param pageTitle used to search the page for images
+	// * @return page (s) with images
+	// */
+	// public String getPageWithImages(String pageTitle);
+
+	//
+	// /**
+	// * Fetches pages for a given category.
+	// *
+	// * @param category
+	// * of articles
+	// * @return pages for a given category
+	// */
+	// public String getMostReadTitlesForCategory(String category);
+	//
+	// /**
+	// * Searches for pages matching given search text
+	// *
+	// * @param searchText used during search operation in Wikipedia API
+	// * @return page snippets (SnippetPage extends Page class) which contain
+	// matching <code>searchText<code>
+	// */
+	// public String searchForPagesThatMatch(String searchText);
+	//
+	// /**
+	// * Lists external pages referencing a given page
+	// *
+	// * @param url the source url
+	// * @return pages which externally link to url
+	// *
+	// */
+	// public String searchForPagesReferencing(String url);
+	//
+	// /**
+	// * Returns a list of Pages that contain images found in a given page
+	// * @param pageTitle used to search the page for images
+	// * @return page (s) with images
+	// */
+	// public String getPageWithImages(String pageTitle);
 
 }

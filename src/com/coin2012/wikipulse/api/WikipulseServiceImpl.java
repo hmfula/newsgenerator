@@ -1,62 +1,117 @@
 package com.coin2012.wikipulse.api;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.Extractor;
-import com.coin2012.wikipulse.identification.Identifiable;
-import com.coin2012.wikipulse.identification.Identifier;
+import com.coin2012.wikipulse.models.News;
 import com.google.gson.Gson;
 
 /**
- * WikiPulseService. Implementation based on the facade design pattern.
- * 
- * @author harrison mfula
- * @author karsten packmohr
- * @since  10-11-2012
+ * Implementation of the WikipulseService interface.
+ *
  */
 public class WikipulseServiceImpl implements WikipulseService {
 
-	@Override
-	public String getNewsForCategory(String category) {
-		Identifiable identifier = new Identifier();
-		String news = identifier.getNewsForCategory(category);
-		return news;
-	}
-	
-	@Override
-	public String getMostReadTitlesForCategory(String category){
-		Identifiable identifier = new Identifier();
-		String news = identifier.getMostReadTitlesForCategory(category);
-		return news;		
-	}
-	
-	@Override
-	public String searchForPagesThatMatch(String searchText){
-		Identifiable identifier = new Identifier();
-		String snippetPages = identifier.searchForPagesThatMatch(searchText);
-		return snippetPages;	
-	}
-	
-	@Override
-	public String searchForPagesReferencing(String url){
-		Identifiable identifier = new Identifier();
-		String pages = identifier.searchForPagesReferencing(url);
-		return pages;	
-	}
+	private Extractor extractor = new Extractor();
+	private Gson gson = new Gson();
+
+	// @Override
+	// public String getNewsForCategory(String category) {
+	// Identifiable identifier = new Identifier();
+	// String news = identifier.getNewsForCategory(category);
+	// return news;
+	// }
+	//
+	// @Override
+	// public String getMostReadTitlesForCategory(String category){
+	// Identifiable identifier = new Identifier();
+	// String news = identifier.getMostReadTitlesForCategory(category);
+	// return news;
+	// }
+	//
+	// @Override
+	// public String searchForPagesThatMatch(String searchText){
+	// Identifiable identifier = new Identifier();
+	// String snippetPages = identifier.searchForPagesThatMatch(searchText);
+	// return snippetPages;
+	// }
+	//
+	// @Override
+	// public String searchForPagesReferencing(String url){
+	// Identifiable identifier = new Identifier();
+	// String pages = identifier.searchForPagesReferencing(url);
+	// return pages;
+	// }
+	//
+	// @Override
+	// public String getPageWithImages(String pageTitle) {
+	// return new Identifier().getPageWithImages(pageTitle);
+	// }
 
 	@Override
-	public String getPageWithImages(String pageTitle) {
-		return new Identifier().getPageWithImages(pageTitle);
-	}
-
-	@Override
-	public String getRecentChanges(int minChanges) {
-		Gson gson = new Gson();
-		Extractor extractor = new Extractor();
-		List<AggregatedChanges> listOfAggregatedChanges = extractor.getRecentChanges(minChanges);
+	public String getRecentChanges(String minChanges) {
+		int minimumAmountOfChanges;
+		try {
+			minimumAmountOfChanges = Integer.valueOf(minChanges);
+		} catch (Exception e) {
+			minimumAmountOfChanges = 10;
+		}
+		List<AggregatedChanges> listOfAggregatedChanges = extractor.getRecentChanges(minimumAmountOfChanges);
 		String result = gson.toJson(listOfAggregatedChanges);
+
 		return result;
 	}
-}
 
+	@Override
+	public String getNews(String nprop) {
+		List<News> news = new ArrayList<News>();
+		// TODO news identification here
+		this.enhanceNewsWithProp(news, nprop);
+		String result = gson.toJson(news);
+
+		return result;
+	}
+
+	@Override
+	public String getNewsForCategory(String category, String nprop) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Enhances the news with additional info.
+	 * 
+	 * @param news
+	 *            - the news to be enhanced.
+	 * @param nprop
+	 *            - additional info separated by |. Currentyl only img is
+	 *            supported.
+	 */
+	private void enhanceNewsWithProp(List<News> news, String nprop) {
+		Map<String, Boolean> parsedNewsProp = this.parseNewsProp(nprop);
+		if (parsedNewsProp.get("img")) {
+			extractor.enhanceNewsWithImages(news);
+		}
+	}
+
+	/**
+	 * Checks for all allowed properties. Currently only img is supported.
+	 * 
+	 * @param nprop
+	 *            - list of given properties
+	 * @return A map of properties and a boolean which indicated if the
+	 *         properties where specified.
+	 */
+	private Map<String, Boolean> parseNewsProp(String nprop) {
+		String[] props = { "img" };
+		Map<String, Boolean> properties = new HashMap<String, Boolean>();
+		for (String prop : props) {
+			properties.put(prop, nprop.contains(prop));
+		}
+		return properties;
+	}
+}
