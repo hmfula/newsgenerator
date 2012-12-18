@@ -1,4 +1,4 @@
-package com.coin2012.wikipulse.extraction.wikipedia;
+package com.coin2012.wikipulse.extraction.utils.models;
 
 public class Change {
 

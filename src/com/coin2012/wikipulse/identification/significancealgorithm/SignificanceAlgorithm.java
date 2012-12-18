@@ -21,7 +21,7 @@ public class SignificanceAlgorithm implements NewsAlgorithm {
 	
 	@Override
 	public List<Page> findNews(String category) {
-		List<Page> titleList = extractor.getTitlesForCategory(category);
+		List<Page> titleList = extractor.getPagesForCategory(category);
 		List<NewsItem> newsItems = new LinkedList<NewsItem>();
 		List<Page> newsList = new LinkedList<Page>();
 		
@@ -41,7 +41,7 @@ public class SignificanceAlgorithm implements NewsAlgorithm {
 
 	@Override
 	public List<Page> findMostReadPages(String category) {
-		List<Page> pages = extractor.getTitlesForCategory(category);	
+		List<Page> pages = extractor.getPagesForCategory(category);	
 		return pages;
 	}
 

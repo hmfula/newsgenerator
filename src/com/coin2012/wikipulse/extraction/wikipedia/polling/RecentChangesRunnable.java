@@ -1,10 +1,12 @@
-package com.coin2012.wikipulse.extraction.wikipedia;
+package com.coin2012.wikipulse.extraction.wikipedia.polling;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
+import com.coin2012.wikipulse.extraction.utils.models.Change;
+import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
 
 public class RecentChangesRunnable implements Runnable {
 	Logger logger = Logger.getLogger("RecentChangesRunnable.class");

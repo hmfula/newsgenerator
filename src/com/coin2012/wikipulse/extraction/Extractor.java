@@ -11,7 +11,6 @@ import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
-import com.coin2012.wikipulse.models.SnippetPage;
 
 /**
  * Represents an Extractor component used to interact with Wikipedia API.
@@ -20,33 +19,6 @@ import com.coin2012.wikipulse.models.SnippetPage;
  * 
  */
 public class Extractor implements Extractable {
-
-	@Override
-	public List<Page> getTitlesForCategory(String category) {
-		List<Page> pages = WikipediaExtractor.getPagesForCategory(category);
-		WikipediaExtractor.updatePagesWithEdits(pages);
-		StatsGrokExtractor.updatePagesWithRelevance(pages);
-		return pages;
-	}
-
-	@Override
-	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
-		List<SnippetPage> pages = WikipediaExtractor.searchForPagesThatMatch(searchText);
-		return pages;
-
-	}
-
-	@Override
-	public List<Page> searchForPagesReferencing(String url) {
-		List<Page> pages = WikipediaExtractor.searchForPagesReferencing(url);
-		return pages;
-
-	}
-
-	@Override
-	public List<Page> getPageWithImages(String pageTitle) {
-		return WikipediaExtractor.getPageWithImages(pageTitle);
-	}
 
 	@Override
 	public List<AggregatedChanges> getRecentChanges(int minChanges) {
@@ -60,10 +32,46 @@ public class Extractor implements Extractable {
 		 */
 	}
 
-
-
+	@Override
+	public List<Page> getPagesForCategory(String category) {
+		List<Page> pages = WikipediaExtractor.getPagesForCategory(category);
+		return pages;
+	}
 	
+	@Override
+	public void enhancePagesWithEdits(List<Page> pages){
+		WikipediaExtractor.updatePagesWithEdits(pages);
+	}
+	
+	@Override
+	public void enhancePagesWithRelevance(List<Page> pages){
+		StatsGrokExtractor.updatePagesWithRelevance(pages);
+	}
+	
+	@Override
+	public void enhanceNewsWithImages(List<News> news) {
+		// TODO Auto-generated method stub
+		
+	}
 
+//	@Override
+//	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
+//		List<SnippetPage> pages = WikipediaExtractor.searchForPagesThatMatch(searchText);
+//		return pages;
+//
+//	}
+//
+//	@Override
+//	public List<Page> searchForPagesReferencing(String url) {
+//		List<Page> pages = WikipediaExtractor.searchForPagesReferencing(url);
+//		return pages;
+//
+//	}
+//
+//	@Override
+//	public List<Page> getPageWithImages(String pageTitle) {
+//		return WikipediaExtractor.getPageWithImages(pageTitle);
+//	}
 
 	/**
 	 * Counts the changes for each title and returns a list of AggregatedChanges
@@ -102,11 +110,6 @@ public class Extractor implements Extractable {
 		        return (new Integer(s1.getCount()).compareTo(new Integer(s2.getCount()))) * -1;
 		    }
 		});
-	}
-
-	public void enhanceNewsWithImages(List<News> news) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

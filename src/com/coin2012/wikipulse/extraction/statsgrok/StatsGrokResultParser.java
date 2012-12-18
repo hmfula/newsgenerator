@@ -15,33 +15,29 @@ public abstract class StatsGrokResultParser extends ResultParser {
 
 	public static float parseResultToRelevance(String result) {
 		JsonParser jsonParser = new JsonParser();
-		JsonObject dailyViews = jsonParser.parse(result).getAsJsonObject()
-				.get("daily_views").getAsJsonObject();
-		
+		JsonObject dailyViews = jsonParser.parse(result).getAsJsonObject().get("daily_views").getAsJsonObject();
+
 		float yesterdaysViews = dailyViews.get(generateTimestampForYesterday()).getAsFloat();
 		float totalViews = 0;
-		Set<Entry<String,JsonElement>> viewsSet = dailyViews.entrySet();
+		Set<Entry<String, JsonElement>> viewsSet = dailyViews.entrySet();
 		for (Entry<String, JsonElement> entry : viewsSet) {
 			totalViews = totalViews + entry.getValue().getAsFloat();
 		}
-		
-		float relevance_result = yesterdaysViews/totalViews;
+
+		float relevance_result = yesterdaysViews / totalViews;
 		return relevance_result;
 	}
-	
-	private static String generateTimestampForYesterday(){
+
+	private static String generateTimestampForYesterday() {
 		return genereateTimestampXDaysFromToday(-1);
 	}
-	
-	private static String genereateTimestampXDaysFromToday(int x){
+
+	private static String genereateTimestampXDaysFromToday(int x) {
 		String DATE_PATTERN = "yyyy-MM-dd";
-		SimpleDateFormat dateFormat=new SimpleDateFormat(DATE_PATTERN);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DATE, x);
 		return dateFormat.format(calendar.getTime());
 	}
-
-
-
 }

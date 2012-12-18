@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import com.coin2012.wikipulse.extraction.wikipedia.RecentChangesRunnable;
+import com.coin2012.wikipulse.extraction.wikipedia.polling.RecentChangesRunnable;
 
 import spark.Request;
 import spark.Response;

@@ -27,7 +27,7 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	@Override
 	public List<Page> findNews(String category) {
 		
-		List<Page> edits = extractor.getTitlesForCategory(category);
+		List<Page> edits = extractor.getPagesForCategory(category);
 		
 //		for (WikiEdit edit : edits) {
 //			NewsItem tmp = new NewsItem();
@@ -42,7 +42,7 @@ public class DummyAlgorithm implements NewsAlgorithm {
 	
 	@Override
 	public List<Page> findMostReadPages(String category) {
-		List<Page> pages = extractor.getTitlesForCategory(category);	
+		List<Page> pages = extractor.getPagesForCategory(category);	
 		return pages;
 	}
 
