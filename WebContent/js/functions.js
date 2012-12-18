@@ -1,13 +1,11 @@
 //var wp_service_url = "http://localhost:8080/Wikipulse";
 var wp_service_url = window.location.toString().substring(0, window.location.toString().lastIndexOf('/'));
-var wp_service_url_current_events = wp_service_url + "/mostreadarticlesincategory?category=Current_events";
 var wp_service_url_get_articles_from_category = wp_service_url + "/mostreadarticlesincategory?category=";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
 var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
 var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
 
 $(document).ready(function() {
-	//alert(window.location.toString().substring(0, window.location.toString().lastIndexOf('/')));
 	var dt = new GetDateTime();
 	$("#date").text(dt.formats.pretty.b);
 	load_s('home.html');
@@ -15,17 +13,14 @@ $(document).ready(function() {
 	setInterval(function () {
 		var dt = new GetDateTime();
 		$("#date").text(dt.formats.pretty.b);
-		//alert(dt.formats.pretty.b);
     }, 30000);
 	
 	load_recent_Changes(10);
 	var i = 1;
 	setInterval(function () {
-		//alert(i.toString());
 		load_recent_Changes(10);
 		i += 1;		
-    }, 20000);
-		
+    }, 20000);		
 });
 
 // catch click event coming from TOP (Home) and BOTTOM navigation (Home AboutUs,ContactUs)
@@ -48,8 +43,7 @@ $('.nav_link').click(function(){
 $('.search-query').keyup(function (e) {
 	e.preventDefault();
     if (e.keyCode == 13) {
-    	//var value = $(this).val();
-    	//load_s('search.html?content=' + value);
+    	
     }    
 });
 
@@ -59,7 +53,6 @@ $('#search_form').submit(function (e) {
     var value = $('#search_input').val();
     load_s('search.html?content=' + value);
 });
-
 
 // load desired document into main_div
 function load_s(source) {
@@ -73,8 +66,7 @@ function load_recent_Changes(minchanges){
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_changes + minchanges.toString(),
-	    dataType: 'jsonp',
-	    jsonpCallback: 'rc_callback',
+	    dataType: 'json',
 	    success: function (data) {
 	    	$("#wait_nav").html('');
 	    	$("#left_navigation ul").html('');
@@ -86,8 +78,7 @@ function load_recent_Changes(minchanges){
 		      			$("#left_navigation ul").append(append_str);	    				
     				}	    			
 	    	});
-	    },
-	    jsonp: 'jsonp'
+	    }
 	});	
 }
 
@@ -96,8 +87,7 @@ function load_images_for_news_item(page){
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_fetch_images + page,
-	    dataType: 'jsonp',
-	    jsonpCallback: 'pic_callback',
+	    dataType: 'json',
 	    success: function (data) {
 	    	$.each(data,function(i,page){
 	    		var str = page.imageUrlList;
@@ -114,18 +104,15 @@ function load_images_for_news_item(page){
 	    				img_slideshow += '<div class="item">';
 	    			} 
 	    			img_slideshow += '<img src="'+ img_list[j] +'" alt="">';
-                    //<div class="carousel-caption"></div>
 	    			img_slideshow += '</div>';
 	    	    };   		
 	    	    img_slideshow += '</div>';
 	    	    img_slideshow += '<a class="left carousel-control" href="#myCarousel_'+ clean_pagetitle + '" data-slide="prev">&lsaquo;</a>';
 	    	    img_slideshow += '<a class="right carousel-control" href="#myCarousel_'+ clean_pagetitle + '" data-slide="next">&rsaquo;</a>';
 	    	    img_slideshow += '</div>';
-	    	    //alert(img_slideshow);
 	    	    try
 	    	    {
 		    	    $('#'+clean_pagetitle).append(img_slideshow);
-		    	    //alert($('#'+clean_pagetitle).val());
 	    	    }
 	    	  catch(err)
 	    	    {
@@ -135,8 +122,7 @@ function load_images_for_news_item(page){
 		    	    //alert(txt);
 	    	    }
 	    	});
-	    },
-    jsonp: 'jsonp'	
+	    }
 	});	
 }
 
@@ -152,8 +138,7 @@ function load_wikipulse_news(url_parameter){
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_get_articles_from_category + url_parameter,
-	    dataType: 'jsonp',
-	    jsonpCallback: 'callback',
+	    dataType: 'json',
 	    success: function (data) {
 	    	$("#wait").html('');
 	    	data.sort(function(a,b){ return parseInt(b.yesterdaysRelevance*100) - parseInt(a.yesterdaysRelevance*100);});
@@ -167,67 +152,40 @@ function load_wikipulse_news(url_parameter){
 	    			load_images_for_news_item(page.title);
 	    			clean_pagetitle = page.title.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
 	    			found = false;
+	    			append_str = (counter == 0 ) ? news_template_big : news_template_small;
+	    			append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
+    				append_str = append_str.replace(/page_title/g,page.title);
+    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
+    				
 	    			if(counter == 0 && (found == false)){
-	    				append_str = news_template_big;
-	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
-	    				append_str = append_str.replace(/page_title/g,page.title);
-	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
 	    				$("#news_1").html(append_str);
-	    				//alert(append_str);
 		    			counter += 1;
 		    			found = true;
 	    			}
 	    			if(counter==1 && (found == false)){						
-	    				append_str = news_template_small;
-	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
-	    				append_str = append_str.replace(/page_title/g,page.title);
-	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
 	    				$("#news_2").html(append_str);
 		    			counter += 1;
 		    			found = true;
 	    			}
 	    			if(counter==2 && (found == false)){
-	    				append_str = news_template_small;
-	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
-	    				append_str = append_str.replace(/page_title/g,page.title);
-	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
 	    				$("#news_3").html(append_str);
 		    			counter += 1;
 		    			found = true;
 	    			}
 	    			if(counter>2 && (found == false) && (subcounter==0)){
-	    				news_rows += '<div class="row-fluid">'; // only for first news item in row
-	    				news_rows += '<div class="span3">';
-	    				append_str = news_template_small;
-	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
-	    				append_str = append_str.replace(/page_title/g,page.title);
-	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
-	    				news_rows += append_str +'</div>';
+	    				news_rows += '<div class="row-fluid"><div class="span3">' + append_str +'</div>'; // only for first news item in row
 	    				subcounter += 1;
 		    			counter += 1;
 		    			found = true;
     				}
 	    			if(counter>2 && (found == false) && (subcounter==1)){
-	    				//news_rows += '<div class="row-fluid">'; // only for first news item in row
-	    				news_rows += '<div class="span3">';
-	    				append_str = news_template_small;
-	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
-	    				append_str = append_str.replace(/page_title/g,page.title);
-	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
-	    				news_rows += append_str +'</div>';
+	    				news_rows += '<div class="span3">' + append_str +'</div>';
 	    				subcounter += 1;
 		    			counter += 1;
 		    			found = true;
     				}	
 	    			if(counter>2 && (found == false) && (subcounter==2)){
-	    				//news_rows += '<div class="row-fluid">'; // only for first news item in row
-	    				news_rows += '<div class="span3">';
-	    				append_str = news_template_small;
-	    				append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+page.title);
-	    				append_str = append_str.replace(/page_title/g,page.title);
-	    				append_str = append_str.replace(/clean_pagetitle/g,clean_pagetitle);
-	    				news_rows += append_str +'</div>';
-	    				news_rows += '</div>'; // only last news item in row
+	    				news_rows += '<div class="span3">' + append_str +'</div></div>';
 	    				subcounter = 0; // only 3rd news item
 		    			counter += 1;
 		    			found = true;
@@ -238,11 +196,9 @@ function load_wikipulse_news(url_parameter){
 	    		news_rows += '</div>';	    		
 	    	}
 	    	$("#row2").append(news_rows);
-	    },
-	    jsonp: 'jsonp'
+	    }
 	});
 }
-
 
 //search functionality on wikipulse
 function search_wikipulse_service(){
@@ -251,8 +207,7 @@ function search_wikipulse_service(){
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_free_text_search + search_input,
-	    dataType: 'jsonp',
-	    jsonpCallback: 'callback',
+	    dataType: 'json',
 	    success: function (data) {
 	    	$.each(data,function(i,page_snippet){
     			var append_str = '<div class="row-fluid"><div class="span6 offset3">';
@@ -262,8 +217,7 @@ function search_wikipulse_service(){
       			append_str += '</div></div></div><hr>';
       			$("#wp_service_search_results").append(append_str);
 	    	});
-	    },
-	    jsonp: 'jsonp'
+	    }
 	});
 }
 
