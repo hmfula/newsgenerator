@@ -1,7 +1,8 @@
-package com.coin2012.wikipulse.extraction.wikipedia;
+package com.coin2012.wikipulse.extraction.utils.models;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class RecentChangesQueryResult {
 	

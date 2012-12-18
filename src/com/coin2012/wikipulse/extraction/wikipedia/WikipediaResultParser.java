@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.restlet.resource.ClientResource;
-
-import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.extraction.utils.ResultParser;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
+import com.coin2012.wikipulse.extraction.utils.models.Change;
+import com.coin2012.wikipulse.extraction.utils.models.RecentChangesQueryResult;
 import com.coin2012.wikipulse.models.Page;
-import com.coin2012.wikipulse.models.SnippetPage;
 import com.coin2012.wikipulse.models.WikiEdit;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -22,14 +20,15 @@ import com.google.gson.JsonParser;
 
 public class WikipediaResultParser extends ResultParser {
 
+	private static final Gson gson = createConfiguredGson();
+	private static final JsonParser jsonParser = new JsonParser();
+
 	public static List<WikiEdit> parseResultToEdits(String result, String pageId) {
-		JsonParser jsonParser = new JsonParser();
 		JsonArray categorymembers = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject()
 				.get(pageId).getAsJsonObject().getAsJsonArray("revisions");
 
 		List<WikiEdit> edits = new LinkedList<WikiEdit>();
 		if (categorymembers != null) {
-			Gson gson = createConfiguredGson();
 			for (JsonElement jsonElement : categorymembers) {
 				WikiEdit edit = gson.fromJson(jsonElement, WikiEdit.class);
 				// edit.setContent(jsonElement.getAsJsonObject().get("*").getAsString());
@@ -40,11 +39,9 @@ public class WikipediaResultParser extends ResultParser {
 		return edits;
 	}
 
-	public static List<Page> parseResultToTitles(String result) {
-		JsonParser jsonParser = new JsonParser();
+	public static List<Page> parseResultToPages(String result) {
 		JsonArray categorymembers = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("categorymembers");
 
-		Gson gson = createConfiguredGson();
 		List<Page> titles = new LinkedList<Page>();
 		for (JsonElement jsonElement : categorymembers) {
 			Page title = gson.fromJson(jsonElement, Page.class);
@@ -54,87 +51,66 @@ public class WikipediaResultParser extends ResultParser {
 		return titles;
 	}
 
-	/**
-	 * TODO refactor this to create universal parser
-	 * 
-	 * @param result
-	 * @return list of page snippets
-	 */
-	public static List<SnippetPage> parseResultToPageSnippets(String result) {
-		JsonParser jsonParser = new JsonParser();
-		JsonArray matchingSnnipePageArray = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("search");
+//	/**
+//	 * TODO refactor this to create universal parser
+//	 * 
+//	 * @param result
+//	 * @return list of page snippets
+//	 */
+//	public static List<SnippetPage> parseResultToPageSnippets(String result) {
+//		JsonArray matchingSnnipePageArray = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("search");
+//
+//		List<SnippetPage> pages = new LinkedList<SnippetPage>();
+//		for (JsonElement jsonElement : matchingSnnipePageArray) {
+//			SnippetPage page = gson.fromJson(jsonElement, SnippetPage.class);
+//			page.setPageUrl(page.getTitle());
+//			pages.add(page);
+//		}
+//
+//		return pages;
+//	}
+//
+//	// TODO refactor this to create universal parser
+//
+//	public static List<Page> parseResultToMatchingPages(String result) {
+//		JsonArray matchingPageArray = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("exturlusage");
+//
+//		List<Page> pages = new LinkedList<Page>();
+//		for (JsonElement jsonElement : matchingPageArray) {
+//			Page page = gson.fromJson(jsonElement, Page.class);
+//			pages.add(page);
+//		}
+//
+//		return pages;
+//	}
 
-		Gson gson = createConfiguredGson();
-		List<SnippetPage> pages = new LinkedList<SnippetPage>();
-		for (JsonElement jsonElement : matchingSnnipePageArray) {
-			SnippetPage page = gson.fromJson(jsonElement, SnippetPage.class);
-			page.setPageUrl(page.getTitle());
-			pages.add(page);
-		}
-
-		return pages;
-	}
-
-	// TODO refactor this to create universal parser
-
-	public static List<Page> parseResultToMatchingPages(String result) {
-		JsonParser jsonParser = new JsonParser();
-		JsonArray matchingPageArray = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("exturlusage");
-
-		Gson gson = createConfiguredGson();
-		List<Page> pages = new LinkedList<Page>();
-		for (JsonElement jsonElement : matchingPageArray) {
-			Page page = gson.fromJson(jsonElement, Page.class);
-			pages.add(page);
-		}
-
-		return pages;
-	}
-
-	// TODO refactor to remove duplicate code
-
-	public static List<Page> parseResultPages(String result) {
-		List<Page> pages = new ArrayList<Page>();
-		Page page = null;
-		Gson gson = new Gson();
-		JsonParser jsonParser = new JsonParser();
+	public static List<String> parseResultToImageFileNames(String result) {
+		List<String> imageFileNames = new ArrayList<String>();
 		Set<Entry<String, JsonElement>> pageEntryMap = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
 				.getAsJsonObject().entrySet();
 		for (Entry<String, JsonElement> entry : pageEntryMap) {
-			// System.out.println("key (page id):" + entry.getKey());
-			// System.out.println("value: " + entry.getValue());
-			page = gson.fromJson(entry.getValue(), Page.class);
-
-			pages.add(page);
-			if (page.getImages() != null) {
-				for (Page.Image image : page.getImages()) {
-					// page.setUrl(image.getTitle());
-					// imageTitles.add(image.getTitle());
-					// TODO CLEAN UP!!!
-					ClientResource resource = new ClientResource("http://en.wikipedia.org/w/api.php");
-					resource.getReference().addQueryParameter("action", "query");
-					resource.getReference().addQueryParameter("titles", image.getTitle());
-					resource.getReference().addQueryParameter("prop", "imageinfo");
-					resource.getReference().addQueryParameter("iiprop", "url");
-					resource.getReference().addQueryParameter("format", "json");
-					String result2 = QueryUtils.executeQueryToResource(resource);
-
-					String url = "";
-					Set<Entry<String, JsonElement>> set = jsonParser.parse(result2).getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject().entrySet();
-					for (Entry<String, JsonElement> entry2 : set) {
-						JsonObject obj = entry2.getValue().getAsJsonObject();
-						JsonArray x = obj.get("imageinfo").getAsJsonArray();
-						JsonElement st	= x.get(0);
-								url =st.getAsJsonObject().get("url").getAsString();
-						break;
-					}
-					
-					page.setUrl(url);
-				}
+			JsonArray jsonArray = entry.getValue().getAsJsonObject().getAsJsonArray("images");
+			for (JsonElement jsonElement : jsonArray) {
+				String imageFileName = jsonElement.getAsJsonObject().get("titel").getAsString();
+				imageFileNames.add(imageFileName);
 			}
+		}
+		return imageFileNames;
+	}
+
+	public static List<String> parseResultToImageURLs(String result) {
+		List<String> imageUrls = new ArrayList<String>();
+		Set<Entry<String, JsonElement>> set = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
+				.getAsJsonObject().entrySet();
+		for (Entry<String, JsonElement> entry : set) {
+			JsonObject page = entry.getValue().getAsJsonObject();
+			JsonArray imageinfo = page.get("imageinfo").getAsJsonArray();
+			JsonElement firstElement = imageinfo.get(0);
+			String url = firstElement.getAsJsonObject().get("url").getAsString();
+			imageUrls.add(url);
 
 		}
-		return pages;
+		return imageUrls;
 	}
 
 	public static RecentChangesQueryResult parseResultToRecentChangesQueryResult(String result) {
