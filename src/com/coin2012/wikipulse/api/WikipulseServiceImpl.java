@@ -1,12 +1,13 @@
 package com.coin2012.wikipulse.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.identification.Identifiable;
+import com.coin2012.wikipulse.identification.Identifier;
 import com.coin2012.wikipulse.models.News;
 import com.google.gson.Gson;
 
@@ -65,21 +66,20 @@ public class WikipulseServiceImpl implements WikipulseService {
 
 		return result;
 	}
-
+	
 	@Override
 	public String getNews(String nprop) {
-		List<News> news = new ArrayList<News>();
-		// TODO news identification here
-		this.enhanceNewsWithProp(news, nprop);
-		String result = gson.toJson(news);
-
-		return result;
+		// TODO Auto-generated method stub
+		return "";
 	}
 
 	@Override
 	public String getNewsForCategory(String category, String nprop) {
-		// TODO Auto-generated method stub
-		return null;
+		Identifiable identifier = new Identifier();
+		List<News> news = identifier.getNewsForCategory(category);
+		enhanceNewsWithProp(news, nprop);
+		
+		return gson.toJson(news);
 	}
 
 	/**
@@ -114,4 +114,6 @@ public class WikipulseServiceImpl implements WikipulseService {
 		}
 		return properties;
 	}
+
+
 }
