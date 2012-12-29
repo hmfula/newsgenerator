@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
-import com.coin2012.wikipulse.identification.dummyalgorithm.DummyAlgorithm;
-import com.coin2012.wikipulse.identification.significancealgorithm.SignificanceAlgorithm;
-import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.News;
 import com.google.gson.Gson;
 
 public class Identifier implements Identifiable {
@@ -16,56 +14,13 @@ public class Identifier implements Identifiable {
 	@Override
 	public String getNewsForCategory(String category) {
 		
-		NewsAlgorithm dummy = createSignificanceAlgorithm();
+		NewsAlgorithm algorithm = new NewsAlgorithmImpl(extractor);
 		
-		List<Page> edits = dummy.findNews(category);
+		List<News> edits = algorithm.findNews(category);
 		Gson gson = new Gson();
 		
 		
 		return gson.toJson(edits);
-	}
-
-	
-	
-	@Override
-	public String getMostReadTitlesForCategory(String category) {
-		
-		NewsAlgorithm dummy = createDummyAlgorithm();		
-		List<Page> pages = dummy.findMostReadPages(category);
-		Gson gson = new Gson();		
-		return gson.toJson(pages);
-	}
-	
-	
-	@Override
-	public String searchForPagesThatMatch(String searchText) {
-		
-		Gson gson = new Gson();		
-		return gson.toJson(createDummyAlgorithm().searchForPagesThatMatch(searchText));
-	}
-	
-	@Override
-	public String  searchForPagesReferencing(String url) {
-	
-		Gson gson = new Gson();		
-		return gson.toJson(createDummyAlgorithm().searchForPagesReferencing(url));
-		
-	}
-	
-	private NewsAlgorithm createDummyAlgorithm() {
-		NewsAlgorithm dummy = new DummyAlgorithm(extractor);
-		return dummy;
-	}
-	
-	private NewsAlgorithm createSignificanceAlgorithm() {
-		NewsAlgorithm alg = new SignificanceAlgorithm(extractor);
-		return alg;
-	}
-
-	@Override
-	public String getPageWithImages(String pageTitle) {
-		Gson gson = new Gson();		
-		return gson.toJson(createDummyAlgorithm().getPageWithImages(pageTitle));
 	}
 
 }

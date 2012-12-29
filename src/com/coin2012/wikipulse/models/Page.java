@@ -9,12 +9,20 @@ public class Page {
 	private static final String BASE_URL = "http://en.wikipedia.org/wiki/";
 	private String pageid;
 	private float yesterdaysRelevance;
+	private int authorgraphRank;
 	private String ns;
 	private String title;
 	private String timestamp;
+	private String category;
 	private List<WikiEdit> edits;
 	private List<Image> images;
-	List<String> imageUrlList = new ArrayList<String>();
+	private List<String> imageUrlList = new ArrayList<String>();
+	
+	public Page() {
+		category = "";
+	}
+	
+	
 	public String getPageId() {
 		return pageid;
 	}
@@ -55,7 +63,11 @@ public class Page {
 	}
 
 	public List<WikiEdit> getEdits() {
-		return edits;
+		if(edits == null){
+			return Collections.emptyList();	
+		} else {
+			return edits;
+		}
 	}
 
 	public void setEdits(List<WikiEdit> edits) {
@@ -112,6 +124,22 @@ public class Page {
 		}
 		return imageUrlList;
 		
+	}
+
+	public int getAuthorgraphRank() {
+		return authorgraphRank;
+	}
+
+	public void setAuthorgraphRank(int authorgraphRank) {
+		this.authorgraphRank = authorgraphRank;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }
