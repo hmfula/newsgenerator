@@ -5,6 +5,8 @@ import static spark.Spark.get;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.wikipedia.polling.RecentChangesRunnable;
@@ -114,6 +116,33 @@ public class WikipulseResource implements SparkApplication {
 				return "success";
 			}
 		});
+		
+		/**
+		 * This route is used only for testing.
+		 * Currently hard coded to show only top 10 Wikipedians
+		 * To be deleted after integration  with identification algorithm.
+		 */
+		get(new Route("/listeditors") {
+			@Override
+			public Object handle(Request request, Response response) {
+				WikipulseService wikipulseService = new WikipulseServiceImpl();
+				response.type("application/json; charset=utf-8");
+//				String editorNames = request.queryParams("ususers");
+				List <String> editorNames = new ArrayList<String>();
+				editorNames.add("Koavf");
+				editorNames.add("Rich Farmbrough");
+				editorNames.add("Waacstats");
+				editorNames.add("Bearcat");
+				editorNames.add("Rjwilmsi");
+				editorNames.add("Woohookitty");
+				editorNames.add("Hmains");
+				editorNames.add("Ser Amantio di Nicolao");
+				editorNames.add("Dr. Blofeld");
+				editorNames.add("Tassedethe");
+				
+				return wikipulseService.getEditors(editorNames);
+			}
+		});
 
 		// get(new Route("/MostReadArticlesInCategory") {
 		// @Override
@@ -201,4 +230,6 @@ public class WikipulseResource implements SparkApplication {
 		}
 
 	}
+	
+	
 }

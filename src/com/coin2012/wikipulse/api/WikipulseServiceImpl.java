@@ -128,5 +128,10 @@ public class WikipulseServiceImpl implements WikipulseService {
 		return properties;
 	}
 
+	@Override
+	public String getEditors(List<String> editorNames) {
+		String result = gson.toJson(extractor.getWikipediaEditors(editorNames));
+		return result;
 
+	}
 }

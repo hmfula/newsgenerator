@@ -123,5 +123,8 @@ public class Extractor implements Extractable {
 		});
 	}
 
-
+	public List<Editor> getWikipediaEditors(List<String> editorsNames) {
+		List<Editor> editors = WikipediaExtractor.getWikipediaEditors(editorsNames);
+	return editors;
+}
 }

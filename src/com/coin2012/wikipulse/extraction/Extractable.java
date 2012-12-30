@@ -25,6 +25,8 @@ public interface Extractable {
 	public void saveUserInteraction(String News);
 	public List<News_Counter> getMostReadNews();
 	
+	public List<Editor> getWikipediaEditors(List<String> editorsNames);
+	
 //	/**
 //	 * Searches for pages containing search text
 //	 * @param searchText

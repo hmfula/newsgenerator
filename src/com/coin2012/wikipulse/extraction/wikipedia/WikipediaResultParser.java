@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.coin2012.wikipulse.extraction.Editor;
 import com.coin2012.wikipulse.extraction.utils.ResultParser;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
@@ -128,5 +129,17 @@ public class WikipediaResultParser extends ResultParser {
 			parsedResult.setRcstart(TimestampGenerator.generateTimestampFromWikipediaTimestamp(rcstart));
 		}
 		return parsedResult;
+	}
+
+	public static List<Editor> parseResultToMatchingEditors(String result) {
+		List <Editor> editors = new ArrayList <Editor>();
+		JsonParser jsonParser = new JsonParser();
+		Gson gson = createConfiguredGson();
+		JsonArray editorJsonArray = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().getAsJsonArray("users");
+		for (JsonElement jsonElement : editorJsonArray) {
+			Editor editor = gson.fromJson(jsonElement, Editor.class);
+			editors.add(editor);
+		}
+		return editors;
 	}
 }

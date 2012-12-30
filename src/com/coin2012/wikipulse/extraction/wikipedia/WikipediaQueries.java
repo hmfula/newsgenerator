@@ -109,4 +109,20 @@ public abstract class WikipediaQueries {
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
 	}
+
+	/**
+ * http://en.wikipedia.org/w/api.php?action=query&list=users&ususers=Koavf&usprop=editcount
+ * @param editors
+ * @return
+ */
+	public static ClientResource buildQueryToFetchWikipediaEditors(String editors) {
+		ClientResource resource = new ClientResource(wikipediaApi);
+		resource.getReference().addQueryParameter("action", "query");
+		resource.getReference().addQueryParameter("list", "users");
+		resource.getReference().addQueryParameter("ususers", editors);
+		resource.getReference().addQueryParameter("usprop", "blockinfo|groups|editcount|registration");
+//		resource.getReference().addQueryParameter("limit", "500");
+		resource.getReference().addQueryParameter("format", "json");
+		return resource;
+	}
 }

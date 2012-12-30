@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.restlet.resource.ClientResource;
 
+import com.coin2012.wikipulse.extraction.Editor;
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
 import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
@@ -98,6 +99,21 @@ public class WikipediaExtractor {
 		}
 		logger.info("Extraction done. Total amount of extracted changes: " + changes.size());
 		return changes;
+	}
+
+	public static List<Editor> getWikipediaEditors(List <String> editorNamesList) {
+		String editorNames = null;
+		if(!editorNamesList.isEmpty()){
+			editorNames = editorNamesList.remove(0);
+			
+			for (String currentEditorName : editorNamesList) {
+				editorNames = editorNames + "|" + currentEditorName;
+			}
+		}
+		ClientResource resource = WikipediaQueries.buildQueryToFetchWikipediaEditors(editorNames);
+		String result = QueryUtils.executeQueryToResource(resource);
+		List<Editor> editors = WikipediaResultParser.parseResultToMatchingEditors(result);
+		return editors;
 	}
 
 //	public static List<SnippetPage> searchForPagesThatMatch(String searchText) {

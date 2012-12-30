@@ -1,5 +1,7 @@
 package com.coin2012.wikipulse.api;
 
+import java.util.List;
+
 /**
  * Defines the interface for the logic that is offered through the REST routes
  * in the WikipulseResource class.
@@ -48,7 +50,15 @@ public interface WikipulseService {
 	 * @return list of top10 news  as JSON string-
 	 */
 	public String getMostReadNews();
+	
 	public void saveUserInteraction(String News);
+
+	/**
+	 * This method returns edit information of Wikipedians.
+	 * @param editorNames a list of Wikipedians user names which you would like to query
+	 * @return JSON string of editor information
+	 */
+	public String getEditors(List<String> editorNames);
 
 	//
 	// /**
