@@ -104,12 +104,14 @@ public class WikipulseResource implements SparkApplication {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
 				String news = request.queryParams("news");
-				wikipulseService.saveUserInteraction(news);
+				//if(news.matches("^[a-zA-Z_]+$")){
+					wikipulseService.saveUserInteraction(news);
+				//}
 				String redirect_url = request.queryParams("redirect_url");
 				if (redirect_url != ""){
 					response.redirect(redirect_url);	
 				}				
-				return "";
+				return "success";
 			}
 		});
 
