@@ -88,6 +88,30 @@ public class WikipulseResource implements SparkApplication {
 				return wikipulseService.getRecentChanges(minChanges);
 			}
 		});
+		
+		get(new Route("/top_user_news") {
+			@Override
+			public Object handle(Request request, Response response) {
+				WikipulseService wikipulseService = new WikipulseServiceImpl();
+				response.type("application/json; charset=utf-8");
+				return wikipulseService.getMostReadNews();
+			}
+		});
+		
+		get(new Route("/user_interaction") {
+			@Override
+			public Object handle(Request request, Response response) {
+				WikipulseService wikipulseService = new WikipulseServiceImpl();
+				response.type("application/json; charset=utf-8");
+				String news = request.queryParams("news");
+				wikipulseService.saveUserInteraction(news);
+				String redirect_url = request.queryParams("redirect_url");
+				if (redirect_url != ""){
+					response.redirect(redirect_url);	
+				}				
+				return "";
+			}
+		});
 
 		// get(new Route("/MostReadArticlesInCategory") {
 		// @Override
@@ -165,6 +189,8 @@ public class WikipulseResource implements SparkApplication {
 			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
 			connection.createStatement()
 					.execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255),UNIQUE (timestamp, pageTitle))");
+			connection.createStatement()
+					.execute("CREATE TABLE mostreadnews (article varchar(255), numberofclicks integer,UNIQUE (article))");
 			new Thread(new RecentChangesRunnable()).start();
 		} catch (SQLException e) {
 			logger.severe("Creation of in memory db table changes failed.");

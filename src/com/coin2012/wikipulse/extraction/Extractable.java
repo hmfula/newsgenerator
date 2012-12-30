@@ -22,6 +22,9 @@ public interface Extractable {
 
 	public void enhancePagesWithRelevance(List<Page> pages);
 	
+	public void saveUserInteraction(String News);
+	public List<News_Counter> getMostReadNews();
+	
 //	/**
 //	 * Searches for pages containing search text
 //	 * @param searchText

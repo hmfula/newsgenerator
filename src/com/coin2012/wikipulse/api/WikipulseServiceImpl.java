@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.News_Counter;
 import com.coin2012.wikipulse.identification.Identifiable;
 import com.coin2012.wikipulse.identification.Identifier;
 import com.coin2012.wikipulse.models.News;
@@ -82,6 +83,18 @@ public class WikipulseServiceImpl implements WikipulseService {
 		return gson.toJson(news);
 	}
 
+	@Override
+	public String getMostReadNews() {
+		List<News_Counter> listOfMostReadNews = extractor.getMostReadNews();
+		String result = gson.toJson(listOfMostReadNews);
+		return result;
+	}
+	
+	@Override
+	public void saveUserInteraction(String News) {
+		extractor.saveUserInteraction(News);
+	}	
+	
 	/**
 	 * Enhances the news with additional info.
 	 * 

@@ -1,9 +1,10 @@
 //var wp_service_url = "http://localhost:8080/Wikipulse";
 var wp_service_url = window.location.toString().substring(0, window.location.toString().lastIndexOf('/'));
-var wp_service_url_get_articles_from_category = wp_service_url + "/mostreadarticlesincategory?category=";
+var wp_service_url_get_articles_from_category = wp_service_url + "/News/";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
 var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
 var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
+var wp_service_url_MostReadArticles = wp_service_url + "/MostReadArticles?number=10";
 
 $(document).ready(function() {
 	var dt = new GetDateTime();
@@ -16,6 +17,7 @@ $(document).ready(function() {
     }, 30000);
 	
 	load_recent_Changes(10);
+	get_Most_Read_Articles();
 	var i = 1;
 	setInterval(function () {
 		load_recent_Changes(10);
@@ -68,14 +70,14 @@ function load_recent_Changes(minchanges){
 	    url: wp_service_url_changes + minchanges.toString(),
 	    dataType: 'json',
 	    success: function (data) {
-	    	$("#wait_nav").html('');
-	    	$("#left_navigation ul").html('');
-	    	$("#left_navigation ul").append('<li class="nav-header">Recent Changes</li>');
+	    	$("#wait_recent_changes").html('');
+	    	$("#recent_changes ul").html('');
+	    	$("#recent_changes ul").append('<li class="nav-header">Recent Changes</li>');
 	    	$.each(data,function(i,page){
     			if(page.title.indexOf(":") < 0)
     				{
 	    				var append_str = '<li><a href="http://' +  page.url + '">' + page.title + '&nbsp;(&nbsp;' + page.count + '&nbsp;edits)&nbsp;' +'</a></li>';
-		      			$("#left_navigation ul").append(append_str);	    				
+		      			$("#recent_changes ul").append(append_str);	    				
     				}	    			
 	    	});
 	    }
@@ -219,6 +221,30 @@ function search_wikipulse_service(){
 	    	});
 	    }
 	});
+}
+
+//get MostReadArticles functionality on wikipulse
+function get_Most_Read_Articles(){
+	$.ajax({
+	    type: 'GET',
+	    url: wp_service_url_changes + "15",
+	    //url: wp_service_url_MostReadArticles,
+	    dataType: 'json',
+	    success: function (data) {
+	    	
+	    	var append_str = '<div class="nav-header">Most Read Stories</div>'+
+	    					'<div class="row-fluid"><div class="span12" style="text-align:center;">'+
+	    						'<table class="table table-condensed" style="margin-bottom:0px"><tr>';
+	    	$.each(data,function(i,page){
+    			if(page.title.indexOf(":") < 0)
+    				{
+	    				append_str += '<td><a href="http://' +  page.url + '">' + page.title + '&nbsp;(&nbsp;' + page.count + '&nbsp;edits)&nbsp;' +'</a></td>';		
+    				}	    			
+	    	});
+	    	append_str += "</tr></table></div></div>";	    	
+	    	$("#most_read_stories").html(append_str);
+	    }
+	});	
 }
 
 

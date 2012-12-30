@@ -1,33 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Wikipulse</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 100px;
-        padding-bottom: 10px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-    </style>
-	<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<head>
+	<meta charset="utf-8">
+	<title>Wikipulse</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
 	
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
+	<!-- styles -->
+	<link href="css/bootstrap.css" rel="stylesheet">
+	<style type="text/css">
+		body {
+		  padding-top: 100px;
+		  padding-bottom: 10px;
+		}
+		.sidebar-nav {
+		  padding: 9px 0;
+		}
+	</style>
+	<link href="css/bootstrap-responsive.css" rel="stylesheet">
+</head>
 
-  <body>
-
+<body>
+	<!-- Start MainNavigation -->
     <div class="navbar navbar navbar-fixed-top">
       <div class="navbar-inner">
       	<div class="container-fluid">
@@ -66,41 +61,61 @@
         </div>
       </div>
     </div>
+    <!-- End MainNavigation -->
+	<!-- Start - Content -->
+    <div class="container-fluid">
+    	<!-- Start Most Read User Stories - Placeholder -->
+    	<!-- new Row for Content -->
+    	<div class="row-fluid">
+    		<div  id="most_read_stories"class="span12 well" >
+    			<div id="wait_mostreadstories"><img class="img-rounded thumbnail" src="img/wait.gif"/></div>
+    		</div>
+    	</div>
+    	<!-- End Most Read User Stories - Placeholder -->
+    	<!-- Start row - Placeholder for Recent Changes and Actual Content-->
+      	<div class="row-fluid">
+      		<!--  Start span for Recent Changes on left side -->
+        	<div class="span2">
+        		<div id="recent_changes" class="well sidebar-nav">
+       	        	<ul id="recent_changes_list" class="nav nav-list">
+    					<li class="nav-header">Recent Changes</li>
+			    	</ul>
+			    	<div id="wait_recent_changes"><img class="img-rounded thumbnail" src="img/wait.gif"/></div>
+            	</div>
+        	</div>
+        	<!--  End span for Recent Changes on left side -->
+        	<!-- Start - Placeholder for Content Page -->
+        	<div id="main_div" class="span10">
+        	</div>
+        	<!-- End - Placeholder for Content Page -->
+      	</div>
+      	<!-- End row - Placeholder for Recent Changes and Actual Content-->
 
-    <div class="container-fluid">   	  
-      <div class="row-fluid">
-        <div class="span2  ">
-        	<div id="left_navigation" class="well sidebar-nav">
-       	        <ul id="current_events_list" class="nav nav-list">
-    				<li class="nav-header">Recent Changes</li>
-			    </ul>
-			    <div id="wait_nav"><img class="img-rounded thumbnail" src="img/wait.gif"/></div>
-            </div><!--/.well -->
-        </div><!--/span-->
-        <div id="main_div" class="span10">
-        </div><!--/span-->
-      </div><!--/row-->
+		<!-- Start - Footer on bottom of Page -->
+      	<div class="row-fluid">
+	      	<footer>
+	   	 		<hr>	        
+		        <div class="pull-center" >
+	              <a class="bottom_nav_link" href="#aboutus">About</a> - 
+	              <a class="bottom_nav_link" href="#contactus">Contact</a>   
+	             </div>  
+	             <br>
+	             <div class="pull-center" id="date"></div> 
+	             <div class="pull-center" id="">&copy; Wikipulse 2012</div>
+	      	</footer>
+		</div>
+		<!-- End - Footer on bottom of Page -->
+	</div>
+	<!-- End - Content -->
 
-      <div class="row-fluid">
-      	<footer>
-   	 		<hr>	        
-	        <div class="pull-center" >
-              <a class="bottom_nav_link" href="#aboutus">About</a> - 
-              <a class="bottom_nav_link" href="#contactus">Contact</a>   
-             </div>  
-             <br>
-             <div class="pull-center" id="date"></div> 
-             <div class="pull-center" id="">&copy; Wikipulse 2012</div>
-      	</footer>
-		</div><!--/row-->
-    </div><!--/.fluid-container-->
-
+	<!-- supporting scripts -->
  	<script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
     <script src="js/bootstrap-transition.js"></script>
 	<script src="js/bootstrap-collapse.js"></script>	    
     
+    <!-- main script -->
     <script src="js/functions.js"></script>    
   </body>
 </html>

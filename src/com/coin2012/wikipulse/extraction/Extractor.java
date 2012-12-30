@@ -53,6 +53,17 @@ public class Extractor implements Extractable {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public List<News_Counter> getMostReadNews() {
+		List<News_Counter> top10List = HsqldbManager.getMostReadNews();
+		return top10List;
+	}
+	@Override 
+	public void saveUserInteraction(String News){
+		HsqldbManager.saveUserInteractionInDB(News);
+	}
+	
 
 //	@Override
 //	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
@@ -111,5 +122,6 @@ public class Extractor implements Extractable {
 		    }
 		});
 	}
+
 
 }

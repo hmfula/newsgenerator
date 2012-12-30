@@ -5,11 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
+import com.coin2012.wikipulse.extraction.News_Counter;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
 
@@ -102,5 +104,58 @@ public class HsqldbManager {
 			e.printStackTrace();
 		}
 		return map;
+	}
+	
+	public static void saveUserInteractionInDB(String News){
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			ResultSet rs = null;
+			try {
+				PreparedStatement psq = connection.prepareStatement("SELECT * FROM mostreadnews WHERE article=?");
+				psq.clearParameters();
+				psq.setString(1,News);
+				rs = psq.executeQuery();
+				int counter = 1;				
+				if (rs != null && rs.next()){
+					counter = rs.getInt(2) + 1;
+					psq.close();
+					psq = connection.prepareStatement("UPDATE mostreadnews SET numberofclicks=? WHERE article=? ");
+					psq.setString(1,Integer.toString(counter));
+					psq.setString(2,News);
+				}		
+				else {
+					psq.close();
+					psq = connection.prepareStatement("INSERT INTO mostreadnews VALUES(?,?)");
+					psq.clearParameters();
+					psq.setString(1,News);
+					psq.setString(2,Integer.toString(counter));					
+				}
+				psq.executeUpdate();					
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static List<News_Counter> getMostReadNews(){
+		List<News_Counter> resultList = new ArrayList<News_Counter>();
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			ResultSet rs = null;
+			PreparedStatement psq = connection.prepareStatement("SELECT TOP 10 * FROM mostreadnews ORDER BY numberofclicks DESC");
+			rs = psq.executeQuery();		
+			while (rs.next()) {
+				News_Counter news = new News_Counter(rs.getString(1), rs.getInt(2));
+				resultList.add(news);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultList;
 	}
 }
