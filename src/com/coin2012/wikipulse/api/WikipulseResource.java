@@ -132,14 +132,16 @@ public class WikipulseResource implements SparkApplication {
 				List <String> editorNames = new ArrayList<String>();
 				editorNames.add("Woohookitty");
 				editorNames.add("Bearcat");
+				editorNames.add("Dr. Blofeld");
 				editorNames.add("Tassedethe");
 				editorNames.add("Rjwilmsi");
+				editorNames.add("Koavf");
 				editorNames.add("Rich Farmbrough");
 				editorNames.add("Waacstats");
 				editorNames.add("Hmains");
 				editorNames.add("Ser Amantio di Nicolao");
-				editorNames.add("Dr. Blofeld");
-				editorNames.add("Koavf");
+				
+				
 				
 				return wikipulseService.getEditors(editorNames);
 			}
