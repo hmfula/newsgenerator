@@ -1,5 +1,6 @@
 package com.coin2012.wikipulse.extraction.wikipedia;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;

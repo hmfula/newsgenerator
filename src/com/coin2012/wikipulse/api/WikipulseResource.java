@@ -121,6 +121,7 @@ public class WikipulseResource implements SparkApplication {
 		 * This route is used only for testing.
 		 * Currently hard coded to show only top 10 Wikipedians
 		 * To be deleted after integration  with identification algorithm.
+		 * Note:The list is randomized to test sort functionality. Coded to return results in descending order(i.e return biggest edit count first).
 		 */
 		get(new Route("/listeditors") {
 			@Override
@@ -129,16 +130,16 @@ public class WikipulseResource implements SparkApplication {
 				response.type("application/json; charset=utf-8");
 //				String editorNames = request.queryParams("ususers");
 				List <String> editorNames = new ArrayList<String>();
-				editorNames.add("Koavf");
+				editorNames.add("Woohookitty");
+				editorNames.add("Bearcat");
+				editorNames.add("Tassedethe");
+				editorNames.add("Rjwilmsi");
 				editorNames.add("Rich Farmbrough");
 				editorNames.add("Waacstats");
-				editorNames.add("Bearcat");
-				editorNames.add("Rjwilmsi");
-				editorNames.add("Woohookitty");
 				editorNames.add("Hmains");
 				editorNames.add("Ser Amantio di Nicolao");
 				editorNames.add("Dr. Blofeld");
-				editorNames.add("Tassedethe");
+				editorNames.add("Koavf");
 				
 				return wikipulseService.getEditors(editorNames);
 			}

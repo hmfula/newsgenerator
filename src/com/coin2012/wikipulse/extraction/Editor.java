@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Represents a Wikipedia Editor. For simplicity all variables are treated as strings- can be changed if needed.
+ * Represents a Wikipedia Editor. For simplicity all variables are treated as
+ * strings- can be changed if needed.
  * 
  * @author mfula
  * @since 30-12-2012
@@ -18,10 +19,8 @@ public class Editor implements Serializable {
 	String title;
 	List<String> groups;
 
-
-	
 	public Editor() {
-	
+
 	}
 
 	public Editor(String userid, String name, String editcount,
@@ -73,6 +72,7 @@ public class Editor implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public List<String> getGroups() {
 		return groups;
 	}

@@ -125,6 +125,12 @@ public class Extractor implements Extractable {
 
 	public List<Editor> getWikipediaEditors(List<String> editorsNames) {
 		List<Editor> editors = WikipediaExtractor.getWikipediaEditors(editorsNames);
+		Collections.sort(editors, new Comparator<Editor>() {
+		    public int compare(Editor currentEditor, Editor nextEditor) {
+		        return  Integer.parseInt(nextEditor.getEditcount()) -
+		        		Integer.parseInt(currentEditor.getEditcount());
+		    }
+		});
 	return editors;
 }
 }
