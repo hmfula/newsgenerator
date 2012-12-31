@@ -7,7 +7,7 @@ public class News {
 
 	private final String BASE_URL = "http://en.wikipedia.org/wiki/";
 	private String pageId;
-	private String pagetTitle;
+	private String pageTitle;
 	private String pageURL;
 	private String news;
 	private List<String> imageUrlList = new ArrayList<String>();
@@ -21,12 +21,12 @@ public class News {
 	}
 
 	public String getPagetTitle() {
-		return pagetTitle;
+		return pageTitle;
 	}
 
 	public void setPagetTitle(String pagetTitle) {
 		this.pageURL = BASE_URL + pagetTitle;
-		this.pagetTitle = pagetTitle;
+		this.pageTitle = pagetTitle;
 	}
 
 	public String getPageLink() {
