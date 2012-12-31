@@ -138,11 +138,16 @@ public class Extractor implements Extractable {
 	
 	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle){
 		boolean doArticlesHaveAtleastOneCommonEditor = false;
+		List<String> users = new ArrayList<String>();
 		List<WikiEdit> firstArticleEdits = firstArticle.getEdits();
+		
 		List<WikiEdit>secondArticleEdits = secondArticle.getEdits();
+		for (WikiEdit wikiedit : secondArticleEdits){
+			users.add(wikiedit.getUser());
+		}
 		
 		for (WikiEdit currentEdit : firstArticleEdits) {
-			if(secondArticleEdits.contains(currentEdit)){
+			if(users.contains(currentEdit.getUser())){
 				doArticlesHaveAtleastOneCommonEditor =  true;	
 				break;
 			}
