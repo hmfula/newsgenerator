@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.coin2012.wikipulse.extraction.Editor;
 import com.coin2012.wikipulse.extraction.utils.ResultParser;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
 import com.coin2012.wikipulse.extraction.utils.models.RecentChangesQueryResult;
+import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
 import com.google.gson.Gson;

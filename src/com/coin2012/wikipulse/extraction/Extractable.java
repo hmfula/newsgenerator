@@ -2,6 +2,7 @@ package com.coin2012.wikipulse.extraction;
 
 import java.util.List;
 
+import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 
@@ -26,6 +27,8 @@ public interface Extractable {
 	public List<News_Counter> getMostReadNews();
 	
 	public List<Editor> getWikipediaEditors(List<String> editorsNames);
+	
+	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle);
 	
 //	/**
 //	 * Searches for pages containing search text

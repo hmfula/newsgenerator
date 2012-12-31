@@ -1,4 +1,4 @@
-package com.coin2012.wikipulse.extraction;
+package com.coin2012.wikipulse.models;
 
 import java.io.Serializable;
 import java.util.List;
@@ -6,8 +6,6 @@ import java.util.List;
 /**
  * Represents a Wikipedia Editor. For simplicity all variables are treated as
  * strings- can be changed if needed.
- * 
- * @author mfula
  * @since 30-12-2012
  */
 public class Editor implements Serializable {

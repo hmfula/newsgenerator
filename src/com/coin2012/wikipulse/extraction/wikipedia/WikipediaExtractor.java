@@ -7,12 +7,12 @@ import java.util.logging.Logger;
 
 import org.restlet.resource.ClientResource;
 
-import com.coin2012.wikipulse.extraction.Editor;
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
 import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
 import com.coin2012.wikipulse.extraction.utils.models.RecentChangesQueryResult;
+import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;

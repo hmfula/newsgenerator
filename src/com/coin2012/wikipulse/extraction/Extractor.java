@@ -9,8 +9,10 @@ import java.util.List;
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
 import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
+import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.WikiEdit;
 
 /**
  * Represents an Extractor component used to interact with Wikipedia API.
@@ -133,4 +135,19 @@ public class Extractor implements Extractable {
 		});
 	return editors;
 }
+	
+	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle){
+		boolean doArticlesHaveAtleastOneCommonEditor = false;
+		List<WikiEdit> firstArticleEdits = firstArticle.getEdits();
+		List<WikiEdit>secondArticleEdits = secondArticle.getEdits();
+		
+		for (WikiEdit currentEdit : firstArticleEdits) {
+			if(secondArticleEdits.contains(currentEdit)){
+				doArticlesHaveAtleastOneCommonEditor =  true;	
+				break;
+			}
+			
+		}
+		return doArticlesHaveAtleastOneCommonEditor;
+	}
 }

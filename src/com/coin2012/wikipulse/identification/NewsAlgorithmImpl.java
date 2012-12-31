@@ -7,6 +7,7 @@ import com.coin2012.wikipulse.identification.newscreation.Dummy;
 import com.coin2012.wikipulse.identification.newsselection.Authorgraph;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.WikiEdit;
 
 public class NewsAlgorithmImpl implements NewsAlgorithm {
 
@@ -33,5 +34,5 @@ public class NewsAlgorithmImpl implements NewsAlgorithm {
 		
 		return newsResults;
 	}
-
+	
 }
