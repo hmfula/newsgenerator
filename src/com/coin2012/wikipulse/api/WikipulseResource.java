@@ -123,7 +123,7 @@ public class WikipulseResource implements SparkApplication {
 		 * To be deleted after integration  with identification algorithm.
 		 * Note:The list is randomized to test sort functionality. Coded to return results in descending order(i.e return biggest edit count first).
 		 */
-		get(new Route("/listeditors") {
+		get(new Route("/wikipedians_by_edit_counts") {
 			@Override
 			public Object handle(Request request, Response response) {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
