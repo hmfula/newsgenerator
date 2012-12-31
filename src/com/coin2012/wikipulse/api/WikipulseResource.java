@@ -91,7 +91,7 @@ public class WikipulseResource implements SparkApplication {
 			}
 		});
 		
-		get(new Route("/top_user_news") {
+		get(new Route("/most_read_news") {
 			@Override
 			public Object handle(Request request, Response response) {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();

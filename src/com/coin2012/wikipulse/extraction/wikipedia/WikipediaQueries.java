@@ -11,7 +11,7 @@ public abstract class WikipediaQueries {
 		ClientResource resource = new ClientResource(wikipediaApi);
 		resource.getReference().addQueryParameter("action", "query");
 		resource.getReference().addQueryParameter("list", "categorymembers");
-		resource.getReference().addQueryParameter("cmtitle", category);
+		resource.getReference().addQueryParameter("cmtitle", "Category:" + category);
 		resource.getReference().addQueryParameter("cmsort", "timestamp");
 		resource.getReference().addQueryParameter("cmdir", "desc");
 		resource.getReference().addQueryParameter("cmprop", "ids|title|timestamp");
