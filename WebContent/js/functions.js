@@ -4,7 +4,7 @@ var wp_service_url_get_articles_from_category = wp_service_url + "/News/";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
 var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
 var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
-var wp_service_url_MostReadArticles = wp_service_url + "/top_user_news";
+var wp_service_url_MostReadArticles = wp_service_url + "/most_read_news";
 var wp_service_url_UserInteraction = wp_service_url + "/user_interaction?news=";
 
 var wiki_url = "http://en.wikipedia.org/wiki/";
