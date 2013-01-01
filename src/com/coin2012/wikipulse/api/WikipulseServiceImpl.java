@@ -70,8 +70,13 @@ public class WikipulseServiceImpl implements WikipulseService {
 	
 	@Override
 	public String getNews(String nprop) {
+		String result = null;
+		if(nprop.contains("top10")){
+			List<News_Counter> listOfMostReadNews = extractor.getMostReadNews();
+			result = gson.toJson(listOfMostReadNews);
+		}
 		// TODO Auto-generated method stub
-		return "";
+		return result;
 	}
 
 	@Override
@@ -81,13 +86,6 @@ public class WikipulseServiceImpl implements WikipulseService {
 		enhanceNewsWithProp(news, nprop);
 		
 		return gson.toJson(news);
-	}
-
-	@Override
-	public String getMostReadNews() {
-		List<News_Counter> listOfMostReadNews = extractor.getMostReadNews();
-		String result = gson.toJson(listOfMostReadNews);
-		return result;
 	}
 	
 	@Override

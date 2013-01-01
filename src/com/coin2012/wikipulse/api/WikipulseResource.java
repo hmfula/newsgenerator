@@ -1,6 +1,7 @@
 package com.coin2012.wikipulse.api;
 
 import static spark.Spark.get;
+import static spark.Spark.put;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -91,21 +92,12 @@ public class WikipulseResource implements SparkApplication {
 			}
 		});
 		
-		get(new Route("/most_read_news") {
+		put(new Route("/news/:news") {
 			@Override
 			public Object handle(Request request, Response response) {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
-				return wikipulseService.getMostReadNews();
-			}
-		});
-		
-		get(new Route("/user_interaction") {
-			@Override
-			public Object handle(Request request, Response response) {
-				WikipulseService wikipulseService = new WikipulseServiceImpl();
-				response.type("application/json; charset=utf-8");
-				String news = request.queryParams("news");
+				String news = request.params(":news");
 				//if(news.matches("^[a-zA-Z_]+$")){
 					wikipulseService.saveUserInteraction(news);
 				//}

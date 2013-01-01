@@ -44,13 +44,6 @@ public interface WikipulseService {
 	 */
 	public String getRecentChanges(String minChanges);
 	
-	/**
-	 * Returns a top10 list of news that has been read by users
-	 * 
-	 * @return list of top10 news  as JSON string-
-	 */
-	public String getMostReadNews();
-	
 	public void saveUserInteraction(String News);
 
 	/**
