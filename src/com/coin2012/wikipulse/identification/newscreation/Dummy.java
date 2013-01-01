@@ -16,7 +16,7 @@ public class Dummy {
 			
 			item.setPageId(p.getPageId());
 			item.setPagetTitle(p.getTitle());
-			
+			item.setRelYesterday(p.getRelYesterday());
 			resultSet.add(item);
 		}
 		return resultSet;

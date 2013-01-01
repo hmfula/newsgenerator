@@ -21,7 +21,7 @@ public class NewsAlgorithmImpl implements NewsAlgorithm {
 	public List<News> findNews(String category) {
 		// get pages from extraction
 		List<Page> pageList = extractor.getPagesForCategory(category);
-		
+		extractor.enhancePagesWithRelevance(pageList);
 		// select pages that are news-worthy
 		List<Page> resultSet1 = Authorgraph.findInterestingPages(pageList);
 		

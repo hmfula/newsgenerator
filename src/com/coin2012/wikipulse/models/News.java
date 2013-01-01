@@ -11,6 +11,7 @@ public class News {
 	private String pageURL;
 	private String news;
 	private List<String> imageUrlList = new ArrayList<String>();
+	private float yesterdaysRelevance;
 
 	public String getPageId() {
 		return pageId;
@@ -47,5 +48,11 @@ public class News {
 
 	public List<String> getImageUrlList() {
 		return imageUrlList;
+	}
+	public void setRelYesterday(float relevance) {
+		this.yesterdaysRelevance = relevance;
+	}
+	public float getRelYesterday() {
+		return this.yesterdaysRelevance;
 	}
 }

@@ -76,6 +76,9 @@ public class WikipulseResource implements SparkApplication {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				String category = request.params(":category");
 				String nprop = request.queryParams("nprop");
+				if (nprop == null) {
+					nprop = "";
+				}
 				response.type("application/json; charset=utf-8");
 				return wikipulseService.getNewsForCategory(category, nprop);
 			}
