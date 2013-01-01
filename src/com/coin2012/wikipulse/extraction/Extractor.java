@@ -52,8 +52,7 @@ public class Extractor implements Extractable {
 	
 	@Override
 	public void enhanceNewsWithImages(List<News> news) {
-		// TODO Auto-generated method stub
-		
+		WikipediaExtractor.enhanceNewsWithImages(news);
 	}
 	
 	@Override
