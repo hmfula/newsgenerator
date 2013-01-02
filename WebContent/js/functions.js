@@ -12,7 +12,6 @@ var wiki_url = "http://en.wikipedia.org/wiki/";
 $(document).ready(function() {
 	var dt = new GetDateTime();
 	$("#date").text(dt.formats.pretty.b);
-	load_s('home.html');
 	
 	setInterval(function () {
 		var dt = new GetDateTime();
@@ -21,6 +20,36 @@ $(document).ready(function() {
 	
 	load_recent_Changes(10);
 	load_most_read_stories();
+	
+	if (window.location.toString().indexOf("#", 0) > 0){
+		var current_doc = "";
+		current_doc = window.location.toString().substring(window.location.toString().lastIndexOf('#')+1,window.location.toString().length);
+		switch(current_doc)
+		{
+			case "":
+				load_doc('home.html');
+				setActiveClass("home");
+				break;
+			case "home":
+				load_doc('home.html');
+				setActiveClass("home");
+				break;
+			case "aboutus":
+				load_doc('aboutus.html');
+				setActiveClass("");
+				break;
+			case "contactus":
+				load_doc('contactus.html');
+				setActiveClass("");
+				break;
+			default:
+				//alert(current_doc);
+				load_doc('news.html?content=' + current_doc);
+				setActiveClass(current_doc);
+				break;
+		}
+	}	
+	
 	var i = 1;
 	setInterval(function () {
 		load_recent_Changes(10);
@@ -33,7 +62,7 @@ $(document).ready(function() {
 $('.bottom_nav_link').click(function(){
 	var value = $(this).attr("href");
 	$('.nav>li.active').removeClass('active');
-	load_s(value.replace('#','') + '.html');
+	load_doc(value.replace('#','') + '.html');
 	$(this).parent().addClass('active');
 });
 
@@ -41,7 +70,7 @@ $('.bottom_nav_link').click(function(){
 $('.nav_link').click(function(){
 	var value = $(this).attr("href");
 	$(this).parent().siblings().removeClass('active');
-	load_s('news.html?content=' + value.replace('#',''));
+	load_doc('news.html?content=' + value.replace('#',''));
 	$(this).parent().addClass('active');
 });
 
@@ -57,11 +86,22 @@ $('.search-query').keyup(function (e) {
 $('#search_form').submit(function (e) {
 	e.preventDefault();
     var value = $('#search_input').val();
-    load_s('search.html?content=' + value);
+    load_doc('search.html?content=' + value);
 });
 
+function setActiveClass(href){
+	$('.top_nav li').each(function(){
+		$(this).removeClass('active');
+		
+	    if( ($(this).children('.nav_link').attr('href') !== undefined) &&
+    		($(this).children('.nav_link').attr('href').toLowerCase() == (("#" + href).toLowerCase())) && 
+    		(href != "")){
+	    		$(this).addClass('active');
+	    }
+	});
+}
 // load desired document into main_div
-function load_s(source) {
+function load_doc(source) {
     $.get(source, function(data) {
     	$('#main_div').html(data);
     });
