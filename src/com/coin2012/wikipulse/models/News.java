@@ -3,15 +3,17 @@ package com.coin2012.wikipulse.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.core.IsNull;
+
 public class News {
 
 	private final String BASE_URL = "http://en.wikipedia.org/wiki/";
-	private String pageId;
-	private String pageTitle;
-	private String pageURL;
-	private String news;
+	private String pageId = "";
+	private String pageTitle = "";
+	private String pageURL = "";
+	private String news = "";
 	private List<String> imageUrlList = new ArrayList<String>();
-	private float yesterdaysRelevance;
+	private float yesterdaysRelevance = 0;
 
 	public String getPageId() {
 		return pageId;
@@ -50,8 +52,11 @@ public class News {
 		return imageUrlList;
 	}
 	public void setRelYesterday(float relevance) {
-		this.yesterdaysRelevance = relevance;
+		if (!Float.isNaN(relevance)){
+			this.yesterdaysRelevance = relevance;
+		}			
 	}
+	
 	public float getRelYesterday() {
 		return this.yesterdaysRelevance;
 	}

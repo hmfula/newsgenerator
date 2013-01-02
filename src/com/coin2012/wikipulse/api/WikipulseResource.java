@@ -101,6 +101,7 @@ public class WikipulseResource implements SparkApplication {
 				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
 				String news = request.params(":news");
+				
 				//if(news.matches("^[a-zA-Z_]+$")){
 					wikipulseService.saveUserInteraction(news);
 				//}

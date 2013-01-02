@@ -66,13 +66,16 @@ public class WikipediaExtractor {
 			if(!imageFileNames.isEmpty()){
 				String imageTitles = imageFileNames.get(0);
 				imageFileNames.remove(0);
-				for (String string : imageFileNames) {
-					imageTitles = imageTitles + "|" + string;
+				if(!imageFileNames.isEmpty()){
+					for (String string : imageFileNames) {
+						imageTitles = imageTitles + "|" + string;
+					}
+					ClientResource imageUrlResource = WikipediaQueries.buildQueryForImagesUrlsOfImageFileNames(imageTitles);
+					String imgUrlQueryResult = QueryUtils.executeQueryToResource(imageUrlResource);
+					List<String> imageUrls = WikipediaResultParser.parseResultToImageURLs(imgUrlQueryResult);
+					newsItem.getImageUrlList().addAll(imageUrls);
 				}
-				ClientResource imageUrlResource = WikipediaQueries.buildQueryForImagesUrlsOfImageFileNames(imageTitles);
-				String imgUrlQueryResult = QueryUtils.executeQueryToResource(imageUrlResource);
-				List<String> imageUrls = WikipediaResultParser.parseResultToImageURLs(imgUrlQueryResult);
-				newsItem.getImageUrlList().addAll(imageUrls);
+				
 			}
 		}
 	}

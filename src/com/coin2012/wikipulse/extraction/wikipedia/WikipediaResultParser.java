@@ -91,9 +91,11 @@ public class WikipediaResultParser extends ResultParser {
 				.getAsJsonObject().entrySet();
 		for (Entry<String, JsonElement> entry : pageEntryMap) {
 			JsonArray jsonArray = entry.getValue().getAsJsonObject().getAsJsonArray("images");
-			for (JsonElement jsonElement : jsonArray) {
-				String imageFileName = jsonElement.getAsJsonObject().get("titel").getAsString();
-				imageFileNames.add(imageFileName);
+			if (jsonArray != null){
+				for (JsonElement jsonElement : jsonArray) {
+					String imageFileName = jsonElement.getAsJsonObject().get("title").getAsString();
+					imageFileNames.add(imageFileName);
+				}
 			}
 		}
 		return imageFileNames;

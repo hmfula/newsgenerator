@@ -16,8 +16,13 @@ public abstract class StatsGrokResultParser extends ResultParser {
 	public static float parseResultToRelevance(String result) {
 		JsonParser jsonParser = new JsonParser();
 		JsonObject dailyViews = jsonParser.parse(result).getAsJsonObject().get("daily_views").getAsJsonObject();
-
-		float yesterdaysViews = dailyViews.get(generateTimestampForYesterday()).getAsFloat();
+		float yesterdaysViews = 0;
+		try {
+			yesterdaysViews = dailyViews.get(generateTimestampForYesterday()).getAsFloat();
+		} catch (Exception e) {
+			yesterdaysViews = dailyViews.get(genereateTimestampXDaysFromToday(-2)).getAsFloat();
+		}
+		
 		float totalViews = 0;
 		Set<Entry<String, JsonElement>> viewsSet = dailyViews.entrySet();
 		for (Entry<String, JsonElement> entry : viewsSet) {
