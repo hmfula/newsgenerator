@@ -3,8 +3,6 @@ package com.coin2012.wikipulse.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.core.IsNull;
-
 public class News {
 
 	private final String BASE_URL = "http://en.wikipedia.org/wiki/";
