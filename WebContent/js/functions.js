@@ -92,10 +92,10 @@ function load_recent_Changes(minchanges){
 function load_wikipulse_news(url_parameter){
 	
 	var news_template_big = "<h3><a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>news_title</a></h3>" +
-							"<a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'><div id='clean_newstitle'></div></a>" +
+							"<a href='#'><div id='clean_newstitle'></div></a>" +
 							"<p>news_title<a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>&nbsp;more information</a></p>";
 	var news_template_small = "<h6><a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>news_title</a></h6>" +
-							"<a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'><div id='clean_newstitle'></div></a>" +
+							"<a href='#'><div id='clean_newstitle'></div></a>" +
 							"<p class='p-small'>news_title<a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>&nbsp;more information</a></p>";
 	$.ajax({
 	    type: 'GET',
@@ -164,14 +164,14 @@ function load_wikipulse_news(url_parameter){
 	    	$.each(data,function(i,news){
 	    		var img_url_list_str = "";
 	    		img_url_list_str = news.imageUrlList;
-	    		if (img_url_list_str == "") return true;
+	    		if (img_url_list_str == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
 	    		var clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
 	    		var div_slideshow = '<div id="myCarousel_' + clean_news_title
 				+ '" class="carousel slide"><div class="carousel-inner">';
 	    		
 	    		var img_list = img_url_list_str.toString().split(',');
 	    		for(var j=0;j<img_list.length;j++){
-	    			if(j==1){
+	    			if(j==0){
 	    				div_slideshow += '<div class="item active">';
 					}
 	    			else {
