@@ -48,7 +48,11 @@ $(document).ready(function() {
 				setActiveClass(current_doc);
 				break;
 		}
-	}	
+	}
+	else {
+		load_doc('home.html');
+		setActiveClass("home");
+	}
 	
 	var i = 1;
 	setInterval(function () {
@@ -157,7 +161,7 @@ function load_wikipulse_news(url_parameter){
 	    			found = false;
 	    			append_str = (counter == 0 ) ? news_template_big : news_template_small;
 	    			append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+news.pageTitle);
-	    			append_str = append_str.replace(/user_interaction_id/g, '"' + clean_news_title + '"');
+	    			append_str = append_str.replace(/user_interaction_id/g, '"' + encodeURIComponent(news.pageTitle) + '"');
     				append_str = append_str.replace(/news_title/g,news.pageTitle);
     				append_str = append_str.replace(/clean_newstitle/g,clean_news_title);
     				
