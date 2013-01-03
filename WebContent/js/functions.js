@@ -221,7 +221,11 @@ function load_wikipulse_news(url_parameter){
 	    			else {
 	    				div_slideshow += '<div class="item">';
 	    			} 
-	    			div_slideshow += '<img src="'+ img_list[j] +'" alt="">';
+	    			if (i >= 3)
+	    				div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
+	    			else
+	    				div_slideshow += '<img class="img-rounded" src="'+ img_list[j] +'" alt="">';
+	    			//div_slideshow += '<img class="img-rounded thumbnail" src="'+ img_list[j] +'" alt="">';
 	    			div_slideshow += '</div>';
 	    	    };
 	    	    div_slideshow += '</div>';
@@ -277,7 +281,7 @@ function load_most_read_stories(){
 	    	$.each(data,function(i,news){
     			if(news.title.indexOf(":") < 0)
     				{
-	    				append_str += '<td><a href="http://' +  news.url + '">' + news.title + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
+	    				append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.title) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
     				}	    			
 	    	});
 	    	append_str += "</tr></table></div></div>";	    	

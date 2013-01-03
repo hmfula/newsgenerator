@@ -44,6 +44,15 @@ public interface WikipulseService {
 	 */
 	public String getRecentChanges(String minChanges);
 	
+	/**
+	 * Return a list of categories as string in JSON format.
+	 * 
+	 * @param nprop
+	 *            - currently not used
+	 * @return list of categories as JSON string.
+	 */
+	public String getCategories(String nprop);	
+	
 	public void saveUserInteraction(String News);
 
 	/**

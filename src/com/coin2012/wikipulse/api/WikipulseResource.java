@@ -95,6 +95,16 @@ public class WikipulseResource implements SparkApplication {
 			}
 		});
 		
+		get(new Route("/category") {
+			@Override
+			public Object handle(Request request, Response response) {
+				WikipulseService wikipulseService = new WikipulseServiceImpl();
+				String nprop = request.queryParams("nprop");
+				response.type("application/json; charset=utf-8");
+				return wikipulseService.getCategories(nprop);
+			}
+		});
+		
 		put(new Route("/news/:news") {
 			@Override
 			public Object handle(Request request, Response response) {
