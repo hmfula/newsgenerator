@@ -6,6 +6,7 @@ var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
 var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
 var wp_service_url_MostReadArticles = wp_service_url + "/news?nprop=top10";
 var wp_service_url_UserInteraction = wp_service_url + "/news/";
+var wp_service_url_loadCategories =  wp_service_url + "/category";
 
 var wiki_url = "http://en.wikipedia.org/wiki/";
 
@@ -18,41 +19,11 @@ $(document).ready(function() {
 		$("#date").text(dt.formats.pretty.b);
     }, 30000);
 	
+	load_categories();
 	load_recent_Changes(10);
 	load_most_read_stories();
 	
-	if (window.location.toString().indexOf("#", 0) > 0){
-		var current_doc = "";
-		current_doc = window.location.toString().substring(window.location.toString().lastIndexOf('#')+1,window.location.toString().length);
-		switch(current_doc)
-		{
-			case "":
-				load_doc('home.html');
-				setActiveClass("home");
-				break;
-			case "home":
-				load_doc('home.html');
-				setActiveClass("home");
-				break;
-			case "aboutus":
-				load_doc('aboutus.html');
-				setActiveClass("");
-				break;
-			case "contactus":
-				load_doc('contactus.html');
-				setActiveClass("");
-				break;
-			default:
-				//alert(current_doc);
-				load_doc('news.html?content=' + current_doc);
-				setActiveClass(current_doc);
-				break;
-		}
-	}
-	else {
-		load_doc('home.html');
-		setActiveClass("home");
-	}
+	
 	
 	var i = 1;
 	setInterval(function () {
@@ -71,10 +42,11 @@ $('.bottom_nav_link').click(function(){
 });
 
 //catch click event coming from top navigation bar (category)
-$('.nav_link').click(function(){
+$('.nav_link').live("click", function(){
 	var value = $(this).attr("href");
 	$(this).parent().siblings().removeClass('active');
-	load_doc('news.html?content=' + value.replace('#',''));
+	if (value.replace('#','') == "home" ) load_doc('home.html');
+	else load_doc('news.html?content=' + value.replace('#',''));
 	$(this).parent().addClass('active');
 });
 
@@ -121,10 +93,10 @@ function load_recent_Changes(minchanges){
 	    	$("#wait_recent_changes").html('');
 	    	$("#recent_changes ul").html('');
 	    	$("#recent_changes ul").append('<li class="nav-header">Recent Changes</li>');
-	    	$.each(data,function(i,page){
-    			if(page.title.indexOf(":") < 0)
+	    	$.each(data,function(i,news){
+    			if(news.title.indexOf(":") < 0)
     				{
-	    				var append_str = '<li><a href="http://' +  page.url + '">' + page.title + '&nbsp;(&nbsp;' + page.count + '&nbsp;edits)&nbsp;' +'</a></li>';
+	    				var append_str = '<li><a href="http://' +  news.url + '">' + news.title + '&nbsp;(&nbsp;' + news.count + '&nbsp;edits)&nbsp;' +'</a></li>';
 		      			$("#recent_changes ul").append(append_str);	    				
     				}	    			
 	    	});
@@ -154,7 +126,7 @@ function load_wikipulse_news(url_parameter){
 	    	var news_rows = '';
 	    	var clean_news_title = '';
 	    	$.each(data,function(i,news){
-	    		if (Number(news.yesterdaysRelevance) > 0.00 ) {
+	    		if ((Number(news.yesterdaysRelevance) > 0.06 ) && (news.pageTitle.indexOf(":") < 0)) {
 	    			//alert(page.pageTitle);
 	    			//load_images_for_news_item(page.pageTitle);
 	    			clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
@@ -225,7 +197,6 @@ function load_wikipulse_news(url_parameter){
 	    				div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
 	    			else
 	    				div_slideshow += '<img class="img-rounded" src="'+ img_list[j] +'" alt="">';
-	    			//div_slideshow += '<img class="img-rounded thumbnail" src="'+ img_list[j] +'" alt="">';
 	    			div_slideshow += '</div>';
 	    	    };
 	    	    div_slideshow += '</div>';
@@ -290,9 +261,58 @@ function load_most_read_stories(){
 	});	
 }
 
+function load_categories(){
+	$.ajax({
+	    type: 'GET',
+	    url: wp_service_url_loadCategories,
+	    dataType: 'json',
+	    success: function (data) {	    	
+	    	$.each(data,function(i,category){
+	    		$('.top_nav').append($('<li/>').append($('<a/>', {
+	    		    'href': '#' + category.categoryId,
+	    		    'class': 'nav_link',
+	    		    'text': category.categoryTitle
+	    		})));
+	    		$('.top_nav').append($('<li/>', { 'class': "divider-vertical" }));
+	    	});
+	    	if (window.location.toString().indexOf("#", 0) > 0){
+	    		var current_doc = "";
+	    		current_doc = window.location.toString().substring(window.location.toString().lastIndexOf('#')+1,window.location.toString().length).toLowerCase();
+	    		switch(current_doc)
+	    		{
+	    			case "":
+	    				load_doc('home.html');
+	    				setActiveClass("home");
+	    				break;
+	    			case "home":
+	    				load_doc('home.html');
+	    				setActiveClass("home");
+	    				break;
+	    			case "aboutus":
+	    				load_doc('aboutus.html');
+	    				setActiveClass("");
+	    				break;
+	    			case "contactus":
+	    				load_doc('contactus.html');
+	    				setActiveClass("");
+	    				break;
+	    			default:
+	    				//alert(current_doc);
+	    				load_doc('news.html?content=' + current_doc);
+	    				setActiveClass(current_doc);
+	    				break;
+	    		}
+	    	}
+	    	else {
+	    		load_doc('home.html');
+	    		setActiveClass("home");
+	    	}
+	    }
+	});
+}
+
 //save UserClick in DB on webserver
-function saveUserInteraction(news){
-	
+function saveUserInteraction(news){	
 	$.ajax({
 	    type: 'PUT',
 	    url: wp_service_url_UserInteraction + news,
@@ -308,7 +328,6 @@ function saveUserInteraction(news){
 		window.focus();	
 	}
 }
-
 
 function getUrlVars()
 {

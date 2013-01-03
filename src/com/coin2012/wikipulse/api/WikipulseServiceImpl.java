@@ -101,8 +101,7 @@ public class WikipulseServiceImpl implements WikipulseService {
 		/*
 		 * List<Category> categories = extractor.loadCategoriesFromDB();
 		 */
-		List<Category> categories = new ArrayList<Category>();		
-		categories.add(new Category("home","Home"));
+		List<Category> categories = new ArrayList<Category>();
 		categories.add(new Category("Economy_of_the_United_States","U.S."));
 		categories.add(new Category("Europe","Europe"));
 		categories.add(new Category("Asia","Asia"));
