@@ -126,7 +126,7 @@ function load_wikipulse_news(url_parameter){
 	    	var news_rows = '';
 	    	var clean_news_title = '';
 	    	$.each(data,function(i,news){
-	    		if ((Number(news.yesterdaysRelevance) > 0.06 ) && (news.pageTitle.indexOf(":") < 0)) {
+	    		if ((Number(news.yesterdaysRelevance) > 0.00 ) && (news.pageTitle.indexOf(":") < 0)) {
 	    			//alert(page.pageTitle);
 	    			//load_images_for_news_item(page.pageTitle);
 	    			clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
@@ -176,11 +176,15 @@ function load_wikipulse_news(url_parameter){
 	    		news_rows += '</div>';	    		
 	    	}
 	    	$("#row2").append(news_rows);
-	    	
+	    	var news_counter = 0;
 	    	$.each(data,function(i,news){
+	    		if (!((Number(news.yesterdaysRelevance) > 0.00 ) && (news.pageTitle.indexOf(":") < 0))) {
+	    			return true;
+	    		}
 	    		var img_url_list_str = "";
 	    		img_url_list_str = news.imageUrlList;
 	    		if (img_url_list_str == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
+	    		
 	    		var clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
 	    		var div_slideshow = '<div id="myCarousel_' + clean_news_title
 				+ '" class="carousel slide"><div class="carousel-inner">';
@@ -193,10 +197,13 @@ function load_wikipulse_news(url_parameter){
 	    			else {
 	    				div_slideshow += '<div class="item">';
 	    			} 
-	    			if (i >= 3)
+	    			if (news_counter >= 3)
 	    				div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
-	    			else
-	    				div_slideshow += '<img class="img-rounded" src="'+ img_list[j] +'" alt="">';
+	    			else if (news_counter >= 1)
+	    				div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
+	    			else 
+	    				div_slideshow += '<img class="img-rounded img_size_news_big" src="'+ img_list[j] +'" alt="">';
+	    			
 	    			div_slideshow += '</div>';
 	    	    };
 	    	    div_slideshow += '</div>';
@@ -206,6 +213,7 @@ function load_wikipulse_news(url_parameter){
 	    	    try
 	    	    {
 		    	    $('#'+clean_news_title).append(div_slideshow);
+		    	    news_counter += 1;
 	    	    }
 	    	  	catch(err)
 	    	    {
