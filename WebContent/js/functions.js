@@ -1,4 +1,4 @@
-//var wp_service_url = "http://localhost:8080/Wikipulse";
+/* get current domain and create URLs to REST - routes */
 var wp_service_url = window.location.toString().substring(0, window.location.toString().lastIndexOf('/'));
 var wp_service_url_get_articles_from_category = wp_service_url + "/news/";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
@@ -8,23 +8,31 @@ var wp_service_url_MostReadArticles = wp_service_url + "/news?nprop=top10";
 var wp_service_url_UserInteraction = wp_service_url + "/news/";
 var wp_service_url_loadCategories =  wp_service_url + "/category";
 
+/* set wikipedia URL */
 var wiki_url = "http://en.wikipedia.org/wiki/";
 
+/* functionality that is called after page has been loaded and the full DOM is available on client */
 $(document).ready(function() {
+	/* set current DateTime on website */
 	var dt = new GetDateTime();
 	$("#date").text(dt.formats.pretty.b);
 	
+	/* update DateTime on website (every 30sec) */
 	setInterval(function () {
 		var dt = new GetDateTime();
 		$("#date").text(dt.formats.pretty.b);
     }, 30000);
 	
+	/* load and create category structure */
 	load_categories();
+	
+	/* load and create recent news */
 	load_recent_Changes(10);
+	
+	/* load and create most read stories */
 	load_most_read_stories();
 	
-	
-	
+	/* update recent news and most read stories (every 20 seconds) */
 	var i = 1;
 	setInterval(function () {
 		load_recent_Changes(10);
@@ -33,16 +41,17 @@ $(document).ready(function() {
     }, 20000);		
 });
 
-// catch click event coming from TOP (Home) and BOTTOM navigation (Home AboutUs,ContactUs)
+/* catch click event of BOTTOM navigation (AboutUs,ContactUs) */
 $('.bottom_nav_link').click(function(){
+	/* retrieve link-information, remove active-class from TOP navigation, load .html - file */
 	var value = $(this).attr("href");
 	$('.nav>li.active').removeClass('active');
 	load_doc(value.replace('#','') + '.html');
-	$(this).parent().addClass('active');
 });
 
-//catch click event coming from top navigation bar (category)
+/* catch click event of TOP navigation (dynamic categories) */
 $('.nav_link').live("click", function(){
+	/* retrieve link-information, remove active-class, load either home.html or dynamic content, set new active-class*/
 	var value = $(this).attr("href");
 	$(this).parent().siblings().removeClass('active');
 	if (value.replace('#','') == "home" ) load_doc('home.html');
@@ -50,25 +59,27 @@ $('.nav_link').live("click", function(){
 	$(this).parent().addClass('active');
 });
 
-// catch enter event
+/* catch ENTER key (search form) */
 $('.search-query').keyup(function (e) {
+	/* prevent default which would cause a full page reload */
 	e.preventDefault();
-    if (e.keyCode == 13) {
-    	
+    if (e.keyCode == 13) {    	
     }    
 });
 
-//catch enter event
+/* catch search form event */
 $('#search_form').submit(function (e) {
+	/* prevent page reload and load dynamic content based on search inpute value*/
 	e.preventDefault();
     var value = $('#search_input').val();
     load_doc('search.html?content=' + value);
 });
 
+/* set class active for navigation item based on its href */
 function setActiveClass(href){
+	/* remove active from all items and then set it */
 	$('.top_nav li').each(function(){
-		$(this).removeClass('active');
-		
+		$(this).removeClass('active');		
 	    if( ($(this).children('.nav_link').attr('href') !== undefined) &&
     		($(this).children('.nav_link').attr('href').toLowerCase() == (("#" + href).toLowerCase())) && 
     		(href != "")){
@@ -76,6 +87,7 @@ function setActiveClass(href){
 	    }
 	});
 }
+
 // load desired document into main_div
 function load_doc(source) {
     $.get(source, function(data) {
