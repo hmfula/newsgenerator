@@ -10,6 +10,7 @@ public class Page {
 	private String pageid;
 	private float yesterdaysRelevance;
 	private int authorgraphRank;
+	private int commonWorkingSetAuthorsRank;
 	private String ns;
 	private String title;
 	private String timestamp;
@@ -133,6 +134,19 @@ public class Page {
 	public void setAuthorgraphRank(int authorgraphRank) {
 		this.authorgraphRank = authorgraphRank;
 	}
+	
+	public int getCommonWorkingSetAuthorsRank() {
+		return commonWorkingSetAuthorsRank;
+	}
+
+	public void setCommonWorkingSetAuthorsRank(int CommonWorkingSetAuthorsRank) {
+		this.commonWorkingSetAuthorsRank = CommonWorkingSetAuthorsRank;
+	}
+	
+	public void increaseCommonWorkingSetAuthorsRank() {
+		this.commonWorkingSetAuthorsRank++;
+	}
+	
 
 	public String getCategory() {
 		return category;

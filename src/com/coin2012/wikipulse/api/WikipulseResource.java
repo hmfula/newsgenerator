@@ -28,6 +28,8 @@ import spark.servlet.SparkApplication;
 public class WikipulseResource implements SparkApplication {
 
 	private static Logger logger = Logger.getLogger("WikipulseResource");
+	
+	private static WikipulseService wikipulseService = new WikipulseServiceImpl();
 
 	/**
 	 * Starts the WikipulseResource with an embedded Jetty server on
@@ -64,7 +66,6 @@ public class WikipulseResource implements SparkApplication {
 		get(new Route("/news") {
 			@Override
 			public Object handle(Request request, Response response) {
-				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				String nprop = request.queryParams("nprop");
 				response.type("application/json; charset=utf-8");
 				return wikipulseService.getNews(nprop);
@@ -74,7 +75,6 @@ public class WikipulseResource implements SparkApplication {
 		get(new Route("/news/:category") {
 			@Override
 			public Object handle(Request request, Response response) {
-				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				String category = request.params(":category");
 				String nprop = request.queryParams("nprop");
 				if (nprop == null) {
@@ -88,7 +88,6 @@ public class WikipulseResource implements SparkApplication {
 		get(new Route("/changes") {
 			@Override
 			public Object handle(Request request, Response response) {
-				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
 				String minChanges = request.queryParams("minchanges");
 				return wikipulseService.getRecentChanges(minChanges);
@@ -98,7 +97,6 @@ public class WikipulseResource implements SparkApplication {
 		get(new Route("/category") {
 			@Override
 			public Object handle(Request request, Response response) {
-				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				String nprop = request.queryParams("nprop");
 				response.type("application/json; charset=utf-8");
 				return wikipulseService.getCategories(nprop);
@@ -108,7 +106,6 @@ public class WikipulseResource implements SparkApplication {
 		put(new Route("/news/:news") {
 			@Override
 			public Object handle(Request request, Response response) {
-				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
 				String news = request.params(":news");
 				
@@ -132,7 +129,6 @@ public class WikipulseResource implements SparkApplication {
 		get(new Route("/wikipedians_by_edit_counts") {
 			@Override
 			public Object handle(Request request, Response response) {
-				WikipulseService wikipulseService = new WikipulseServiceImpl();
 				response.type("application/json; charset=utf-8");
 //				String editorNames = request.queryParams("ususers");
 				List <String> editorNames = new ArrayList<String>();
