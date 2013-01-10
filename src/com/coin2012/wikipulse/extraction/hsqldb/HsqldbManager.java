@@ -17,7 +17,7 @@ import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
 
 public class HsqldbManager {
-	static Logger logger = Logger.getLogger(ClassLoader.class.getSimpleName());
+	static Logger logger = Logger.getLogger(HsqldbManager.class.getSimpleName());
 	private  static Connection connection;
 	
 	
