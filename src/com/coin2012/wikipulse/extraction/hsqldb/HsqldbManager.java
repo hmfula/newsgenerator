@@ -58,7 +58,7 @@ public class HsqldbManager {
 				}
 			}
 		} catch (SQLException e) {
-			logger.info("Failed to create  a Preparedstatement because of  " + e.getCause());
+			logger.info("Failed to create a Preparedstatement because of  " + e.getCause());
 			e.printStackTrace();
 		}finally{
 			cleanup(connection, prepStatement);	

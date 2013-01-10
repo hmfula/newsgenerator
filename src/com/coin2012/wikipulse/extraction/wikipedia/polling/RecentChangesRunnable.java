@@ -9,15 +9,18 @@ import com.coin2012.wikipulse.extraction.utils.models.Change;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
 
 public class RecentChangesRunnable implements Runnable {
-	Logger logger = Logger.getLogger("RecentChangesRunnable.class");
+	Logger logger = Logger.getLogger(RecentChangesRunnable.class.getSimpleName());
 
 	@Override
 	public void run() {
 		while (true) {
 			logger.info("Starting querying recent changes");
 			List<Change> changes = WikipediaExtractor.getRecentChangesWithinTwoHours();
-			HsqldbManager.saveChangesToMemDB(changes);
-			HsqldbManager.clearOldChangesFromMemDB(TimestampGenerator.generateTimestampFromTwoHoursAgo());
+			if(changes != null && !changes.isEmpty() ){
+				HsqldbManager.saveChangesToMemDB(changes);
+				HsqldbManager.clearOldChangesFromMemDB(TimestampGenerator.generateTimestampFromTwoHoursAgo());
+				logger.info("Saved all changes to the database");
+			}
 			logger.info("Querying done");
 			try {
 				Thread.sleep(60000);
