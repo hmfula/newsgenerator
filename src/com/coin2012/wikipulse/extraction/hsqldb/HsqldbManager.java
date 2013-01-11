@@ -18,11 +18,11 @@ import com.coin2012.wikipulse.extraction.utils.models.Change;
 
 public class HsqldbManager {
 	static Logger logger = Logger.getLogger(HsqldbManager.class.getSimpleName());
-	private  static Connection connection;
 	
 	
 	public static String getTimestampForLastSavedChange() {
 		String timestamp = null;
+		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		try {
 			connection = getConnection();
@@ -43,6 +43,7 @@ public class HsqldbManager {
 	}
 	
 	public static void saveChangesToMemDB(List<Change> changes) {
+		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		try {
 		 connection = getConnection();
@@ -85,6 +86,7 @@ public class HsqldbManager {
 
 	public static void clearOldChangesFromMemDB(String timestamp) {
 		logger.info("Removing all changes from DB older than " + timestamp);
+		Connection connection = null;
 		long timeAsLong = Long.valueOf(timestamp);
 		ResultSet rs = getAllChangesFromMemDB();
 		try {
@@ -108,6 +110,7 @@ public class HsqldbManager {
 	}
 
 	public static ResultSet getAllChangesFromMemDB() {
+		Connection connection = null;
 		ResultSet rs = null;
 		PreparedStatement prepStatement = null;
 		try {
@@ -126,6 +129,7 @@ public class HsqldbManager {
 
 	public static HashMap<String, AggregatedChanges> getAllAggregatedChangesFromMemDB() {
 		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
+		Connection connection = null;
 		ResultSet rs = getAllChangesFromMemDB();
 		try {
 			while (rs.next()) {
@@ -152,6 +156,7 @@ public class HsqldbManager {
 	}
 	
 	public static void saveUserInteractionInDB(String News){
+		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		ResultSet rs = null;
 		try {
@@ -186,6 +191,7 @@ public class HsqldbManager {
 	
 	public static List<News_Counter> getMostReadNews(){
 		List<News_Counter> resultList = new ArrayList<News_Counter>();
+		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		ResultSet rs = null;
 		try {
