@@ -20,15 +20,6 @@ public class HsqldbManager {
 	static Logger logger = Logger.getLogger(HsqldbManager.class.getSimpleName());
 	private  static Connection connection;
 	
-	static{
-		try {
-			connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-		} catch (SQLException e) {
-			logger.info("Failed to create a connection to the database because of : " + e.getCause() );
-			e.printStackTrace();
-		}	
-	}
-	
 	
 	public static String getTimestampForLastSavedChange() {
 		String timestamp = null;
