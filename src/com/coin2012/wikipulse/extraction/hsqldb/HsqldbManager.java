@@ -20,6 +20,15 @@ public class HsqldbManager {
 	static Logger logger = Logger.getLogger(HsqldbManager.class.getSimpleName());
 	private  static Connection connection;
 	
+	static{
+		try {
+			connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+		} catch (SQLException e) {
+			logger.info("Failed to create a connection to the database because of : " + e.getCause() );
+			e.printStackTrace();
+		}	
+	}
+	
 	
 	public static String getTimestampForLastSavedChange() {
 		String timestamp = null;
@@ -80,10 +89,7 @@ public class HsqldbManager {
 	}
 
 	private static Connection getConnection() throws SQLException {
-		if(connection != null){
-			return connection;
-		} 
-		return DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+		return  DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
 	}
 
 	public static void clearOldChangesFromMemDB(String timestamp) {
@@ -114,9 +120,10 @@ public class HsqldbManager {
 		ResultSet rs = null;
 		PreparedStatement prepStatement = null;
 		try {
-			connection = getConnection();
-			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
-			rs = prepStatement.executeQuery();
+				
+				connection = getConnection();
+				prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+				rs = prepStatement.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
