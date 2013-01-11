@@ -122,7 +122,8 @@ public class HsqldbManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
-			cleanup(connection, prepStatement);
+			// not possible, because returnvalue rs will be empty after closing connection
+			//cleanup(connection, prepStatement);
 		}
 		return rs;
 	}
@@ -130,8 +131,12 @@ public class HsqldbManager {
 	public static HashMap<String, AggregatedChanges> getAllAggregatedChangesFromMemDB() {
 		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
 		Connection connection = null;
-		ResultSet rs = getAllChangesFromMemDB();
+		PreparedStatement prepStatement = null;
+		//ResultSet rs = getAllChangesFromMemDB();
 		try {
+			connection = getConnection();
+			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				String title = rs.getString(2);
 				AggregatedChanges change = map.get(rs.getString(2));
@@ -141,13 +146,14 @@ public class HsqldbManager {
 					change.addToCount();
 				}
 			}
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
 			try {
-				cleanup(connection, rs.getStatement());
-			} catch (SQLException e) {
+				cleanup(connection, prepStatement);
+			} catch (Exception e) {
 				logger.info("Failed to close the connection to the database because of : " + e.getCause() );
 				e.printStackTrace();
 			}	
@@ -180,7 +186,8 @@ public class HsqldbManager {
 					prepStatement.setString(1,News);
 					prepStatement.setString(2,Integer.toString(counter));					
 				}
-				prepStatement.executeUpdate();					
+				prepStatement.executeUpdate();	
+				rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -202,6 +209,7 @@ public class HsqldbManager {
 				News_Counter news = new News_Counter(rs.getString(1), rs.getInt(2));
 				resultList.add(news);
 			}
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
