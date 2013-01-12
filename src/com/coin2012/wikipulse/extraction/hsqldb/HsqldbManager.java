@@ -20,14 +20,16 @@ public class HsqldbManager {
 	static Logger logger = Logger
 			.getLogger(HsqldbManager.class.getSimpleName());
 
+
 	public static String getTimestampForLastSavedChange() {
 		String timestamp = null;
-		ResultSet rs = null;
+		Connection connection = null;
+		PreparedStatement prepStatement = null;
 		try {
-			Connection connection = getConnection();
-			PreparedStatement prepStatement = connection
+			 connection = getConnection();
+			 prepStatement = connection
 					.prepareStatement("SELECT * FROM changes");
-			rs = prepStatement.executeQuery();
+			 ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				if (rs.isFirst()) {
 					timestamp = rs.getString(1);
@@ -37,7 +39,7 @@ public class HsqldbManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			closeDatabaseConnectionsFromResultSet(rs);
+			closeDatabaseConnections(connection, prepStatement);
 		}
 		return timestamp;
 	}
@@ -76,9 +78,13 @@ public class HsqldbManager {
 	public static void clearOldChangesFromMemDB(String timestamp) {
 		logger.info("Removing all changes from DB older than " + timestamp);
 		long timeAsLong = Long.valueOf(timestamp);
-
-		ResultSet rs = getAllChangesFromMemDB();
+		Connection connection = null;
+		PreparedStatement prepStatement = null;
+//		ResultSet rs = getAllChangesFromMemDB();
 		try {
+			 connection = getConnection();
+			 prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			 ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				if (rs.getLong(1) < timeAsLong) {
 					rs.deleteRow();
@@ -88,7 +94,7 @@ public class HsqldbManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			closeDatabaseConnectionsFromResultSet(rs);
+			closeDatabaseConnections(connection, prepStatement);
 		}
 
 	}
@@ -97,13 +103,13 @@ public class HsqldbManager {
 
 	public static HashMap<String, AggregatedChanges> getAllAggregatedChangesFromMemDB() {
 		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
-		ResultSet rs = null;
+		Connection connection = null;
+		PreparedStatement prepStatement = null;
 		try {
-			// connection = getConnection();
-			// prepStatement =
-			// connection.prepareStatement("SELECT * FROM changes for update");
-			// ResultSet rs = prepStatement.executeQuery();
-			rs = getAllChangesFromMemDB();
+			 connection = getConnection();
+			 prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			 ResultSet rs = prepStatement.executeQuery();
+//			 rs = getAllChangesFromMemDB();
 			while (rs.next()) {
 				String title = rs.getString(2);
 				AggregatedChanges change = map.get(rs.getString(2));
@@ -117,7 +123,7 @@ public class HsqldbManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			closeDatabaseConnectionsFromResultSet(rs);
+			closeDatabaseConnections(connection, prepStatement);
 		}
 		return map;
 	}
@@ -161,12 +167,13 @@ public class HsqldbManager {
 
 	public static List<News_Counter> getMostReadNews() {
 		List<News_Counter> resultList = new ArrayList<News_Counter>();
-		ResultSet rs = null;
+		Connection connection = null;
+		PreparedStatement prepStatement = null;
 		try {
-			Connection connection = getConnection();
-			PreparedStatement prepStatement = connection
+			connection = getConnection();
+			prepStatement = connection
 					.prepareStatement("SELECT TOP 10 * FROM mostreadnews ORDER BY numberofclicks DESC");
-			rs = prepStatement.executeQuery();
+			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				News_Counter news = new News_Counter(rs.getString(1),
 						rs.getInt(2));
@@ -177,7 +184,7 @@ public class HsqldbManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			closeDatabaseConnectionsFromResultSet(rs);
+			closeDatabaseConnections(connection, prepStatement);
 		}
 		return resultList;
 	}
@@ -200,25 +207,6 @@ public class HsqldbManager {
 		}
 	}
 
-	private static void closeDatabaseConnectionsFromResultSet(ResultSet rs) {
-		try {
-			if (rs != null) {
-				rs.close();
-			}
-
-			if (rs.getStatement() != null) {
-				rs.getStatement().close();
-			}
-			if (rs.getStatement().getConnection() != null) {
-				rs.getStatement().getConnection().close();
-			}
-
-		} catch (Exception e) {
-			logger.info("Failed to close the connection to the database because of : "
-					+ e.getCause());
-			e.printStackTrace();
-		}
-	}
 	
 	private static ResultSet getAllChangesFromMemDB() {
 		ResultSet rs = null;
