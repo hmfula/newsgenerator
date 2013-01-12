@@ -228,12 +228,40 @@ public class WikipulseResource implements SparkApplication {
 			connection.createStatement()
 					.execute("CREATE TABLE mostreadnews (article varchar(255), numberofclicks integer,UNIQUE (article))");
 			new Thread(new RecentChangesRunnable()).start();
+
+			addShutdownHook(connection);
 		} catch (SQLException e) {
 			logger.severe("Creation of in memory db table changes failed.");
 		} catch (ClassNotFoundException e) {
 			logger.severe("Loading of necessary db classes failed.");
 		}
 
+	}
+
+	/**
+	 * Shuts down the in-memory database correctly in case of any shutdown command.
+	 * @param connection the connection to the in-memory database
+	 */
+	private static void addShutdownHook(final Connection connection) {
+		  Runtime.getRuntime().addShutdownHook(new Thread() {  
+	            @Override  
+	            public void run() {  
+	            	try {
+
+	        			if (connection != null) {
+	        				connection.close();
+	        				
+	        			}
+
+	        		} catch (Exception e) {
+	        			logger.info("Failed to close the connection to the database because of : "
+	        					+ e.getCause());
+	        			e.printStackTrace();
+	        		}
+	            	
+	            }  
+	        });  
+		
 	}
 	
 	
