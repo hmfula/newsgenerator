@@ -191,7 +191,7 @@ public class HsqldbManager {
 	
 	private static void closeDatabaseConnections(Connection connection, Statement prepStatement) {
 		try {
-			if (prepStatement.getResultSet() != null) {
+			if (prepStatement != null && prepStatement.getResultSet() != null) {
 				prepStatement.getResultSet().close();
 			}
 			if (prepStatement != null) {
