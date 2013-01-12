@@ -86,8 +86,8 @@ public class HsqldbManager {
 
 	public static void clearOldChangesFromMemDB(String timestamp) {
 		logger.info("Removing all changes from DB older than " + timestamp);
-		Connection connection = null;
 		long timeAsLong = Long.valueOf(timestamp);
+		
 		ResultSet rs = getAllChangesFromMemDB();
 		try {
 			while (rs.next()) {
@@ -100,7 +100,7 @@ public class HsqldbManager {
 			e.printStackTrace();
 		}finally{
 			try {
-				cleanup(connection, rs.getStatement());
+				cleanup(rs.getStatement().getConnection(), rs.getStatement());
 			} catch (SQLException e) {
 				logger.info("Failed to close the connection to the database because of : " + e.getCause() );
 				e.printStackTrace();
@@ -109,34 +109,28 @@ public class HsqldbManager {
 		
 	}
 
-	public static ResultSet getAllChangesFromMemDB() {
-		Connection connection = null;
+	private static ResultSet getAllChangesFromMemDB() {
 		ResultSet rs = null;
-		PreparedStatement prepStatement = null;
 		try {
 				
-				connection = getConnection();
-				prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+				Connection connection = getConnection();
+				PreparedStatement	prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
 				rs = prepStatement.executeQuery();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			// not possible, because returnvalue rs will be empty after closing connection
-			//cleanup(connection, prepStatement);
 		}
 		return rs;
 	}
 
 	public static HashMap<String, AggregatedChanges> getAllAggregatedChangesFromMemDB() {
 		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
-		Connection connection = null;
-		PreparedStatement prepStatement = null;
-		//ResultSet rs = getAllChangesFromMemDB();
+		ResultSet rs= null;
+		
 		try {
-			connection = getConnection();
-			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
-			ResultSet rs = prepStatement.executeQuery();
+//			connection = getConnection();
+//			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+//			ResultSet rs = prepStatement.executeQuery();
+			rs = getAllChangesFromMemDB();
 			while (rs.next()) {
 				String title = rs.getString(2);
 				AggregatedChanges change = map.get(rs.getString(2));
@@ -146,13 +140,12 @@ public class HsqldbManager {
 					change.addToCount();
 				}
 			}
-			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
 			try {
-				cleanup(connection, prepStatement);
+				cleanup(rs.getStatement().getConnection(), rs.getStatement());
 			} catch (Exception e) {
 				logger.info("Failed to close the connection to the database because of : " + e.getCause() );
 				e.printStackTrace();
