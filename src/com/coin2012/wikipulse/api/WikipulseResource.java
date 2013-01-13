@@ -150,16 +150,20 @@ public class WikipulseResource implements SparkApplication {
 		});
 
 		// Example
-		// http://localhost:4567/create_summary?url=www.mittromney.com
+		//http://localhost:4567/create_summary?url=http://en.wikipedia.org/wiki/Finland&length=7
+		//Where: 
+		//create_summary => route name
+		//http://en.wikipedia.org/wiki/Finland => article url
+		//length=7 => number of sentences in from the article
 		get(new Route("/create_summary") {
 			@Override
 			public Object handle(Request request, Response response) {
 				response.type("application/json; charset=utf-8");
 			
 			String url = request.queryParams("url");
-			String length = "10";//TODO FIX hard code	
+			String length = request.queryParams("length");	
 			
-			return wikipulseService.summarizeArticle(url,  length);
+			return wikipulseService.summarizeArticle(url, length);
 			}
 		});
 	 
