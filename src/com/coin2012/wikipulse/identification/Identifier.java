@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
 import com.coin2012.wikipulse.identification.newscreation.Dummy;
 import com.coin2012.wikipulse.identification.newsselection.Authorgraph;
 import com.coin2012.wikipulse.identification.newsselection.CommonWorkingSetAuthors;
@@ -55,5 +56,11 @@ public class Identifier implements Identifiable {
 		List <News> newsResults = Dummy.createNewsFromPages(resultSet); // dummy for now
 		
 		return newsResults;
+	}
+	
+	
+	public Page summarizeArticle(String url, String length) {
+		Page page = PageSummarizer.summarizeArticle(url, length);
+		return page;
 	}
 }

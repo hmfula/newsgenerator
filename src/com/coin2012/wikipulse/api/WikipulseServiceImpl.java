@@ -8,7 +8,6 @@ import java.util.Map;
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.extraction.News_Counter;
-import com.coin2012.wikipulse.identification.Identifiable;
 import com.coin2012.wikipulse.identification.Identifier;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;
@@ -83,7 +82,7 @@ public class WikipulseServiceImpl implements WikipulseService {
 
 	@Override
 	public String getNewsForCategory(String category, String nprop) {
-		Identifiable identifier = new Identifier();
+		Identifier identifier = new Identifier();
 		List<News> news = identifier.getNewsForCategory(category);
 		enhanceNewsWithProp(news, nprop);
 		
@@ -149,5 +148,11 @@ public class WikipulseServiceImpl implements WikipulseService {
 		String result = gson.toJson(extractor.getWikipediaEditors(editorNames));
 		return result;
 
+	}
+
+	@Override
+	public String summarizeArticle(String url, String length) {
+		String result = gson.toJson(extractor.summarizeArticle(url, length));
+		return result;
 	}
 }

@@ -62,6 +62,14 @@ public interface WikipulseService {
 	 */
 	public String getEditors(List<String> editorNames);
 
+	/**
+	 * Summarizes a page
+	 * @param url of the  page 
+	 * @param length number sentences.  The minimum is 6 sentences.
+	 * @return JSON string  that contain the summary of the page
+	 */
+	public String  summarizeArticle(String url, String length);
+
 	//
 	// /**
 	// * Fetches pages for a given category.

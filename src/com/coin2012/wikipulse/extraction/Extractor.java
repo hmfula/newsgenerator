@@ -7,12 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
+import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
 import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
+import com.google.gson.JsonElement;
 
 /**
  * Represents an Extractor component used to interact with Wikipedia API.
@@ -153,5 +155,14 @@ public class Extractor implements Extractable {
 			
 		}
 		return doArticlesHaveAtleastOneCommonEditor;
+	}
+
+	/**
+	 * TODO : Method to be moved to identifier after fixing threading issue
+	 *
+	 */
+	public Page summarizeArticle(String url, String length) {
+		Page page = PageSummarizer.summarizeArticle(url, length);
+		return page;
 	}
 }

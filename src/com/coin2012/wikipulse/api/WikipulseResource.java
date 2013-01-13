@@ -149,6 +149,20 @@ public class WikipulseResource implements SparkApplication {
 			}
 		});
 
+		// Example
+		// http://localhost:4567/create_summary?url=www.mittromney.com
+		get(new Route("/create_summary") {
+			@Override
+			public Object handle(Request request, Response response) {
+				response.type("application/json; charset=utf-8");
+			
+			String url = request.queryParams("url");
+			String length = "10";//TODO FIX hard code	
+			
+			return wikipulseService.summarizeArticle(url,  length);
+			}
+		});
+	 
 		// get(new Route("/MostReadArticlesInCategory") {
 		// @Override
 		// public Object handle(Request request, Response response) {
@@ -250,7 +264,6 @@ public class WikipulseResource implements SparkApplication {
 
 	        			if (connection != null) {
 	        				connection.close();
-	        				
 	        			}
 
 	        		} catch (Exception e) {
