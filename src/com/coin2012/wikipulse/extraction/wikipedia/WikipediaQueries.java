@@ -20,6 +20,15 @@ public abstract class WikipediaQueries {
 		return resource;
 	}
 	
+	public static ClientResource buildQueryForPageWithCategoriesByTitle(String title) {
+		ClientResource resource = new ClientResource(wikipediaApi);
+		resource.getReference().addQueryParameter("action", "query");
+		resource.getReference().addQueryParameter("titles", title);
+		resource.getReference().addQueryParameter("prop", "categories");;
+		resource.getReference().addQueryParameter("format", "json");
+		return resource;
+	}
+
 	/**
 	 * http://en.wikipedia.org/w/api.php?action=query&pageids=DUMMY&prop=revisions&rvprop=ids|timestamp|comment|user&rvend=DATE&rvdir=older&format=json
 	 * @param pageId

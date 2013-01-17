@@ -1,6 +1,6 @@
 package com.coin2012.wikipulse.extraction.wikipedia;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -118,6 +118,17 @@ public class WikipediaExtractor {
 		String result = QueryUtils.executeQueryToResource(resource);
 		List<Editor> editors = WikipediaResultParser.parseResultToMatchingEditors(result);
 		return editors;
+	}
+	
+	public static List<Page> getPagesWithCategoriesForTitles(List<String> titles){
+		List<Page> pages = new ArrayList<Page>();
+		for (String title : titles) {
+			ClientResource resource = WikipediaQueries.buildQueryForPageWithCategoriesByTitle(title);
+			String result = QueryUtils.executeQueryToResource(resource);
+			Page page = WikipediaResultParser.parseResultToPage(result);
+			pages.add(page);
+		}
+		return pages;
 	}
 
 //	public static List<SnippetPage> searchForPagesThatMatch(String searchText) {
