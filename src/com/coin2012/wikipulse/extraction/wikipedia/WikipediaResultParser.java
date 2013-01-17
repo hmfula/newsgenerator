@@ -144,4 +144,9 @@ public class WikipediaResultParser extends ResultParser {
 		}
 		return editors;
 	}
+
+	public static Page parseResultToPage(String result) {
+		// TODO Auto-generated method stub
+		return new Page();
+	}
 }

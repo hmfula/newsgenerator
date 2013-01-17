@@ -43,6 +43,11 @@ public class Extractor implements Extractable {
 	}
 	
 	@Override
+	public List<Page> getPagesWithCategory(List<String> titles){
+		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForTitles(titles);
+		return pages;
+	}
+	@Override
 	public void enhancePagesWithEdits(List<Page> pages){
 		WikipediaExtractor.updatePagesWithEdits(pages);
 	}

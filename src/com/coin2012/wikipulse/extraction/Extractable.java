@@ -41,6 +41,8 @@ public interface Extractable {
 	 * @return true if two articles at least one editor in common other returns false
 	 */
 	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle);
+
+	public List<Page> getPagesWithCategory(List<String> titles);
 	
 	/**
 	 * Summarizes a page
