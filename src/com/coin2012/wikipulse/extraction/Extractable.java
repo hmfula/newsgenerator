@@ -42,7 +42,7 @@ public interface Extractable {
 	 */
 	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle);
 
-	public List<Page> getPagesWithCategory(List<String> titles);
+	public List<Page> getPagesForIdentification();
 	
 	/**
 	 * Summarizes a page
@@ -51,26 +51,4 @@ public interface Extractable {
 	 * @return Page object  that contain the summary of the page
 	 */
 	public Page summarizeArticle(String url, String length);
-	
-//	/**
-//	 * Searches for pages containing search text
-//	 * @param searchText
-//	 * @return
-//	 */
-//	public List<SnippetPage> searchForPagesThatMatch(String searchText);
-	
-//	/**
-//	 * Returns pages referencing a particular page (url)
-//	 * 
-//	 * @param url
-//	 * @return
-//	 */
-//	public List<Page> searchForPagesReferencing(String url);
-	
-//	/**
-//	 * Returns a list of Pages that contain images found in a given page
-//	 * @param pageTitle used to search the page for images
-//	 * @return page (s) with images
-//	 */
-//	List<Page> getPageWithImages(String pageTitle);
 }

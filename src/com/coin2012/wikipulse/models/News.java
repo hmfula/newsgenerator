@@ -12,6 +12,7 @@ public class News {
 	private String news = "";
 	private List<String> imageUrlList = new ArrayList<String>();
 	private float yesterdaysRelevance = 0;
+	private int viewCount;
 
 	public String getPageId() {
 		return pageId;
@@ -57,5 +58,13 @@ public class News {
 	
 	public float getRelYesterday() {
 		return this.yesterdaysRelevance;
+	}
+
+	public int getViewCount() {
+		return viewCount;
+	}
+
+	public void setViewCount(int viewCount) {
+		this.viewCount = viewCount;
 	}
 }

@@ -120,6 +120,8 @@ public class WikipulseResource implements SparkApplication {
 			}
 		});
 		
+		
+		//TODO Clean up
 		/**
 		 * This route is used only for testing.
 		 * Currently hard coded to show only top 10 Wikipedians
@@ -148,7 +150,8 @@ public class WikipulseResource implements SparkApplication {
 				return wikipulseService.getEditors(editorNames);
 			}
 		});
-
+		
+		//TODO Clean up
 		// Example
 		//http://localhost:4567/create_summary?url=http://en.wikipedia.org/wiki/Finland&length=7
 		//Where: 
@@ -166,71 +169,6 @@ public class WikipulseResource implements SparkApplication {
 			return wikipulseService.summarizeArticle(url, length);
 			}
 		});
-	 
-		// get(new Route("/MostReadArticlesInCategory") {
-		// @Override
-		// public Object handle(Request request, Response response) {
-		// String category = "Category:" + request.queryParams("category");
-		// WikipulseService wikipulseService = new WikipulseServiceImpl();
-		// response.type("application/json; charset=utf-8");
-		// String return_set = "callback(" +
-		// wikipulseService.getMostReadTitlesForCategory(category) + ")";
-		// return return_set;
-		// }
-		// });
-		//
-		// //Example
-		// http://localhost:4567/ExernalLinkSearch?url=www.mittromney.com
-		// //Example can be used for result verification.
-		// http://en.wikipedia.org/w/api.php?action=query&list=exturlusage&euquery=www.mittromney.com&eulimit=30&eunamespace=0&format=json
-		// get(new Route("/ExernalLinkSearch") {
-		// @Override
-		// public Object handle(Request request, Response response) {
-		// String url = request.queryParams("url");
-		// WikipulseService wikipulseService = new WikipulseServiceImpl();
-		// response.type("application/json; charset=utf-8");
-		// String externallyLinkePages =
-		// wikipulseService.searchForPagesReferencing(url);
-		//
-		// return externallyLinkePages;
-		// }
-		// });
-		//
-		//
-		// //Example: to search for pages containing text '2012 US Elections'.
-		// http://localhost:4567/FreeTextSearch?&srsearch=2012 US Elections
-		// get(new Route("/FreeTextSearch") {
-		// @Override
-		// public Object handle(Request request, Response response) {
-		// String searchText = request.queryParams("srsearch");
-		// WikipulseService wikipulseService = new WikipulseServiceImpl();
-		// response.type("application/json; charset=utf-8");
-		// String snippetPages = "callback(" +
-		// wikipulseService.searchForPagesThatMatch(searchText) + ")";
-		// return snippetPages;
-		// }
-		//
-		// });
-		//
-		//
-		// // Example: To list images on Albert Einstein page.
-		// http://localhost:4567/FetchPageImages?titles=Albert%20Einstein
-		//
-		// get(new Route("/FetchPageImages") {
-		//
-		// @Override
-		// public Object handle(Request request, Response response) {
-		//
-		// String imageTitle = request.queryParams("titles");
-		// WikipulseService wikipulseService = new WikipulseServiceImpl();
-		// response.type("application/json; charset=utf-8");
-		// String pageDetails = "pic_callback(" +
-		// wikipulseService.getPageWithImages(imageTitle) + ")";
-		// return pageDetails;
-		// }
-		//
-		// });
-
 	}
 
 	/**

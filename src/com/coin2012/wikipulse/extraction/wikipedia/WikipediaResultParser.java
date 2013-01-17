@@ -146,7 +146,8 @@ public class WikipediaResultParser extends ResultParser {
 	}
 
 	public static Page parseResultToPage(String result) {
-		// TODO Auto-generated method stub
+		System.out.println(result);
+		
 		return new Page();
 	}
 }

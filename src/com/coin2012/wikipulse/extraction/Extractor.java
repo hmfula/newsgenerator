@@ -14,7 +14,6 @@ import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
-import com.google.gson.JsonElement;
 
 /**
  * Represents an Extractor component used to interact with Wikipedia API.
@@ -29,11 +28,6 @@ public class Extractor implements Extractable {
 		List<AggregatedChanges> aggregatedChanges = this.aggregateChangesFromMemDB(minChanges);
 		this.sortAggregatedChanges(aggregatedChanges);
 		return aggregatedChanges;
-		/*
-		 * read last entry from db clear db check if within 2h if then call get
-		 * recentChanges(lasttimestamp) else call get recentChanges(2h
-		 * timestamp) add result to db aggregate return
-		 */
 	}
 
 	@Override
@@ -43,8 +37,14 @@ public class Extractor implements Extractable {
 	}
 	
 	@Override
-	public List<Page> getPagesWithCategory(List<String> titles){
+	public List<Page> getPagesForIdentification(){
+		List<AggregatedChanges> recentChanges =  this.getRecentChanges(0);
+		List<String> titles = new ArrayList<String>();
+		for (AggregatedChanges aggregatedChanges : recentChanges) {
+			titles.add(aggregatedChanges.getTitle());
+		}
 		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForTitles(titles);
+		//TODO enhance with edits
 		return pages;
 	}
 	@Override
@@ -71,26 +71,6 @@ public class Extractor implements Extractable {
 	public void saveUserInteraction(String News){
 		HsqldbManager.saveUserInteractionInDB(News);
 	}
-	
-
-//	@Override
-//	public List<SnippetPage> searchForPagesThatMatch(String searchText) {
-//		List<SnippetPage> pages = WikipediaExtractor.searchForPagesThatMatch(searchText);
-//		return pages;
-//
-//	}
-//
-//	@Override
-//	public List<Page> searchForPagesReferencing(String url) {
-//		List<Page> pages = WikipediaExtractor.searchForPagesReferencing(url);
-//		return pages;
-//
-//	}
-//
-//	@Override
-//	public List<Page> getPageWithImages(String pageTitle) {
-//		return WikipediaExtractor.getPageWithImages(pageTitle);
-//	}
 
 	/**
 	 * Counts the changes for each title and returns a list of AggregatedChanges
