@@ -15,9 +15,9 @@ public class WikipediaExtractorTest {
 	@Test
 	public void getPagesWithCategoriesForTitles(){
 		List<String> titles = new ArrayList<String>();
-		titles.add("Eintracht Frankfurt");
-		titles.add("Hessen");
-		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForTitles(titles);
+		titles.add("736");
+		titles.add("20396");
+		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForPageIds(titles);
 		Assert.assertTrue(pages.size()==2);
 	}
 

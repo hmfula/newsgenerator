@@ -120,12 +120,12 @@ public class WikipediaExtractor {
 		return editors;
 	}
 	
-	public static List<Page> getPagesWithCategoriesForTitles(List<String> titles){
+	public static List<Page> getPagesWithCategoriesForPageIds(List<String> pageids){
 		List<Page> pages = new ArrayList<Page>();
-		for (String title : titles) {
-			ClientResource resource = WikipediaQueries.buildQueryForPageWithCategoriesByTitle(title);
+		for (String pageid : pageids) {
+			ClientResource resource = WikipediaQueries.buildQueryForPageWithCategoriesByPageId(pageid);
 			String result = QueryUtils.executeQueryToResource(resource);
-			Page page = WikipediaResultParser.parseResultToPage(result);
+			Page page = WikipediaResultParser.parseResultToPage(result,pageid);
 			pages.add(page);
 		}
 		return pages;

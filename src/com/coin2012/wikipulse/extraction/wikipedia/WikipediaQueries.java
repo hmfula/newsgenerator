@@ -20,10 +20,10 @@ public abstract class WikipediaQueries {
 		return resource;
 	}
 	
-	public static ClientResource buildQueryForPageWithCategoriesByTitle(String title) {
+	public static ClientResource buildQueryForPageWithCategoriesByPageId(String pageid) {
 		ClientResource resource = new ClientResource(wikipediaApi);
 		resource.getReference().addQueryParameter("action", "query");
-		resource.getReference().addQueryParameter("titles", title);
+		resource.getReference().addQueryParameter("pageids", pageid);
 		resource.getReference().addQueryParameter("prop", "categories");;
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;

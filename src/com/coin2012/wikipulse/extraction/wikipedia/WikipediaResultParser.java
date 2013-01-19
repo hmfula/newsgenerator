@@ -110,16 +110,12 @@ public class WikipediaResultParser extends ResultParser {
 		return editors;
 	}
 
-	public static Page parseResultToPage(String result) {
+	public static Page parseResultToPage(String result, String pageid) {
 		System.out.println(result);
 		Page page = null;
-		Set<Entry<String, JsonElement>> set = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
-				.getAsJsonObject().entrySet();
-		for (Entry<String, JsonElement> entry : set) {
-			JsonObject pageAsJson = entry.getValue().getAsJsonObject();
+		JsonObject pageAsJson = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
+				.getAsJsonObject().get(pageid).getAsJsonObject();
 			page = gson.fromJson(pageAsJson, Page.class);
-			break;
-		}
 		return page;
 	}
 }

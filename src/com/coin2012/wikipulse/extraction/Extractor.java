@@ -39,11 +39,11 @@ public class Extractor implements Extractable {
 	@Override
 	public List<Page> getPagesForIdentification(){
 		List<AggregatedChanges> recentChanges =  this.getRecentChanges(0);
-		List<String> titles = new ArrayList<String>();
+		List<String> pageids = new ArrayList<String>();
 		for (AggregatedChanges aggregatedChanges : recentChanges) {
-			titles.add(aggregatedChanges.getTitle());
+			pageids.add(aggregatedChanges.getPageid());
 		}
-		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForTitles(titles);
+		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForPageIds(pageids);
 		WikipediaExtractor.updatePagesWithEditsFromTheLastTwoHours(pages);
 		return pages;
 	}
