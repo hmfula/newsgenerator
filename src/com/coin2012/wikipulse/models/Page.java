@@ -19,6 +19,7 @@ public class Page {
 	private List<Image> images;
 	private List<String> imageUrlList = new ArrayList<String>();
 	private PageSummary pageSummary;
+	private List<Category> categories = new ArrayList<Category>();
 	
 	public Page() {
 		category = "";
@@ -208,4 +209,13 @@ public class Page {
 		
 	}
 
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
 }

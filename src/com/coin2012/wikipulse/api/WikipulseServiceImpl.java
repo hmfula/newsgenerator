@@ -96,18 +96,19 @@ public class WikipulseServiceImpl implements WikipulseService {
 	
 	@Override
 	public String getCategories(String nprop){
-		
-		/*
-		 * List<Category> categories = extractor.loadCategoriesFromDB();
-		 */
-		List<Category> categories = new ArrayList<Category>();
-		categories.add(new Category("Economy_of_the_United_States","U.S."));
-		categories.add(new Category("Europe","Europe"));
-		categories.add(new Category("Asia","Asia"));
-		categories.add(new Category("Recent_deaths","Recent Deaths"));
-		categories.add(new Category("Current_events","Current Wikipedia Events"));
-		categories.add(new Category("Current_sports_events","Current Sports Events"));
-		return gson.toJson(categories);
+		//TODO implement
+//		/*
+//		 * List<Category> categories = extractor.loadCategoriesFromDB();
+//		 */
+//		List<Category> categories = new ArrayList<Category>();
+//		categories.add(new Category("Economy_of_the_United_States","U.S."));
+//		categories.add(new Category("Europe","Europe"));
+//		categories.add(new Category("Asia","Asia"));
+//		categories.add(new Category("Recent_deaths","Recent Deaths"));
+//		categories.add(new Category("Current_events","Current Wikipedia Events"));
+//		categories.add(new Category("Current_sports_events","Current Sports Events"));
+//		return gson.toJson(categories);
+		return "";
 	}
 	
 	/**

@@ -14,14 +14,14 @@ public class RecentChangesRunnable implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			logger.info("Starting querying recent changes");
+			logger.info("Starting collecting recent changes");
 			List<Change> changes = WikipediaExtractor.getRecentChangesWithinTwoHours();
 			if(changes != null && !changes.isEmpty() ){
 				HsqldbManager.saveChangesToMemDB(changes);
 				HsqldbManager.clearOldChangesFromMemDB(TimestampGenerator.generateTimestampFromTwoHoursAgo());
 				logger.info("Saved all changes to the database");
 			}
-			logger.info("Querying done");
+			logger.info("Collecting recent changes done");
 			try {
 				Thread.sleep(60000);
 			} catch (InterruptedException e) {

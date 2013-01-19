@@ -4,7 +4,7 @@ public class News_Counter {
 		private final String title;
 		private final String url;
 		private int count;
-
+//TODO remove if possible
 		public News_Counter(String title, Integer count) {
 			this.title = title;
 			url = "en.wikipedia.org/wiki/" + title;

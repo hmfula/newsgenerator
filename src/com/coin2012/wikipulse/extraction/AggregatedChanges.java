@@ -5,7 +5,7 @@ public class AggregatedChanges {
 	private final String title;
 	private final String url;
 	private int count;
-
+//TODO remove if possible
 	public AggregatedChanges(String title) {
 		this.title = title;
 		url = "en.wikipedia.org/wiki/" + title;

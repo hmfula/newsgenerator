@@ -130,18 +130,14 @@ public class WikipediaExtractor {
 		}
 		return pages;
 	}
+	
+	public static void updatePagesWithEditsFromTheLastTwoHours(List<Page> pages) {
+		for (Page page : pages) {
+			ClientResource resource = WikipediaQueries.buildQueryForRevisionsFromTheLastTwoHours(page.getPageId());
+			String result = QueryUtils.executeQueryToResource(resource);
+			List<WikiEdit> edits = WikipediaResultParser.parseResultToEdits(result, page.getPageId());
+			page.setEdits(edits);
+		}
+	}
 
-//	public static List<SnippetPage> searchForPagesThatMatch(String searchText) {
-//		ClientResource resource = WikipediaQueries.buildQuerySearchForPagesThatMatch(searchText);
-//		String result = QueryUtils.executeQueryToResource(resource);
-//		List<SnippetPage> pages = WikipediaResultParser.parseResultToPageSnippets(result);
-//		return pages;
-//	}
-
-//	public static List<Page> searchForPagesReferencing(String url) {
-//		ClientResource resource = WikipediaQueries.buildQueryToSearchForPagesReferencing(url);
-//		String result = QueryUtils.executeQueryToResource(resource);
-//		List<Page> pages = WikipediaResultParser.parseResultToMatchingPages(result);
-//		return pages;
-//	}
 }

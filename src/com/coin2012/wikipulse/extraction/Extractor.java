@@ -44,7 +44,7 @@ public class Extractor implements Extractable {
 			titles.add(aggregatedChanges.getTitle());
 		}
 		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForTitles(titles);
-		//TODO enhance with edits
+		WikipediaExtractor.updatePagesWithEditsFromTheLastTwoHours(pages);
 		return pages;
 	}
 	@Override
@@ -64,11 +64,13 @@ public class Extractor implements Extractable {
 	
 	@Override
 	public List<News_Counter> getMostReadNews() {
+		//TODO work over
 		List<News_Counter> top10List = HsqldbManager.getMostReadNews();
 		return top10List;
 	}
 	@Override 
 	public void saveUserInteraction(String News){
+		//TODO work over
 		HsqldbManager.saveUserInteractionInDB(News);
 	}
 
