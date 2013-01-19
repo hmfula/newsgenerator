@@ -3,11 +3,13 @@ package com.coin2012.wikipulse.extraction;
 public class AggregatedChanges {
 
 	private final String title;
+	private final String pageid;
 	private final String url;
 	private int count;
-//TODO remove if possible
-	public AggregatedChanges(String title) {
+
+	public AggregatedChanges(String title, String pageid) {
 		this.title = title;
+		this.pageid = pageid;
 		url = "en.wikipedia.org/wiki/" + title;
 		count = 1;
 	}
@@ -26,6 +28,10 @@ public class AggregatedChanges {
 
 	public String getUrl() {
 		return url;
+	}
+
+	public String getPageid() {
+		return pageid;
 	}
 
 }

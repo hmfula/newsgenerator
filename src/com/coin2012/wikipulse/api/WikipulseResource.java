@@ -180,11 +180,8 @@ public class WikipulseResource implements SparkApplication {
 			Class.forName("org.hsqldb.jdbcDriver");
 			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
 			connection.createStatement()
-					.execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255),UNIQUE (timestamp, pageTitle))");
-			connection.createStatement()
-					.execute("CREATE TABLE mostreadnews (article varchar(255), numberofclicks integer,UNIQUE (article))");
+					.execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255), pageid varchar(255), UNIQUE (timestamp, pageTitle, pageid))");
 			new Thread(new RecentChangesRunnable()).start();
-
 			addShutdownHook(connection);
 		} catch (SQLException e) {
 			logger.severe("Creation of in memory db table changes failed.");

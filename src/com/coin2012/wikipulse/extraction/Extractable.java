@@ -25,7 +25,7 @@ public interface Extractable {
 	
 	public void saveUserInteraction(String News);
 	
-	public List<News_Counter> getMostReadNews();
+	public List<News> getTop10MostReadNews();
 	
 	/**
 	 * Returns a sorted list of Editors  according to the  number of edits. 

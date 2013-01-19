@@ -63,15 +63,14 @@ public class Extractor implements Extractable {
 	}
 	
 	@Override
-	public List<News_Counter> getMostReadNews() {
-		//TODO work over
-		List<News_Counter> top10List = HsqldbManager.getMostReadNews();
-		return top10List;
+	public List<News> getTop10MostReadNews() {
+		//TODO Method to query neo4j for top 10 news
+
+		return new ArrayList<News>();
 	}
 	@Override 
-	public void saveUserInteraction(String News){
-		//TODO work over
-		HsqldbManager.saveUserInteractionInDB(News);
+	public void saveUserInteraction(String newsId){
+		//TODO Method to update viewcount for a news over
 	}
 
 	/**
@@ -125,6 +124,7 @@ public class Extractor implements Extractable {
 }
 	
 	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle){
+		//TODO move to Identification?
 		boolean doArticlesHaveAtleastOneCommonEditor = false;
 		List<String> users = new ArrayList<String>();
 		List<WikiEdit> firstArticleEdits = firstArticle.getEdits();
@@ -144,6 +144,7 @@ public class Extractor implements Extractable {
 		return doArticlesHaveAtleastOneCommonEditor;
 	}
 
+	
 	/**
 	 * TODO : Method to be moved to identifier after fixing threading issue
 	 *

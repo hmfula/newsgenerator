@@ -6,30 +6,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
-import com.coin2012.wikipulse.extraction.News_Counter;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
 
 public class HsqldbManager {
-	static Logger logger = Logger
-			.getLogger(HsqldbManager.class.getSimpleName());
-
+	static Logger logger = Logger.getLogger(HsqldbManager.class.getSimpleName());
 
 	public static String getTimestampForLastSavedChange() {
 		String timestamp = null;
 		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		try {
-			 connection = getConnection();
-			 prepStatement = connection
-					.prepareStatement("SELECT * FROM changes");
-			 ResultSet rs = prepStatement.executeQuery();
+			connection = getConnection();
+			prepStatement = connection.prepareStatement("SELECT * FROM changes");
+			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				if (rs.isFirst()) {
 					timestamp = rs.getString(1);
@@ -49,42 +44,35 @@ public class HsqldbManager {
 		PreparedStatement prepStatement = null;
 		try {
 			connection = getConnection();
-			prepStatement = connection
-					.prepareStatement("INSERT INTO changes VALUES (?,?)");
+			prepStatement = connection.prepareStatement("INSERT INTO changes VALUES (?,?,?)");
 			for (Change change : changes) {
 				try {
 					prepStatement.clearParameters();
-					prepStatement.setString(1, TimestampGenerator
-							.generateTimestampFromWikipediaTimestamp(change
-									.getTimestamp()));
+					prepStatement.setString(1, TimestampGenerator.generateTimestampFromWikipediaTimestamp(change.getTimestamp()));
 					prepStatement.setString(2, change.getTitle());
+					prepStatement.setString(3, change.getPageid());
 					prepStatement.executeUpdate();
 				} catch (SQLException e) {
-					logger.info("Ignored double: " + change.getTitle() + " "
-							+ change.getTimestamp());
+					logger.info("Ignored double: " + change.getTitle() + " " + change.getTimestamp());
 				}
 			}
 		} catch (SQLException e) {
-			logger.info("Failed to create a Preparedstatement because of  "
-					+ e.getCause());
+			logger.info("Failed to create a Preparedstatement because of  " + e.getCause());
 			e.printStackTrace();
 		} finally {
 			closeDatabaseConnections(connection, prepStatement);
 		}
 	}
 
-	
-
 	public static void clearOldChangesFromMemDB(String timestamp) {
 		logger.info("Removing all changes from DB older than " + timestamp);
 		long timeAsLong = Long.valueOf(timestamp);
 		Connection connection = null;
 		PreparedStatement prepStatement = null;
-//		ResultSet rs = getAllChangesFromMemDB();
 		try {
-			 connection = getConnection();
-			 prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
-			 ResultSet rs = prepStatement.executeQuery();
+			connection = getConnection();
+			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				if (rs.getLong(1) < timeAsLong) {
 					rs.deleteRow();
@@ -99,22 +87,21 @@ public class HsqldbManager {
 
 	}
 
-	
-
 	public static HashMap<String, AggregatedChanges> getAllAggregatedChangesFromMemDB() {
 		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
 		Connection connection = null;
 		PreparedStatement prepStatement = null;
 		try {
-			 connection = getConnection();
-			 prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
-			 ResultSet rs = prepStatement.executeQuery();
-//			 rs = getAllChangesFromMemDB();
+			connection = getConnection();
+			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				String title = rs.getString(2);
+				String pageid = rs.getString(3);
 				AggregatedChanges change = map.get(rs.getString(2));
+
 				if (change == null) {
-					map.put(title, new AggregatedChanges(title));
+					map.put(title, new AggregatedChanges(title, pageid));
 				} else {
 					change.addToCount();
 				}
@@ -128,67 +115,6 @@ public class HsqldbManager {
 		return map;
 	}
 
-	public static void saveUserInteractionInDB(String News) {
-		PreparedStatement prepStatement = null;
-		Connection connection = null;
-		try {
-		    connection = getConnection();
-		    prepStatement  = connection
-					.prepareStatement("SELECT * FROM mostreadnews WHERE article=?");
-			prepStatement.clearParameters();
-			prepStatement.setString(1, News);
-			ResultSet	rs = prepStatement.executeQuery();
-			int counter = 1;
-			if (rs != null && rs.next()) {
-				counter = rs.getInt(2) + 1;
-				prepStatement.close();
-				prepStatement = connection
-						.prepareStatement("UPDATE mostreadnews SET numberofclicks=? WHERE article=? ");
-				prepStatement.setString(1, Integer.toString(counter));
-				prepStatement.setString(2, News);
-			} else {
-				prepStatement.close();
-				prepStatement = connection
-						.prepareStatement("INSERT INTO mostreadnews VALUES(?,?)");
-				prepStatement.clearParameters();
-				prepStatement.setString(1, News);
-				prepStatement.setString(2, Integer.toString(counter));
-			}
-			prepStatement.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			closeDatabaseConnections(connection, prepStatement);
-		}
-	}
-
-
-
-	public static List<News_Counter> getMostReadNews() {
-		List<News_Counter> resultList = new ArrayList<News_Counter>();
-		Connection connection = null;
-		PreparedStatement prepStatement = null;
-		try {
-			connection = getConnection();
-			prepStatement = connection
-					.prepareStatement("SELECT TOP 10 * FROM mostreadnews ORDER BY numberofclicks DESC");
-			ResultSet rs = prepStatement.executeQuery();
-			while (rs.next()) {
-				News_Counter news = new News_Counter(rs.getString(1),
-						rs.getInt(2));
-				resultList.add(news);
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			closeDatabaseConnections(connection, prepStatement);
-		}
-		return resultList;
-	}
-	
 	private static void closeDatabaseConnections(Connection connection, Statement prepStatement) {
 		try {
 			if (prepStatement != null && prepStatement.getResultSet() != null) {
@@ -201,29 +127,12 @@ public class HsqldbManager {
 				connection.close();
 			}
 		} catch (SQLException e) {
-			logger.info("Failed to close the connection to the database because of : "
-					+ e.getCause());
+			logger.info("Failed to close the connection to the database because of : " + e.getCause());
 			e.printStackTrace();
 		}
 	}
 
-	
-	private static ResultSet getAllChangesFromMemDB() {
-		ResultSet rs = null;
-		try {
-
-			Connection connection = getConnection();
-			PreparedStatement prepStatement = connection
-					.prepareStatement("SELECT * FROM changes for update");
-			rs = prepStatement.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return rs;
-	}
-	
 	private static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb",
-				"SA", "");
+		return DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
 	}
 }

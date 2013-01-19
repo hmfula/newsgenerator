@@ -1,15 +1,12 @@
 package com.coin2012.wikipulse.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.Extractor;
-import com.coin2012.wikipulse.extraction.News_Counter;
 import com.coin2012.wikipulse.identification.Identifier;
-import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;
 import com.google.gson.Gson;
 
@@ -21,39 +18,6 @@ public class WikipulseServiceImpl implements WikipulseService {
 
 	private Extractor extractor = new Extractor();
 	private Gson gson = new Gson();
-
-	// @Override
-	// public String getNewsForCategory(String category) {
-	// Identifiable identifier = new Identifier();
-	// String news = identifier.getNewsForCategory(category);
-	// return news;
-	// }
-	//
-	// @Override
-	// public String getMostReadTitlesForCategory(String category){
-	// Identifiable identifier = new Identifier();
-	// String news = identifier.getMostReadTitlesForCategory(category);
-	// return news;
-	// }
-	//
-	// @Override
-	// public String searchForPagesThatMatch(String searchText){
-	// Identifiable identifier = new Identifier();
-	// String snippetPages = identifier.searchForPagesThatMatch(searchText);
-	// return snippetPages;
-	// }
-	//
-	// @Override
-	// public String searchForPagesReferencing(String url){
-	// Identifiable identifier = new Identifier();
-	// String pages = identifier.searchForPagesReferencing(url);
-	// return pages;
-	// }
-	//
-	// @Override
-	// public String getPageWithImages(String pageTitle) {
-	// return new Identifier().getPageWithImages(pageTitle);
-	// }
 
 	@Override
 	public String getRecentChanges(String minChanges) {
@@ -73,8 +37,8 @@ public class WikipulseServiceImpl implements WikipulseService {
 	public String getNews(String nprop) {
 		String result = null;
 		if(nprop.contains("top10")){
-			List<News_Counter> listOfMostReadNews = extractor.getMostReadNews();
-			result = gson.toJson(listOfMostReadNews);
+			List<News> mostReadNews = extractor.getTop10MostReadNews();
+			result = gson.toJson(mostReadNews);
 		}
 		// TODO Auto-generated method stub
 		return result;
