@@ -47,7 +47,7 @@ public class WikipulseServiceImpl implements WikipulseService {
 	@Override
 	public String getNewsForCategory(String category, String nprop) {
 		Identifier identifier = new Identifier();
-		List<News> news = identifier.getNewsForCategory(category);
+		List<News> news = identifier.getNews();
 		enhanceNewsWithProp(news, nprop);
 		
 		return gson.toJson(news);

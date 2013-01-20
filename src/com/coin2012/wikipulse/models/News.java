@@ -6,11 +6,17 @@ import java.util.List;
 public class News {
 
 	private final String BASE_URL = "http://en.wikipedia.org/wiki/";
+
 	private String pageId = "";
+
 	private String pageTitle = "";
+
 	private String pageURL = "";
+
 	private String news = "";
+
 	private List<String> imageUrlList = new ArrayList<String>();
+
 	private float yesterdaysRelevance = 0;
 	private int viewCount;
 
@@ -50,12 +56,13 @@ public class News {
 	public List<String> getImageUrlList() {
 		return imageUrlList;
 	}
+
 	public void setRelYesterday(float relevance) {
-		if (!Float.isNaN(relevance)){
+		if (!Float.isNaN(relevance)) {
 			this.yesterdaysRelevance = relevance;
-		}			
+		}
 	}
-	
+
 	public float getRelYesterday() {
 		return this.yesterdaysRelevance;
 	}
@@ -67,4 +74,5 @@ public class News {
 	public void setViewCount(int viewCount) {
 		this.viewCount = viewCount;
 	}
+
 }

@@ -7,7 +7,7 @@ import com.coin2012.wikipulse.models.Page;
 
 public interface Identifiable {
 	
-	public List<News> getNewsForCategory(String category);
+	public List<News> getNews();
 	
 	/**
 	 * Summarizes a page

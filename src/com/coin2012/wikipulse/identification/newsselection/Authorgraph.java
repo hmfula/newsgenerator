@@ -7,6 +7,7 @@ import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
 
 import com.coin2012.wikipulse.extraction.Extractable;
+import com.coin2012.wikipulse.identification.IdentificationRunnable;
 import com.coin2012.wikipulse.models.Page;
 
 public class Authorgraph {
@@ -15,7 +16,7 @@ public class Authorgraph {
 
 	public static void initAuthorgraphDatabaseThread(Extractable extractor) {
 		if (authorgraphThread == null ) {
-			authorgraphThread = new Thread(new AuthorgraphRunnable(extractor));
+			authorgraphThread = new Thread(new IdentificationRunnable(extractor));
 			authorgraphThread.run();
 		}
 	}
