@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.neo4j.AuthorgraphDatabase;
 import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
 import com.coin2012.wikipulse.identification.newsselection.Authorgraph;
-import com.coin2012.wikipulse.identification.newsselection.AuthorgraphDatabase;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 

@@ -7,6 +7,7 @@ import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
 
 import com.coin2012.wikipulse.extraction.Extractable;
+import com.coin2012.wikipulse.extraction.neo4j.AuthorgraphDatabase;
 import com.coin2012.wikipulse.identification.IdentificationRunnable;
 import com.coin2012.wikipulse.models.Page;
 

@@ -4,6 +4,7 @@ public class WikiEdit {
 	private String revid;
 	private String parentid;
 	private String user;
+	private String userid;
 	private String timestamp;
 	private String comment;
 	private String content;
@@ -30,6 +31,14 @@ public class WikiEdit {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public String getUserId() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 	public String getTimestamp() {
