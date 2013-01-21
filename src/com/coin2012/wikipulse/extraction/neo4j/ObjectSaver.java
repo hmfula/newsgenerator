@@ -20,7 +20,7 @@ public class ObjectSaver {
 	private GraphDatabaseService graphDB;
 	
 	public void saveOrUpdatePage(Page page){
-		GraphDatabaseService graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
 		try
 		{
@@ -44,11 +44,38 @@ public class ObjectSaver {
 	};
 	
 	public void saveAuthor(Editor editor){
-		//TODO
+		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		Transaction tx = graphDB.beginTx();
+		try
+		{
+		    Node editorNode = this.getOrCreateNodeWithUniqueFactory(editor.getUserid(), "authors");
+		    editorNode.setProperty("name", editor.getName());
+		    editorNode.setProperty("editcount", editor.getEditcount());
+		    tx.success();
+		}
+		finally
+		{
+		    tx.finish();
+		}
 	};
 	
+
 	public void saveNews (News news){
-		//TODO
+//		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+//		Transaction tx = graphDB.beginTx();
+//		try
+//		{
+//		    Node newsNode = this.getOrCreateNodeWithUniqueFactory("ID HERE", "authors");
+//		    newsNode.setProperty("news", news.getNews());
+//		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
+//		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
+//		   // this.createUniqueRelationship(newsNode, Relationships.BASED_ON_EDIT_OF, editorNode);
+//		    tx.success();
+//		}
+//		finally
+//		{
+//		    tx.finish();
+//		}
 	};
 	
 	private Node getOrCreateNodeWithUniqueFactory(String id, String index) {

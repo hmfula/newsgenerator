@@ -7,6 +7,8 @@ public class News {
 
 	private final String BASE_URL = "http://en.wikipedia.org/wiki/";
 
+	private String id;
+	
 	private String pageId = "";
 
 	private String pageTitle = "";
@@ -14,6 +16,10 @@ public class News {
 	private String pageURL = "";
 
 	private String news = "";
+	
+	private Editor editor;
+	
+	
 
 	private List<String> imageUrlList = new ArrayList<String>();
 
