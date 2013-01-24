@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * Implements sentence buffering given  page text content and  edited text.
+ */
 public class SentenceFinder {
 /**
  * Adds buffer sentence(s) to  given text (edit) by matching edited sentences  between the original page text and the edit text and adding buffer sentences to the edited text as buffer sentences accordingly.
@@ -63,7 +65,7 @@ public class SentenceFinder {
 	/**
 	 * Finds sentences from  given text.
 	 * @param textToProcess input containing sentence (s).
-	 * @return a map of indices  ask keys and sentences as values
+	 * @return a map of indices  as keys and sentences as values
 	 */
 	public  static Map <Integer, String> findSentences(String textToProcess) {
 		List <String> sentenceList = new ArrayList<String>();
