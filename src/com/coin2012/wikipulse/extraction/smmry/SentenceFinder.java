@@ -20,7 +20,7 @@ public class SentenceFinder {
  * @param pageContent the text that represents the page content
  * @param wikiEditContent text that represents the edited part of the page content.
  */
-	public static void summarize(final String pageContent, final String wikiEditContent) {
+	public static String summarize(final String pageContent, final String wikiEditContent) {
 		Map <Integer, String> editIndexSentenceMap = new HashMap <Integer, String>();
 		Map <Integer, String> pageIndexSentenceMap = new HashMap <Integer, String>();
 		List <String> sentenceList = new ArrayList<String>();
@@ -55,11 +55,7 @@ public class SentenceFinder {
 					}
 					}
 				}
-				for(String sentence :sentenceList){
-					editcontent.append(sentence) ;	
-					editcontent.append("\n") ;	
-				}
-					
+				return sentenceList.toString();
 	}
 
 	/**
