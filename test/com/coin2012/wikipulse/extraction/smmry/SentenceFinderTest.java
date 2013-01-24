@@ -69,7 +69,7 @@ public class SentenceFinderTest {
 	}
 	
 	@Test
-	public void editInFirsTwoSentencesAddsSentenceAfterThemAsBuffer()
+	public void editInFirstTwoSentencesAddsSentenceAfterThemAsBuffer()
 			throws Exception {
 		
 		String sampleWikiEdit = "This is sentence one. A journey of a thousand miles always start with one step. Before God all men are created equal.";
