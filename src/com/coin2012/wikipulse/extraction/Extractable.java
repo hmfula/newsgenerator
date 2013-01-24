@@ -51,4 +51,10 @@ public interface Extractable {
 	 * @return Page object  that contain the summary of the page
 	 */
 	public Page summarizeArticle(String url, String length);
+
+	void savePages(List<Page> pages);
+
+	void saveAuthor(Editor editor);
+
+	void saveNews(List<News> newsList);
 }

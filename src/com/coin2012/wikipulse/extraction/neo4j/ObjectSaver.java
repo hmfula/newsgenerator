@@ -61,21 +61,23 @@ public class ObjectSaver {
 	
 
 	public void saveNews (News news){
-//		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
-//		Transaction tx = graphDB.beginTx();
-//		try
-//		{
-//		    Node newsNode = this.getOrCreateNodeWithUniqueFactory("ID HERE", "authors");
-//		    newsNode.setProperty("news", news.getNews());
-//		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
-//		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
-//		   // this.createUniqueRelationship(newsNode, Relationships.BASED_ON_EDIT_OF, editorNode);
-//		    tx.success();
-//		}
-//		finally
-//		{
-//		    tx.finish();
-//		}
+		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		Transaction tx = graphDB.beginTx();
+		try
+		{
+			//TODO news Id generation
+		    Node newsNode = this.getOrCreateNodeWithUniqueFactory("1", "authors");
+		    newsNode.setProperty("news", news.getNews());
+		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
+		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
+		    Node editorNode = this.getOrCreateNodeWithUniqueFactory(news.getEditor().getUserid(), "authors");
+		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON_EDIT_OF, editorNode);
+		    tx.success();
+		}
+		finally
+		{
+		    tx.finish();
+		}
 	};
 	
 	private Node getOrCreateNodeWithUniqueFactory(String id, String index) {

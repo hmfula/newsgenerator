@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
+import com.coin2012.wikipulse.extraction.neo4j.ObjectSaver;
 import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
 import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
@@ -152,5 +153,27 @@ public class Extractor implements Extractable {
 	public Page summarizeArticle(String url, String length) {
 		Page page = PageSummarizer.summarizeArticle(url, length);
 		return page;
+	}
+	
+	@Override
+	public void savePages(List<Page> pages){
+		ObjectSaver saver = new ObjectSaver();
+		for (Page page : pages) {
+			saver.saveOrUpdatePage(page);
+		}
+	}
+	
+	@Override
+	public void saveAuthor(Editor editor){
+		ObjectSaver saver = new ObjectSaver();
+		saver.saveAuthor(editor);
+	}
+	
+	@Override
+	public void saveNews(List<News> newsList){
+		ObjectSaver saver = new ObjectSaver();
+		for (News news : newsList) {
+			saver.saveNews(news);
+		}
 	}
 }
