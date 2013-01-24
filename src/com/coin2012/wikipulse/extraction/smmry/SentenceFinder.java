@@ -14,15 +14,11 @@ import java.util.regex.Pattern;
 public class SentenceFinder {
 
 	/**
-	 * Adds buffer sentence(s) to given text (edit) by matching edited sentences
-	 * between the original page text and the edit text and adding buffer
-	 * sentences to the edited text as buffer sentences accordingly. If the edit
-	 * is only made to the first sentence of the page content then the second
-	 * sentence is added to the edited text as buffer. If a sentence between two
-	 * sentences is edited then two buffer sentences are added, one sentence
-	 * before the edit and another sentence after the edit. If the last sentence
-	 * is the only edit then the sentence before it is added as buffer. Note:
-	 * All buffer sentences are calculated from the page text i.e the source
+	 * Adds buffer sentence(s) to given text (edit) by matching edited sentences between the original page text and the edit text and adding buffer
+	 * sentences to the edited text as buffer sentences accordingly. If the edit is only made to the first sentence of the page content then the second
+	 * sentence is added to the edited text as buffer. If a sentence between two sentences is edited then two buffer sentences are added, one sentence
+	 * before the edit and another sentence after the edit. If the last sentence is the only edit then the sentence before it is added as buffer. 
+	 * Note: All buffer sentences are calculated from the page text i.e the source
 	 * page that contain text that was actually edited.
 	 * 
 	 * @param pageContent
@@ -45,15 +41,13 @@ public class SentenceFinder {
 
 			sentenceList.addAll(editIndexSentenceMap.values());
 			String edit = sentenceList.get(0);
+			
 			if (edit != null) {
 				for (Entry<Integer, String> entry : pageIndexSentenceMap
 						.entrySet()) {
 					if (entry.getValue().equals(edit)) {
 						Integer key = entry.getKey();
-						sentenceList
-								.add(0,
-										pageIndexSentenceMap.get(key - 1) != null ? pageIndexSentenceMap
-												.get(key - 1) : "");
+						sentenceList.add(0,	pageIndexSentenceMap.get(key - 1) != null ? pageIndexSentenceMap.get(key - 1) : "");
 						break;
 					}
 				}
@@ -74,6 +68,7 @@ public class SentenceFinder {
 				}
 			}
 		}
+		
 		for (String sentence : sentenceList) {
 			editcontent.append(sentence + " ");
 		}
