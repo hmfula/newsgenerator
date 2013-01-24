@@ -19,12 +19,20 @@ public class News {
 	
 	private Editor editor;
 	
+	private String timestamp;
+	
 	
 
 	private List<String> imageUrlList = new ArrayList<String>();
 
 	private float yesterdaysRelevance = 0;
 	private int viewCount;
+
+	public News(String id, String newsText, String timestamp) {
+		this.id = id;
+		this.news = newsText;
+		this.timestamp = timestamp;
+	}
 
 	public String getPageId() {
 		return pageId;
@@ -93,8 +101,7 @@ public class News {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public String getTimestamp() {
+		return timestamp;
 	}
-
 }

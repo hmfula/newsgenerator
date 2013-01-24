@@ -17,6 +17,7 @@ public class Editor implements Serializable {
 	String title;
 	List<String> groups;
 
+	//TODO clean up?
 	public Editor() {
 
 	}

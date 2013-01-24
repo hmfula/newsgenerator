@@ -52,12 +52,21 @@ public class AuthorgraphDatabase {
 		
 		return graphDb;
 	}
-	
+	/**
+	 * @deprecated use ObjectRetriever
+	 * @return
+	 */
+	@Deprecated
 	public static List<News> getLatestNews() {
 		// TODO
 		return Collections.EMPTY_LIST;//added Dummy return in order to let the code compile
 	} 
 	
+	/**
+	 * @deprecated use ObjectRetriever
+	 * @return
+	 */
+	@Deprecated
 	public static News getNews(String newsid) {
 		Index<Node> nodeIndex = getGraphDatabaseServiceInstance().index().forNodes( "pages" );
 

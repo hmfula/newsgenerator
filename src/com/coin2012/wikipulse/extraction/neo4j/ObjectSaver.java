@@ -1,6 +1,7 @@
 package com.coin2012.wikipulse.extraction.neo4j;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -9,6 +10,7 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.UniqueFactory;
 
+import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
@@ -50,7 +52,6 @@ public class ObjectSaver {
 		{
 		    Node editorNode = this.getOrCreateNodeWithUniqueFactory(editor.getUserid(), "authors");
 		    editorNode.setProperty("name", editor.getName());
-		    editorNode.setProperty("editcount", editor.getEditcount());
 		    tx.success();
 		}
 		finally
@@ -65,9 +66,11 @@ public class ObjectSaver {
 		Transaction tx = graphDB.beginTx();
 		try
 		{
-			//TODO news Id generation
-		    Node newsNode = this.getOrCreateNodeWithUniqueFactory("1", "authors");
+			//2^122 possibilites => nearly no chance for double
+			String id = UUID.randomUUID().toString();
+		    Node newsNode = this.getOrCreateNodeWithUniqueFactory(id, "news");
 		    newsNode.setProperty("news", news.getNews());
+		    newsNode.setProperty("timestamp", TimestampGenerator.generateTimestamp());
 		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
 		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
 		    Node editorNode = this.getOrCreateNodeWithUniqueFactory(news.getEditor().getUserid(), "authors");
@@ -79,6 +82,22 @@ public class ObjectSaver {
 		    tx.finish();
 		}
 	};
+	
+	public void updateViewCount(String newsId){
+		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		Transaction tx = graphDB.beginTx();
+		try
+		{
+		    Node newsNode = this.getOrCreateNodeWithUniqueFactory(newsId, "news");
+		    Long newViewCount = ((Long) newsNode.getProperty("viewCount")) + 1;
+		    newsNode.setProperty("viewCount",newViewCount.toString());
+		    tx.success();
+		}
+		finally
+		{
+		    tx.finish();
+		}
+	}
 	
 	private Node getOrCreateNodeWithUniqueFactory(String id, String index) {
 		UniqueFactory<Node> factory = new UniqueFactory.UniqueNodeFactory(graphDB, index) {
