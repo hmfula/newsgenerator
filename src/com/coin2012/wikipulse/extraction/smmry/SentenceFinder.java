@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 /**
  * Implements sentence buffering given  page text content and  edited text.
  */
@@ -68,7 +69,7 @@ public class SentenceFinder {
 	 */
 	public  static Map <Integer, String> findSentences(String textToProcess) {
 		List <String> sentenceList = new ArrayList<String>();
-		Map <Integer, String > IndexSentenceMap = new HashMap<Integer, String>();
+		Map <Integer, String > indexSentenceMap = new HashMap<Integer, String>();
         Pattern re = Pattern.compile(
             "# Match a sentence ending in punctuation or EOS.\n" +
             "[^.!?\\s]    # First char is non-punct, non-ws\n" +
@@ -82,15 +83,17 @@ public class SentenceFinder {
             "['\"]?       # Optional closing quote.\n" +
             "(?=\\s|$)", 
             Pattern.MULTILINE | Pattern.COMMENTS);
+       
         Matcher reMatcher = re.matcher(textToProcess);
-       Integer count = 0;
+        Integer count = 0;
+       
         while (reMatcher.find()) {
             sentenceList.add(reMatcher.group());
         } 
         for (String sentence: sentenceList) {
-            IndexSentenceMap.put(count++, sentence);
+            indexSentenceMap.put(count++, sentence);
         }
-        return IndexSentenceMap;
+        return indexSentenceMap;
 	}
 	
 	
