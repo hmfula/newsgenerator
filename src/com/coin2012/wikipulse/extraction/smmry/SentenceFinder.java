@@ -56,10 +56,9 @@ public class SentenceFinder {
 					}
 				}
 				for(String sentence :sentenceList){
-					editcontent.append(sentence) ;	
-					editcontent.append("\n") ;	
+					editcontent.append(sentence + " ") ;	
 				}
-				return editcontent.toString();
+				return editcontent.toString().trim();
 	}
 
 	/**
