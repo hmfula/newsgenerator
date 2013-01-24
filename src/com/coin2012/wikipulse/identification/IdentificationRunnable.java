@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.Extractable;
+import com.coin2012.wikipulse.extraction.neo4j.AuthorgraphDatabase;
 import com.coin2012.wikipulse.identification.newscreation.Dummy;
 import com.coin2012.wikipulse.identification.newsselection.Authorgraph;
-import com.coin2012.wikipulse.identification.newsselection.AuthorgraphDatabase;
 import com.coin2012.wikipulse.identification.newsselection.CommonWorkingSetAuthors;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;

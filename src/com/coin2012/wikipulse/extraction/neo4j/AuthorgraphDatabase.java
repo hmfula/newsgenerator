@@ -3,6 +3,7 @@ package com.coin2012.wikipulse.extraction.neo4j;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,8 @@ public class AuthorgraphDatabase {
 	
 	public static List<News> getLatestNews() {
 		// TODO
-	}
+		return Collections.EMPTY_LIST;//added Dummy return in order to let the code compile
+	} 
 	
 	public static News getNews(String newsid) {
 		Index<Node> nodeIndex = getGraphDatabaseServiceInstance().index().forNodes( "pages" );
