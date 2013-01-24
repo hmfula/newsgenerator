@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
  * Implements sentence buffering given  page text content and  edited text.
  */
 public class SentenceFinder {
+
 /**
  * Adds buffer sentence(s) to  given text (edit) by matching edited sentences  between the original page text and the edit text and adding buffer sentences to the edited text as buffer sentences accordingly.
  * If the edit is only made to the first sentence of the page content then the second sentence is added to the edited text as buffer. If a sentence between two sentences is edited then two buffer sentences 
@@ -90,6 +91,7 @@ public class SentenceFinder {
         while (reMatcher.find()) {
             sentenceList.add(reMatcher.group());
         } 
+        
         for (String sentence: sentenceList) {
             indexSentenceMap.put(count++, sentence);
         }
