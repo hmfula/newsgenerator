@@ -39,7 +39,7 @@ public class Extractor implements Extractable {
 	
 	@Override
 	public List<Page> getPagesForIdentification(){
-		List<AggregatedChanges> recentChanges =  this.getRecentChanges(0);
+		List<AggregatedChanges> recentChanges =  this.getRecentChanges(10);
 		List<String> pageids = new ArrayList<String>();
 		for (AggregatedChanges aggregatedChanges : recentChanges) {
 			pageids.add(aggregatedChanges.getPageid());

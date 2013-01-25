@@ -16,7 +16,7 @@ public class News extends ShortNews{
 	public void setNews(String news) {
 		this.news = news;
 		//TODO generate shortNews;
-		shortNews = news.substring(0, 50);
+		shortNews = news;
 	}
 
 

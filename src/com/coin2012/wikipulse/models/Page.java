@@ -6,26 +6,19 @@ import java.util.List;
 
 public class Page {
 
-	private static final String BASE_URL = "http://en.wikipedia.org/wiki/";
 	private String pageid;
 	private float yesterdaysRelevance;
-	private int authorgraphRank;
-	private int commonWorkingSetAuthorsRank;
+	private int[] ranks = new int[3];
 	private String ns;
 	private String title;
 	private String timestamp;
-	private String category;
 	private List<WikiEdit> edits;
 	private List<Image> images;
 	private List<String> imageUrlList = new ArrayList<String>();
 	private PageSummary pageSummary;
 	private List<Category> categories = new ArrayList<Category>();
 	
-	public Page() {
-		category = "";
-	}
-	
-	
+
 	public String getPageId() {
 		return pageid;
 	}
@@ -129,39 +122,36 @@ public class Page {
 		
 	}
 
-	public int getAuthorgraphRank() {
-		return authorgraphRank;
+
+	public int getTotalRank() {
+		int totalrank = (int) (yesterdaysRelevance * 100); 
+		
+		for (int i = 0; i < ranks.length; i++) {
+			totalrank += ranks[i];
+		}
+		
+		return totalrank;
+	}
+	
+	/**
+	 * @return the ranks
+	 */
+	public int[] getRanks() {
+		return ranks;
 	}
 
-	public void setAuthorgraphRank(int authorgraphRank) {
-		this.authorgraphRank = authorgraphRank;
+	/**
+	 * @param ranks the ranks to set
+	 */
+	public void setRank(int id, int rank) {
+		ranks[id] = rank;
 	}
 	
-	public int getCommonWorkingSetAuthorsRank() {
-		return commonWorkingSetAuthorsRank;
-	}
-
-	public void setCommonWorkingSetAuthorsRank(int CommonWorkingSetAuthorsRank) {
-		this.commonWorkingSetAuthorsRank = CommonWorkingSetAuthorsRank;
-	}
-	
-	public void increaseCommonWorkingSetAuthorsRank() {
-		this.commonWorkingSetAuthorsRank++;
+	public void increaseRank(int id) {
+		ranks[id]++;
 	}
 	
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	
-	
-	
-	
 	public static class PageSummary {
 		
 		
