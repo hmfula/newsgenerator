@@ -27,6 +27,24 @@ public class ShortNews {
 	private Editor editor;
 	
 	
+	public ShortNews(String id, String shortNews, List<String> imageUrlList, long viewCount, String timestamp) {
+		this.id = id;
+		this.shortNews = shortNews;
+		this.imageUrlList = imageUrlList;
+		this.viewCount = viewCount;
+		this.timestamp = timestamp;
+	}
+
+	public ShortNews(String id, List<String> imageUrlList, long viewCount, String timestamp) {
+		this.id = id;
+		this.imageUrlList = imageUrlList;
+		this.viewCount = viewCount;
+		this.timestamp = timestamp;
+	}
+
+	public ShortNews() {
+	}
+
 	public String getPageId() {
 		return pageId;
 	}

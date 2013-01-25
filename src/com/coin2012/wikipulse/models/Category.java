@@ -4,7 +4,14 @@ package com.coin2012.wikipulse.models;
 public class Category {
 
 		private String title = "";
-		private String ns = "";
+		private long newsCount = 0;
+		
+		public Category(){};
+		
+		public Category(String title, long newsCount){
+			this.title = title;
+			this.newsCount = newsCount;
+		}
 		
 		public String getTitle() {
 			return title;
@@ -13,12 +20,8 @@ public class Category {
 		public void setTitle(String title) {
 			this.title = title;
 		}
-		
-		public String getNs() {
-			return ns;
-		}
-		
-		public void setNs(String ns) {
-			this.ns = ns;
+
+		public long getNewsCount() {
+			return newsCount;
 		}
 }

@@ -1,7 +1,6 @@
 package com.coin2012.wikipulse.extraction.neo4j;
 
 import java.util.Map;
-import java.util.UUID;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -29,13 +28,15 @@ public class ObjectSaver {
 		{
 		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(page.getPageId(), "pages");
 		    pageNode.setProperty("title", page.getTitle());
+		    pageNode.setProperty("type", "page");
 		    for (WikiEdit edit : page.getEdits()) {
 				Node editorNode = this.getOrCreateNodeWithUniqueFactory(edit.getUserId(), "authors");
-				editorNode.setProperty("username", edit.getUser());
+				editorNode.setProperty("name", edit.getUser());
 				this.createUniqueRelationshipWithProperty(editorNode, Relationships.EDITED, pageNode, "revid", edit.getRevid());
 			}
 		    for (Category category : page.getCategories()) {
-				Node categoryNode = this.getOrCreateNodeWithUniqueFactory(category.getTitle(), "categories");
+				Node categoryNode = this.getOrCreateNodeWithUniqueFactory("title", category.getTitle(), "categories");
+				 categoryNode.setProperty("type", "category");
 				this.createUniqueRelationship(pageNode, Relationships.HAS, categoryNode);
 			}
 		    tx.success();
@@ -71,9 +72,11 @@ public class ObjectSaver {
 			//TODO correct
 			String id = "1";//UUID.randomUUID().toString();
 		    Node newsNode = this.getOrCreateNodeWithUniqueFactory(id, "news");
+		    newsNode.setProperty("type", "news");
 		    newsNode.setProperty("news", news.getNews());
 		    newsNode.setProperty("shortNews", news.getShortNews());
 		    newsNode.setProperty("timestamp", TimestampGenerator.generateTimestamp());
+		    newsNode.setProperty("viewCount", news.getViewCount());
 		    Gson gson = new Gson();
 		    newsNode.setProperty("imageUrlList", gson.toJson(news.getImageUrlList()));
 		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
@@ -94,8 +97,9 @@ public class ObjectSaver {
 		try
 		{
 		    Node newsNode = this.getOrCreateNodeWithUniqueFactory(newsId, "news");
-		    Long newViewCount = ((Long) newsNode.getProperty("viewCount")) + 1;
-		    newsNode.setProperty("viewCount",newViewCount.toString());
+		    Long viewCount = (Long) newsNode.getProperty("viewCount");
+		    viewCount = viewCount + 1;
+		    newsNode.setProperty("viewCount",viewCount);
 		    tx.success();
 		}
 		finally
@@ -104,14 +108,18 @@ public class ObjectSaver {
 		}
 	}
 	
-	private Node getOrCreateNodeWithUniqueFactory(String id, String index) {
+	private Node getOrCreateNodeWithUniqueFactory(final String key, String value, String index) {
 		UniqueFactory<Node> factory = new UniqueFactory.UniqueNodeFactory(graphDB, index) {
 			@Override
 			protected void initialize(Node created, Map<String, Object> properties) {
-				created.setProperty("id", properties.get("id"));
+				created.setProperty(key, properties.get(key));
 			}
 		};
-		return factory.getOrCreate("id", id);
+		return factory.getOrCreate(key, value);
+	}
+	
+	private Node getOrCreateNodeWithUniqueFactory(String id, String index) {
+		return this.getOrCreateNodeWithUniqueFactory("id", id, index);
 	}
 	
 	private void createUniqueRelationship(Node startNode, Relationships relationshipType, Node endNode){
