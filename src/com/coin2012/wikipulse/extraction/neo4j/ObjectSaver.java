@@ -16,6 +16,7 @@ import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
+import com.google.gson.Gson;
 
 public class ObjectSaver {
 	
@@ -67,10 +68,14 @@ public class ObjectSaver {
 		try
 		{
 			//2^122 possibilites => nearly no chance for double
-			String id = UUID.randomUUID().toString();
+			//TODO correct
+			String id = "1";//UUID.randomUUID().toString();
 		    Node newsNode = this.getOrCreateNodeWithUniqueFactory(id, "news");
 		    newsNode.setProperty("news", news.getNews());
+		    newsNode.setProperty("shortNews", news.getShortNews());
 		    newsNode.setProperty("timestamp", TimestampGenerator.generateTimestamp());
+		    Gson gson = new Gson();
+		    newsNode.setProperty("imageUrlList", gson.toJson(news.getImageUrlList()));
 		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
 		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
 		    Node editorNode = this.getOrCreateNodeWithUniqueFactory(news.getEditor().getUserid(), "authors");

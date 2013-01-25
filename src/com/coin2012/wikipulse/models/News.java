@@ -1,59 +1,13 @@
 package com.coin2012.wikipulse.models;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class News {
+public class News extends ShortNews{
 
-	private final String BASE_URL = "http://en.wikipedia.org/wiki/";
+	private String news;
 
-	private String id;
-	
-	private String pageId = "";
-
-	private String pageTitle = "";
-
-	private String pageURL = "";
-
-	private String news = "";
-	
-	private Editor editor;
-	
-	private String timestamp;
-	
-	
-
-	private List<String> imageUrlList = new ArrayList<String>();
-
+	//TODO Remove? or do we need this?
 	private float yesterdaysRelevance = 0;
-	private int viewCount;
 
-	public News(String id, String newsText, String timestamp) {
-		this.id = id;
-		this.news = newsText;
-		this.timestamp = timestamp;
-	}
-
-	public String getPageId() {
-		return pageId;
-	}
-
-	public void setPageId(String pageId) {
-		this.pageId = pageId;
-	}
-
-	public String getPagetTitle() {
-		return pageTitle;
-	}
-
-	public void setPagetTitle(String pagetTitle) {
-		this.pageURL = BASE_URL + pagetTitle;
-		this.pageTitle = pagetTitle;
-	}
-
-	public String getPageLink() {
-		return pageURL;
-	}
 
 	public String getNews() {
 		return news;
@@ -61,15 +15,10 @@ public class News {
 
 	public void setNews(String news) {
 		this.news = news;
+		//TODO generate shortNews;
+		shortNews = news.substring(0, 50);
 	}
 
-	public String getBASE_URL() {
-		return BASE_URL;
-	}
-
-	public List<String> getImageUrlList() {
-		return imageUrlList;
-	}
 
 	public void setRelYesterday(float relevance) {
 		if (!Float.isNaN(relevance)) {
@@ -79,29 +28,5 @@ public class News {
 
 	public float getRelYesterday() {
 		return this.yesterdaysRelevance;
-	}
-
-	public int getViewCount() {
-		return viewCount;
-	}
-
-	public void setViewCount(int viewCount) {
-		this.viewCount = viewCount;
-	}
-
-	public Editor getEditor() {
-		return editor;
-	}
-
-	public void setEditor(Editor editor) {
-		this.editor = editor;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getTimestamp() {
-		return timestamp;
 	}
 }
