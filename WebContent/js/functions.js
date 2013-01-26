@@ -1,6 +1,6 @@
 /* get current domain and create URLs to REST - routes */
 var wp_service_url = window.location.toString().substring(0, window.location.toString().lastIndexOf('/'));
-var wp_service_url_get_articles_from_category = wp_service_url + "/news/";
+var wp_service_url_get_news = wp_service_url + "/news/";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
 var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
 var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
@@ -24,19 +24,19 @@ $(document).ready(function() {
     }, 30000);
 	
 	/* load and create category structure */
-	load_categories();
+	loadCategories();
 	
 	/* load and create recent news */
-	load_recent_Changes(10);
+	loadRecentChanges(10);
 	
 	/* load and create most read stories */
-	load_most_read_stories();
+	loadMostReadNews();
 	
 	/* update recent news and most read stories (every 20 seconds) */
 	var i = 1;
 	setInterval(function () {
-		load_recent_Changes(10);
-		load_most_read_stories();
+		loadRecentChanges(10);
+		loadMostReadNews();
 		i += 1;		
     }, 20000);		
 });
@@ -46,57 +46,65 @@ $('.bottom_nav_link').click(function(){
 	/* retrieve link-information, remove active-class from TOP navigation, load .html - file */
 	var value = $(this).attr("href");
 	$('.nav>li.active').removeClass('active');
-	load_doc(value.replace('#','') + '.html');
+	loadDoc(value.replace('#','') + '.html');
 });
 
 /* catch click event of TOP navigation (dynamic categories) */
-$('.nav_link').live("click", function(){
+$('.nav_link').on("click", function(){
 	/* retrieve link-information, remove active-class, load either home.html or dynamic content, set new active-class*/
 	var value = $(this).attr("href");
 	$(this).parent().siblings().removeClass('active');
-	if (value.replace('#','') == "home" ) load_doc('home.html');
-	else load_doc('news.html?content=' + value.replace('#',''));
+	if (value.replace('#cat=','') == "home" ) loadDoc('home.html');
+	else loadDoc('news.html?content=' + value.replace('#cat=',''));
 	$(this).parent().addClass('active');
 });
 
-/* catch ENTER key (search form) */
-$('.search-query').keyup(function (e) {
+/* catch ENTER key (search form)  not used currently*/
+//$('.search-query').keyup(function (e) {
 	/* prevent default which would cause a full page reload */
-	e.preventDefault();
-    if (e.keyCode == 13) {    	
-    }    
-});
+//	e.preventDefault();
+//    if (e.keyCode == 13) {    	
+//    }    
+//});
 
 /* catch search form event */
-$('#search_form').submit(function (e) {
+//$('#search_form').submit(function (e) {
 	/* prevent page reload and load dynamic content based on search inpute value*/
-	e.preventDefault();
-    var value = $('#search_input').val();
-    load_doc('search.html?content=' + value);
+//	e.preventDefault();
+//    var value = $('#search_input').val();
+//    loadDoc('search.html?content=' + value);
+//});
+
+/* add click event to all news records in order, increase user interaction (counter) and load news detail*/
+$('#main_div').on("click",'.show_detail', function(){
+    var news_id = $(this).attr('news_id');
+    increaseViewCounter(news_id);
+    loadDoc('news_detail.html?news_id=' + news_id);
 });
 
-/* set class active for navigation item based on its href */
+
+/* set class=active for navigation item based on attribute href */
 function setActiveClass(href){
 	/* remove active from all items and then set it */
 	$('.top_nav li').each(function(){
 		$(this).removeClass('active');		
 	    if( ($(this).children('.nav_link').attr('href') !== undefined) &&
-    		($(this).children('.nav_link').attr('href').toLowerCase() == (("#" + href).toLowerCase())) && 
+    		($(this).children('.nav_link').attr('href').toLowerCase() == (("#cat=" + href).toLowerCase())) && 
     		(href != "")){
 	    		$(this).addClass('active');
 	    }
 	});
 }
 
-// load desired document into main_div
-function load_doc(source) {
+/* load desired document into main_div */
+function loadDoc(source) {
     $.get(source, function(data) {
     	$('#main_div').html(data);
     });
 }
 
-//load current events
-function load_recent_Changes(minchanges){
+/* load recent changes and display */
+function loadRecentChanges(minchanges){
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_changes + minchanges.toString(),
@@ -116,18 +124,79 @@ function load_recent_Changes(minchanges){
 	});	
 }
 
-//load category values
-function load_wikipulse_news(url_parameter){
+/* create HTML-code for image slide show in news category and news detail */
+function createImageSlideshow(newsId,urlList){
+	var img_url_list_str = "";
+	img_url_list_str = urlList;
+	if (img_url_list_str == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
 	
-	var news_template_big = "<h3><a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>news_title</a></h3>" +
-							"<a href='#'><div id='clean_newstitle'></div></a>" +
-							"<p>news_title<a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>&nbsp;more information</a></p>";
-	var news_template_small = "<h6><a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>news_title</a></h6>" +
-							"<a href='#'><div id='clean_newstitle'></div></a>" +
-							"<p class='p-small'>news_title<a href='#' onclick='saveUserInteraction(user_interaction_id); return false;'>&nbsp;more information</a></p>";
+	var div_slideshow = '<div id="myCarousel_' + newsId
+	+ '" class="carousel slide"><div class="carousel-inner">';
+	
+	var img_list = img_url_list_str.toString().split(',');
+	for(var j=0;j<img_list.length;j++){
+		if(j==0){
+			div_slideshow += '<div class="item active">';
+		}
+		else {
+			div_slideshow += '<div class="item">';
+		} 
+		if (news_counter >= 3)
+			div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
+		else if (news_counter >= 1)
+			div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
+		else 
+			div_slideshow += '<img class="img-rounded img_size_news_big" src="'+ img_list[j] +'" alt="">';
+		
+		div_slideshow += '</div>';
+    };
+    div_slideshow += '</div>';
+    div_slideshow += '<a class="left carousel-control" href="#myCarousel_'+ newsId + '" data-slide="prev">&lsaquo;</a>';
+    div_slideshow += '<a class="right carousel-control" href="#myCarousel_'+ newsId + '" data-slide="next">&rsaquo;</a>';
+    div_slideshow += '</div>';
+    return div_slideshow;
+}
+
+/* get news detail from service and display */
+function loadNewsDetail(url_parameter){
+	var news_template = "<h3>news_title</h3>" + "<div id='clean_newstitle'>img_slide_show</div>" +
+	"<p>news_summary</p><a href='wikipedia_article'>see more on wikipedia</a>";
+    $.ajax({
+	    type: 'GET',
+	    url: wp_service_url_get_news + "?id=" + url_parameter,
+	    dataType: 'text',
+	    success: function (data) {
+	    	$.each(data,function(i,news){
+	    			//alert(page.pageTitle);
+	    			//load_images_for_news_item(page.pageTitle);
+	    			//clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+	    			
+	    			append_str = news_template;
+	    			append_str = append_str.replace(/news_id/g, '"' + news.NewsId + '"');
+    				append_str = append_str.replace(/news_title/g,news.pageTitle);
+    				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.imageUrlList));
+    				append_str = append_str.replace(/news_summary/g,news.newsSummary);
+    				append_str = append_str.replace(/wikipedia_article/g, news.newsTitle);
+    				
+	    	});
+	    	$("#wait").html('');
+	    	$("#wp_service_news_detail_results").html(append_str);	    	
+	    }
+	});
+}
+
+/* load news for a category */
+function loadNews(url_parameter){
+	
+	var news_template_big = "<h3><a href='#' id='news_id' data-toggle='modal'>news_title</a></h3>" +
+							"<a href='#'><div id='news_id'>img_slide_show</div></a>" +
+							"<p>news_title<a href='#' id='news_id' data-toggle='modal'>&nbsp;more information</a></p>";
+	var news_template_small = "<h6><a href='#' id='news_id' data-toggle='modal'>news_title</a></h6>" +
+							"<a href='#' id='news_id' data-toggle='modal'><div id='news_id'>img_slide_show</div></a>" +
+							"<p class='p-small'>news_summary<a href='#' id='news_id' data-toggle='modal'>&nbsp;more information</a></p>";
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_url_get_articles_from_category + url_parameter + "?nprop=img",
+	    url: wp_service_url_get_news + url_parameter + "?nprop=img",
 	    dataType: 'json',
 	    success: function (data) {
 	    	$("#wait").html('');
@@ -136,18 +205,22 @@ function load_wikipulse_news(url_parameter){
 	    	var counter = 0;
 	    	var subcounter = 0;
 	    	var news_rows = '';
-	    	var clean_news_title = '';
 	    	$.each(data,function(i,news){
 	    		if ((Number(news.yesterdaysRelevance) > 0.00 ) && (news.pageTitle.indexOf(":") < 0)) {
 	    			//alert(page.pageTitle);
 	    			//load_images_for_news_item(page.pageTitle);
-	    			clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+	    			//clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+	    			
 	    			found = false;
 	    			append_str = (counter == 0 ) ? news_template_big : news_template_small;
-	    			append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+news.pageTitle);
-	    			append_str = append_str.replace(/user_interaction_id/g, '"' + encodeURIComponent(news.pageTitle) + '"');
+	    			//append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+news.pageTitle);
+	    			//append_str = append_str.replace(/user_interaction_id/g, '"' + encodeURIComponent(news.pageTitle) + '"');
+	    			append_str = append_str.replace(/news_id/g, '"' + news.NewsId + '"');
     				append_str = append_str.replace(/news_title/g,news.pageTitle);
-    				append_str = append_str.replace(/clean_newstitle/g,clean_news_title);
+    				
+    				//append_str = append_str.replace(/clean_newstitle/g,clean_news_title);
+    				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.imageUrlList));
+    				append_str = append_str.replace(/news_summary/g,news.Summary);
     				
 	    			if(counter == 0 && (found == false)){
 	    				$("#news_1").html(append_str);
@@ -188,79 +261,33 @@ function load_wikipulse_news(url_parameter){
 	    		news_rows += '</div>';	    		
 	    	}
 	    	$("#row2").append(news_rows);
-	    	var news_counter = 0;
-	    	$.each(data,function(i,news){
-	    		if (!((Number(news.yesterdaysRelevance) > 0.00 ) && (news.pageTitle.indexOf(":") < 0))) {
-	    			return true;
-	    		}
-	    		var img_url_list_str = "";
-	    		img_url_list_str = news.imageUrlList;
-	    		if (img_url_list_str == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
-	    		
-	    		var clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
-	    		var div_slideshow = '<div id="myCarousel_' + clean_news_title
-				+ '" class="carousel slide"><div class="carousel-inner">';
-	    		
-	    		var img_list = img_url_list_str.toString().split(',');
-	    		for(var j=0;j<img_list.length;j++){
-	    			if(j==0){
-	    				div_slideshow += '<div class="item active">';
-					}
-	    			else {
-	    				div_slideshow += '<div class="item">';
-	    			} 
-	    			if (news_counter >= 3)
-	    				div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
-	    			else if (news_counter >= 1)
-	    				div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
-	    			else 
-	    				div_slideshow += '<img class="img-rounded img_size_news_big" src="'+ img_list[j] +'" alt="">';
-	    			
-	    			div_slideshow += '</div>';
-	    	    };
-	    	    div_slideshow += '</div>';
-	    	    div_slideshow += '<a class="left carousel-control" href="#myCarousel_'+ clean_news_title + '" data-slide="prev">&lsaquo;</a>';
-	    	    div_slideshow += '<a class="right carousel-control" href="#myCarousel_'+ clean_news_title + '" data-slide="next">&rsaquo;</a>';
-	    	    div_slideshow += '</div>';
-	    	    try
-	    	    {
-		    	    $('#'+clean_news_title).append(div_slideshow);
-		    	    news_counter += 1;
-	    	    }
-	    	  	catch(err)
-	    	    {
-		    	    txt="There was an error on this page.\n\n";
-		    	    txt+="Error description: " + err.message + "\n\n";
-		    	    txt+="Click OK to continue.\n\n";
-	    	    }
-	    	});
 	    }
 	});
 }
 
-//search functionality on wikipulse
-function search_wikipulse_service(){
-	var search_input =$('#search_input').val();
+/* search functionality on wikipulse - currently not used */
+//function search_wikipulse_service(){
+//	var search_input =$('#search_input').val();
 	//alert(wp_service_url_free_text_search + search_input);
-	$.ajax({
-	    type: 'GET',
-	    url: wp_service_url_free_text_search + search_input,
-	    dataType: 'json',
-	    success: function (data) {
-	    	$.each(data,function(i,page_snippet){
-    			var append_str = '<div class="row-fluid"><div class="span6 offset3">';
-				append_str += '<div id="_content'+i+'">';
-				append_str += '<a href="' +  page_snippet.urlToFullPage + '">' +  page_snippet.title + '</a>';
-				append_str += '<p class="p-small">' + page_snippet.snippet + '</p>';
-      			append_str += '</div></div></div><hr>';
-      			$("#wp_service_search_results").append(append_str);
-	    	});
-	    }
-	});
-}
+//	$.ajax({
+//	    type: 'GET',
+//	    url: wp_service_url_free_text_search + search_input,
+//	    dataType: 'json',
+//	    success: function (data) {
+//	    	$.each(data,function(i,page_snippet){
+//   			var append_str = '<div class="row-fluid"><div class="span6 offset3">';
+//				append_str += '<div id="_content'+i+'">';
+//				append_str += '<a href="' +  page_snippet.urlToFullPage + '">' +  page_snippet.title + '</a>';
+//				append_str += '<p class="p-small">' + page_snippet.snippet + '</p>';
+//     			append_str += '</div></div></div><hr>';
+//      			$("#wp_service_search_results").append(append_str);
+//	    	});
+//	    }
+//	});
+//}
 
-//get MostReadArticles functionality on wikipulse
-function load_most_read_stories(){
+/* get most read news functionality on wikipulse and display them */
+function loadMostReadNews(){
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_MostReadArticles,
@@ -272,7 +299,8 @@ function load_most_read_stories(){
 	    	$.each(data,function(i,news){
     			if(news.title.indexOf(":") < 0)
     				{
-	    				append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.title) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
+    					append_str += "<td><a href='#' id='" + news.newsId + "' data-toggle='modal'>" + decodeURIComponent(news.title) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';
+	    				//append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.title) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
     				}	    			
 	    	});
 	    	append_str += "</tr></table></div></div>";	    	
@@ -280,8 +308,8 @@ function load_most_read_stories(){
 	    }
 	});	
 }
-
-function load_categories(){
+/* get category structure and load it if desired, e.g. bookmarks */
+function loadCategories(){
 	$.ajax({
 	    type: 'GET',
 	    url: wp_service_url_loadCategories,
@@ -289,66 +317,76 @@ function load_categories(){
 	    success: function (data) {	    	
 	    	$.each(data,function(i,category){
 	    		$('.top_nav').append($('<li/>').append($('<a/>', {
-	    		    'href': '#' + category.categoryId,
+	    		    'href': '#cat=' + category.categoryId,
 	    		    'class': 'nav_link',
 	    		    'text': category.categoryTitle
 	    		})));
 	    		$('.top_nav').append($('<li/>', { 'class': "divider-vertical" }));
 	    	});
-	    	if (window.location.toString().indexOf("#", 0) > 0){
+	    	if (window.location.toString().indexOf("#cat=", 0) > 0 && (data.success == true)){
 	    		var current_doc = "";
-	    		current_doc = window.location.toString().substring(window.location.toString().lastIndexOf('#')+1,window.location.toString().length).toLowerCase();
+	    		current_doc = window.location.toString().substring(window.location.toString().lastIndexOf('#cat=')+1,window.location.toString().length).toLowerCase();
 	    		switch(current_doc)
 	    		{
 	    			case "":
-	    				load_doc('home.html');
+	    				loadDoc('home.html');
 	    				setActiveClass("home");
 	    				break;
 	    			case "home":
-	    				load_doc('home.html');
+	    				loadDoc('home.html');
 	    				setActiveClass("home");
 	    				break;
 	    			case "aboutus":
-	    				load_doc('aboutus.html');
+	    				loadDoc('aboutus.html');
 	    				setActiveClass("");
 	    				break;
 	    			case "contactus":
-	    				load_doc('contactus.html');
+	    				loadDoc('contactus.html');
 	    				setActiveClass("");
 	    				break;
 	    			default:
 	    				//alert(current_doc);
-	    				load_doc('news.html?content=' + current_doc);
+	    				loadDoc('news.html?content=' + current_doc);
 	    				setActiveClass(current_doc);
 	    				break;
 	    		}
 	    	}
-	    	else {
-	    		load_doc('home.html');
-	    		setActiveClass("home");
+	    	else if (window.location.toString().indexOf("#news_id=", 0) > 0 && (data.success == true)){
+	    		var news_id = "";
+	    		news_id = window.location.toString().substring(window.location.toString().lastIndexOf('#news_id=')+1,window.location.toString().length).toLowerCase();
+	    		loadDoc('news_detail.html?news_id=' + news_id);
 	    	}
+	    	else {
+	    		loadDoc('home.html');
+	    		setActiveClass("home");
+	    	} 
+	    },
+	    error: function(){
+			loadDoc('home.html');
+			setActiveClass("home");
 	    }
 	});
 }
 
-//save UserClick in DB on webserver
-function saveUserInteraction(news){	
+/* increase view counter for news */
+function increaseViewCounter(newsID){	
 	$.ajax({
 	    type: 'PUT',
-	    url: wp_service_url_UserInteraction + news,
+	    url: wp_service_url_UserInteraction + newsID,
 	    dataType: 'json',
 	    success: function (data) {
 	    }
 	});	
 	
-	var result = confirm("Do you want to open the Wikipedia-page: " + news);
+	/*var result = confirm("Do you want to open the Wikipedia-page: " + news);
 	if (result==true) {
 		//Logic to delete the item
 		window.open(wiki_url + news, '_blank');
 		window.focus();	
-	}
+	}*/
 }
 
+/* returns url parameter as an array, whole parameter string must start with a '#' */
 function getUrlVars()
 {
     var vars = [], hash;
@@ -362,7 +400,7 @@ function getUrlVars()
     return vars;
 }
 
-//Set DateTime - Value on Website
+/* Set DateTime - value on website */
 function GetDateTime() {
     function getDaySuffix(a) {
         var b = "" + a,
