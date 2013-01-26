@@ -10,6 +10,9 @@ import junit.framework.Assert;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.neo4j.cypher.javacompat.ExecutionEngine;
+import org.neo4j.cypher.javacompat.ExecutionResult;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
@@ -36,14 +39,33 @@ public class ObjectRetrieverTest {
 		when(edit.getRevid()).thenReturn("999");
 		when(edit.getUserId()).thenReturn("user1");
 		when(edit.getUser()).thenReturn("USER1");
+		WikiEdit edit2 = mock(WikiEdit.class);
+		when(edit2.getRevid()).thenReturn("998");
+		when(edit2.getUserId()).thenReturn("user2");
+		when(edit2.getUser()).thenReturn("USER2");
 		List<WikiEdit> edits = new ArrayList<WikiEdit>();
 		edits.add(edit);
+		edits.add(edit2);
+		
+		WikiEdit edit3 = mock(WikiEdit.class);
+		when(edit3.getRevid()).thenReturn("997");
+		when(edit3.getUserId()).thenReturn("user2");
+		when(edit3.getUser()).thenReturn("USER2");
+		List<WikiEdit> edits2 = new ArrayList<WikiEdit>();
+		edits2.add(edit3);
+		
 
 		Page page = mock(Page.class);
 		when(page.getPageId()).thenReturn("1");
 		when(page.getTitle()).thenReturn("Page-A");
 		when(page.getCategories()).thenReturn(categories);
 		when(page.getEdits()).thenReturn(edits);
+		
+		Page page2 = mock(Page.class);
+		when(page2.getPageId()).thenReturn("2");
+		when(page2.getTitle()).thenReturn("Page-B");
+		when(page2.getCategories()).thenReturn(categories);
+		when(page2.getEdits()).thenReturn(edits2);
 
 		Editor editor = mock(Editor.class);
 		when(editor.getUserid()).thenReturn("user1");
@@ -60,9 +82,17 @@ public class ObjectRetrieverTest {
 
 		ObjectSaver saver = new ObjectSaver();
 		saver.saveOrUpdatePage(page);
+		saver.saveOrUpdatePage(page2);
 		id = saver.saveNews(news);
 	}
 
+	@Test
+	public void aTryout(){
+		GraphDatabaseService graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
+		ExecutionEngine engine = new ExecutionEngine(graphDB);
+		ExecutionResult result = engine.execute("START nodes = node(*) Return nodes");
+		System.out.println("nru ein test");
+	}
 	@Test
 	public void getCategoriesWithHighestNewsCount() {
 		ObjectRetriever retriever = new ObjectRetriever();
@@ -125,4 +155,21 @@ public class ObjectRetrieverTest {
 		Assert.assertTrue(shortNews.get(0).getEditor().getName().equals("USER1"));
 	}
 
+	@Test
+	public void getTwoDomainExperts(){
+		ObjectRetriever retriever = new ObjectRetriever();
+		Category b = new Category();
+		b.setTitle("b");
+		List<Editor> editors =retriever.getDomainExperts(b, 0);
+		Assert.assertTrue(editors.size() == 2);
+	}
+	
+	@Test
+	public void getOneDomainExperts(){
+		ObjectRetriever retriever = new ObjectRetriever();
+		Category b = new Category();
+		b.setTitle("b");
+		List<Editor> editors =retriever.getDomainExperts(b, 2);
+		Assert.assertTrue(editors.size() == 1);
+	}
 }

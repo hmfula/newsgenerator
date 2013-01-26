@@ -107,6 +107,30 @@ public class ObjectRetriever {
 		}
 		return news;
 	}
+	
+	public List<Editor> getDomainExperts(Category category, int minEditsInCategory){
+		List<Editor> editors = new ArrayList<Editor>();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("title", category.getTitle());
+		params.put("minEdits", minEditsInCategory);
+		ExecutionEngine engine = new ExecutionEngine(graphDB);
+		ExecutionResult result = engine.execute("START category = node:categories(title={title}) MATCH category<-[:HAS]-page<-[:EDITED]-author WITH distinct author , count(author) AS domainEdits WHERE domainEdits>={minEdits} RETURN author", params);
+		for (Map<String, Object> row : result) {
+			Editor author = this.generateAuthorFrom(row);
+			editors.add(author);
+		}
+		return editors;	
+	}
+
+	private Editor generateAuthorFrom(Map<String, Object> row) {
+		Node editorNode = (Node)row.get("author");
+		String userId = editorNode.getProperty("id").toString();
+		String name = editorNode.getProperty("name").toString();
+		Editor editor = new Editor(userId, name);
+		return editor;
+	}
+
 
 	/**
 	 * 
@@ -155,10 +179,7 @@ public class ObjectRetriever {
 		shortNews.setPageId(row.get("page.id").toString());
 		shortNews.setPagetTitle(row.get("page.title").toString());
 		
-		Node editorNode = (Node)row.get("author");
-		String userId = editorNode.getProperty("id").toString();
-		String name = editorNode.getProperty("name").toString();
-		Editor editor = new Editor(userId, name);
+		Editor editor = this.generateAuthorFrom(row);
 		shortNews.setEditor(editor);
 	}
 
