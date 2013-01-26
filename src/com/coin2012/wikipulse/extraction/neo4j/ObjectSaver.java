@@ -1,6 +1,7 @@
 package com.coin2012.wikipulse.extraction.neo4j;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -17,97 +18,118 @@ import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
 import com.google.gson.Gson;
 
+/**
+ * Handles the saving of objects into the WikipulseGraphDatabase.
+ * @author Karsten
+ *
+ */
 public class ObjectSaver {
-	
+
 	private GraphDatabaseService graphDB;
-	
-	public void saveOrUpdatePage(Page page){
+
+	/**
+	 * Saves if the page is new or updates if the page already exists in the DB.
+	 * Generates EDITED relationships with contributing authors and HAS
+	 * relationships with all Categories of the page.
+	 * 
+	 * @param page
+	 */
+	public void saveOrUpdatePage(Page page) {
 		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
-		try
-		{
-		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(page.getPageId(), "pages");
-		    pageNode.setProperty("title", page.getTitle());
-		    pageNode.setProperty("type", "page");
-		    for (WikiEdit edit : page.getEdits()) {
+		try {
+			Node pageNode = this.getOrCreateNodeWithUniqueFactory(page.getPageId(), "pages");
+			pageNode.setProperty("title", page.getTitle());
+			pageNode.setProperty("type", "page");
+			for (WikiEdit edit : page.getEdits()) {
 				Node editorNode = this.getOrCreateNodeWithUniqueFactory(edit.getUserId(), "authors");
 				editorNode.setProperty("name", edit.getUser());
 				this.createUniqueRelationshipWithProperty(editorNode, Relationships.EDITED, pageNode, "revid", edit.getRevid());
 			}
-		    for (Category category : page.getCategories()) {
+			for (Category category : page.getCategories()) {
 				Node categoryNode = this.getOrCreateNodeWithUniqueFactory("title", category.getTitle(), "categories");
-				 categoryNode.setProperty("type", "category");
+				categoryNode.setProperty("type", "category");
 				this.createUniqueRelationship(pageNode, Relationships.HAS, categoryNode);
 			}
-		    tx.success();
-		}
-		finally
-		{
-		    tx.finish();
+			tx.success();
+		} finally {
+			tx.finish();
 		}
 	};
-	
-	public void saveAuthor(Editor editor){
-		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
-		Transaction tx = graphDB.beginTx();
-		try
-		{
-		    Node editorNode = this.getOrCreateNodeWithUniqueFactory(editor.getUserid(), "authors");
-		    editorNode.setProperty("name", editor.getName());
-		    tx.success();
-		}
-		finally
-		{
-		    tx.finish();
-		}
-	};
-	
 
-	public void saveNews (News news){
+	/**
+	 * Saves a Editor object.
+	 * 
+	 * @param editor
+	 *            - object to be saved
+	 */
+	public void saveAuthor(Editor editor) {
 		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
-		try
-		{
-			//2^122 possibilites => nearly no chance for double
-			//TODO correct
-			String id = "1";//UUID.randomUUID().toString();
-		    Node newsNode = this.getOrCreateNodeWithUniqueFactory(id, "news");
-		    newsNode.setProperty("type", "news");
-		    newsNode.setProperty("news", news.getNews());
-		    newsNode.setProperty("shortNews", news.getShortNews());
-		    newsNode.setProperty("timestamp", TimestampGenerator.generateTimestamp());
-		    newsNode.setProperty("viewCount", news.getViewCount());
-		    Gson gson = new Gson();
-		    newsNode.setProperty("imageUrlList", gson.toJson(news.getImageUrlList()));
-		    Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
-		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
-		    Node editorNode = this.getOrCreateNodeWithUniqueFactory(news.getEditor().getUserid(), "authors");
-		    this.createUniqueRelationship(newsNode, Relationships.BASED_ON_EDIT_OF, editorNode);
-		    tx.success();
-		}
-		finally
-		{
-		    tx.finish();
+		try {
+			Node editorNode = this.getOrCreateNodeWithUniqueFactory(editor.getUserid(), "authors");
+			editorNode.setProperty("name", editor.getName());
+			tx.success();
+		} finally {
+			tx.finish();
 		}
 	};
-	
-	public void updateViewCount(String newsId){
+
+	/**
+	 * Saves a News object if it has no id. Therefore generates an UUID and
+	 * saves the news object as a node. Furthermore a Relationship with the page
+	 * the news is BASED_ON and a BASED_ON_EDIT_OF Relationship with the
+	 * contributing Author are created.
+	 * 
+	 * @param news
+	 *            - object to be saved.
+	 */
+	public void saveNews(News news) {
+		if (news.getId() == null || news.getId().equals("")) {
+			// 2^122 Possibilities => nearly no chance for double
+			String id = UUID.randomUUID().toString();
+			int viewCount = 0;
+			graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
+			Transaction tx = graphDB.beginTx();
+			try {
+				Node newsNode = this.getOrCreateNodeWithUniqueFactory(id, "news");
+				newsNode.setProperty("news", news.getNews());
+				newsNode.setProperty("shortNews", news.getShortNews());
+				newsNode.setProperty("timestamp", TimestampGenerator.generateTimestamp());
+				newsNode.setProperty("viewCount", viewCount);
+				Gson gson = new Gson();
+				newsNode.setProperty("imageUrlList", gson.toJson(news.getImageUrlList()));
+				Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
+				this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
+				Node editorNode = this.getOrCreateNodeWithUniqueFactory(news.getEditor().getUserid(), "authors");
+				this.createUniqueRelationship(newsNode, Relationships.BASED_ON_EDIT_OF, editorNode);
+				tx.success();
+			} finally {
+				tx.finish();
+			}
+		}
+	};
+
+	/**
+	 * Increases the view count for a news by one.
+	 * 
+	 * @param newsId
+	 *            - id of the news.
+	 */
+	public void updateViewCount(String newsId) {
 		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
-		try
-		{
-		    Node newsNode = this.getOrCreateNodeWithUniqueFactory(newsId, "news");
-		    Long viewCount = (Long) newsNode.getProperty("viewCount");
-		    viewCount = viewCount + 1;
-		    newsNode.setProperty("viewCount",viewCount);
-		    tx.success();
-		}
-		finally
-		{
-		    tx.finish();
+		try {
+			Node newsNode = this.getOrCreateNodeWithUniqueFactory(newsId, "news");
+			Long viewCount = (Long) newsNode.getProperty("viewCount");
+			viewCount = viewCount + 1;
+			newsNode.setProperty("viewCount", viewCount);
+			tx.success();
+		} finally {
+			tx.finish();
 		}
 	}
-	
+
 	private Node getOrCreateNodeWithUniqueFactory(final String key, String value, String index) {
 		UniqueFactory<Node> factory = new UniqueFactory.UniqueNodeFactory(graphDB, index) {
 			@Override
@@ -117,23 +139,23 @@ public class ObjectSaver {
 		};
 		return factory.getOrCreate(key, value);
 	}
-	
+
 	private Node getOrCreateNodeWithUniqueFactory(String id, String index) {
 		return this.getOrCreateNodeWithUniqueFactory("id", id, index);
 	}
-	
-	private void createUniqueRelationship(Node startNode, Relationships relationshipType, Node endNode){
-		for (Relationship relationship : startNode.getRelationships(relationshipType, Direction.OUTGOING)){
-			if(relationship.getEndNode().equals(endNode)){
+
+	private void createUniqueRelationship(Node startNode, Relationships relationshipType, Node endNode) {
+		for (Relationship relationship : startNode.getRelationships(relationshipType, Direction.OUTGOING)) {
+			if (relationship.getEndNode().equals(endNode)) {
 				return;
 			}
 		}
 		startNode.createRelationshipTo(endNode, relationshipType);
 	}
 
-	private void createUniqueRelationshipWithProperty(Node startNode, Relationships relationshipType, Node endNode, String property, String value){
-		for (Relationship relation : startNode.getRelationships(relationshipType, Direction.OUTGOING)){
-			if(relation.getEndNode().equals(endNode) && relation.getProperty(property) == value){
+	private void createUniqueRelationshipWithProperty(Node startNode, Relationships relationshipType, Node endNode, String property, String value) {
+		for (Relationship relation : startNode.getRelationships(relationshipType, Direction.OUTGOING)) {
+			if (relation.getEndNode().equals(endNode) && relation.getProperty(property) == value) {
 				return;
 			}
 		}
