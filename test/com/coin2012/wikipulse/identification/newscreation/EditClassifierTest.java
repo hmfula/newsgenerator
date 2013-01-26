@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -15,10 +16,14 @@ import org.junit.Test;
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.extraction.neo4j.ObjectRetriever;
 import com.coin2012.wikipulse.extraction.neo4j.ObjectSaver;
+import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
+import com.coin2012.wikipulse.extraction.smmry.SentenceFinder;
+import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.PageSummary;
 import com.coin2012.wikipulse.models.ShortNews;
 import com.coin2012.wikipulse.models.WikiEdit;
 
@@ -84,7 +89,7 @@ public class EditClassifierTest {
 		Assert.assertTrue(shortNews.getEditor().getName().equals("USER1"));
 		Assert.assertTrue(shortNews.getPageLink().equals("testUrl"));
 		
-		EditClassfier ec = new EditClassfier();
+		WikiEditClassifier ec = new WikiEditClassifier();
 		boolean editWorhtiness = ec.isEditNewsWorthy(wikiEdit);
 		System.err.println(editWorhtiness);
 		Assert.assertTrue("Typo fixes are not regarded as news valid edits",editWorhtiness);
@@ -94,7 +99,7 @@ public class EditClassifierTest {
 	
 	@Test
 	public void isEditorANewsCreator() {
-		EditClassfier ec = new EditClassfier();
+		WikiEditClassifier ec = new WikiEditClassifier();
 		
 		wikiEdit = mock(WikiEdit.class);
 		when(wikiEdit.getRevid()).thenReturn("1");
@@ -107,4 +112,42 @@ public class EditClassifierTest {
 	
 	
 //	extractor.summarizeArticle(url, length);
+	
+
+
+//	public static List<News> createNewsFromPages(List<Page> pages) {
+//		List<News> resultSet = new LinkedList<News>();
+//		List<News> newsList = new ArrayList<News>();
+//		WikiEditClassifier wikiEditClassifier = new WikiEditClassifier();
+//		
+//		for (Page page: pages) {
+//			
+//			wikiEditClassifier.classify(page);//classify the pages based on edits
+//		
+//		
+//		WikiEdit wikiEdit = new WikiEdit();//Dummy
+//		String bufferedWikiEdit = SentenceFinder.summarize(page.getTextContent(), wikiEdit.getContent());//TODO create buffered summaries - use own impl or smmry//REMEMBER get to remove get title
+//		News item = new News();	//create and return news 
+//		item.setPageId(page.getPageId());
+//		item.setPagetTitle(page.getTitle());
+//		item.setRelYesterday(page.getRelYesterday());
+//		//if there are more that 30 sentences in the buffered WikiEdit,  we use the smmry api to summarize to 20 sentences
+//		if(SentenceFinder.getNumberOfSentencesInBufferedWikiEdit() > WikipulseConstants.MAXIMUM_ALLOWED_NUMBER_OF_SENTENCES){
+//			String pageUrl = WikipulseConstants.WIKIPEDIA_API_BASE_URL+"/"+ page.getTitle();
+//			PageSummary summarizedEdit =	PageSummarizer.summarizeArticle(pageUrl, Integer.toString(WikipulseConstants.MAXIMUM_ALLOWED_NUMBER_OF_SENTENCES));
+//			item.setNews(summarizedEdit.getSm_api_content());
+//		}
+//		else{
+//			
+//			item.setNews(bufferedWikiEdit);
+//		}
+//		
+//			Editor editor = new Editor();
+//			editor.setUserid(wikiEdit.getUserId());
+//			editor.setName(wikiEdit.getUser());
+//			item.setEditor(editor);
+//		
+//			newsList.add(item);
+//		}
+//		return newsList;
 }

@@ -161,4 +161,14 @@ public class Page {
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
+
+	public String getTextConten() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getTextContent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

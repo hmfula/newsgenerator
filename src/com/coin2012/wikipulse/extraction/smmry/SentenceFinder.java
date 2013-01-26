@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
  */
 public class SentenceFinder {
 
+	private static Map<Integer, String> editIndexSentenceMap;
+
 	/**
 	 * Adds buffer sentence(s) to given text (edit) by matching edited sentences between the original page text and the edit text and adding buffer
 	 * sentences to the edited text as buffer sentences accordingly. If the edit is only made to the first sentence of the page content then the second
@@ -28,7 +30,7 @@ public class SentenceFinder {
 	 */
 	public static String summarize(final String pageContent,
 			final String wikiEditContent) {
-		Map<Integer, String> editIndexSentenceMap = new HashMap<Integer, String>();
+		editIndexSentenceMap = new HashMap<Integer, String>();
 		Map<Integer, String> pageIndexSentenceMap = new HashMap<Integer, String>();
 		List<String> sentenceList = new ArrayList<String>();
 		StringBuffer editcontent = new StringBuffer();
@@ -111,6 +113,10 @@ public class SentenceFinder {
 			indexSentenceMap.put(count++, sentence);
 		}
 		return indexSentenceMap;
+	}
+
+	public static int  getNumberOfSentencesInBufferedWikiEdit() {
+		return editIndexSentenceMap.size();
 	}
 
 }
