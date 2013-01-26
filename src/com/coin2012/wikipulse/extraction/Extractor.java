@@ -16,6 +16,7 @@ import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.PageSummary;
 import com.coin2012.wikipulse.models.ShortNews;
 import com.coin2012.wikipulse.models.WikiEdit;
 
@@ -149,9 +150,9 @@ public class Extractor implements Extractable {
 	 * TODO : Method to be moved to identifier after fixing threading issue
 	 * 
 	 */
-	public Page summarizeArticle(String url, String length) {
-		Page page = PageSummarizer.summarizeArticle(url, length);
-		return page;
+	public PageSummary summarizeArticle(String url, String length) {
+		PageSummary pageSummary = PageSummarizer.summarizeArticle(url, length);
+		return pageSummary;
 	}
 
 	@Override

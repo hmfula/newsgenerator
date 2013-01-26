@@ -18,14 +18,11 @@ public class Identifier implements Identifiable {
 	@Override
 	public List<News> getNews() {
 		
-		return WikipulseGraphDatabase.getLatestNews();
+//		return WikipulseGraphDatabase.getLatestNews();
+		return null;
 	}
 	
 	
-	public Page summarizeArticle(String url, String length) {
-		Page page = PageSummarizer.summarizeArticle(url, length);
-		return page;
-	}
 
 	public static void startIdentificationThread() {
 		if (identificationThread == null ) {

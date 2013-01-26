@@ -6,6 +6,7 @@ import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.PageSummary;
 import com.coin2012.wikipulse.models.ShortNews;
 
 public interface Extractable {
@@ -49,9 +50,9 @@ public interface Extractable {
 	 * Summarizes a page
 	 * @param url of the  page 
 	 * @param length number sentences.  The minimum is 6 sentences.
-	 * @return Page object  that contain the summary of the page
+	 * @return PageSummary object  that contain the summary of the page
 	 */
-	public Page summarizeArticle(String url, String length);
+	public PageSummary summarizeArticle(String url, String length);
 
 	void savePages(List<Page> pages);
 

@@ -3,18 +3,17 @@ package com.coin2012.wikipulse.identification;
 import java.util.List;
 
 import com.coin2012.wikipulse.models.News;
-import com.coin2012.wikipulse.models.Page;
 
+/**
+ * Defines the News identification business contract for application..
+ *
+ */
 public interface Identifiable {
 	
-	public List<News> getNews();
-	
 	/**
-	 * Summarizes a page
-	 * @param url of the  page 
-	 * @param length number sentences.  The minimum is 6 sentences.
-	 * @return Page object  that contain the summary of the page
+	 * This method  gathers a list of identified news items.
+	 * @return list of news objects
 	 */
-	public Page summarizeArticle(String url, String length);
+	public List<News> getNews();
 	
 }

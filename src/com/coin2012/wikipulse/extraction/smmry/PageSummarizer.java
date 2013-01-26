@@ -4,14 +4,15 @@ import org.restlet.resource.ClientResource;
 
 import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.PageSummary;
 
 public class PageSummarizer {
 	
-	public static Page summarizeArticle(String url, String length) {
+	public static PageSummary summarizeArticle(String url, String length) {
 		ClientResource resource = PageSummarizerQueries.buildQueryToSummarizeArticle(url,length);
 		String result = QueryUtils.executeQueryToResource(resource);
-		Page page = PageSummarizerResultsParser.parseResultToSummaryPage(result);
-		return page;
+		PageSummary pageSummary = PageSummarizerResultsParser.parseResultToSummaryPage(result);
+		return pageSummary;
 	}
 
 }
