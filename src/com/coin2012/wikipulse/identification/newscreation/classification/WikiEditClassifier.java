@@ -1,4 +1,4 @@
-package com.coin2012.wikipulse.identification.newscreation.wikiedit.classification;
+package com.coin2012.wikipulse.identification.newscreation.classification;
 
 
 
