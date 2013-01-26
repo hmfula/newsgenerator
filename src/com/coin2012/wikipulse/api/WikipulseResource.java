@@ -69,22 +69,19 @@ public class WikipulseResource implements SparkApplication {
 		get(new Route("/news") {
 			@Override
 			public Object handle(Request request, Response response) {
-				String nprop = request.queryParams("nprop");
+				String sort = request.queryParams("sort");
+				String limit = request.queryParams("limit");
 				response.type("application/json; charset=utf-8");
-				return wikipulseService.getNews(nprop);
+				return wikipulseService.getNews(sort, limit);
 			}
 		});
-
-		get(new Route("/news/:category") {
+		
+		get(new Route("/news/:news"){
 			@Override
 			public Object handle(Request request, Response response) {
-				String category = request.params(":category");
-				String nprop = request.queryParams("nprop");
-				if (nprop == null) {
-					nprop = "";
-				}
+				String newsId = request.params(":news");
 				response.type("application/json; charset=utf-8");
-				return wikipulseService.getNewsForCategory(category, nprop);
+				return wikipulseService.getNews(newsId);
 			}
 		});
 
@@ -97,24 +94,32 @@ public class WikipulseResource implements SparkApplication {
 			}
 		});
 		
-		get(new Route("/category") {
+		get(new Route("/categories") {
 			@Override
 			public Object handle(Request request, Response response) {
-				String nprop = request.queryParams("nprop");
+				String limit = request.queryParams("limit");
 				response.type("application/json; charset=utf-8");
-				return wikipulseService.getCategories(nprop);
+				return wikipulseService.getCategories(limit);
 			}
 		});
+		
+		get(new Route("/categories/:category") {
+			@Override
+			public Object handle(Request request, Response response) {
+				String category = request.params(":category");
+				response.type("application/json; charset=utf-8");
+				return wikipulseService.getNewsForCategory(category);
+			}
+		});
+		
 		
 		put(new Route("/news/:news") {
 			@Override
 			public Object handle(Request request, Response response) {
 				response.type("application/json; charset=utf-8");
 				String news = request.params(":news");
-				
-				//if(news.matches("^[a-zA-Z_]+$")){
-					wikipulseService.saveUserInteraction(news);
-				//}
+				wikipulseService.saveUserInteraction(news);
+
 				String redirect_url = request.queryParams("redirect_url");
 				if (redirect_url != ""){
 					response.redirect(redirect_url);	

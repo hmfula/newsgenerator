@@ -22,7 +22,7 @@ public class ObjectSaver {
 	private GraphDatabaseService graphDB;
 	
 	public void saveOrUpdatePage(Page page){
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
 		try
 		{
@@ -48,7 +48,7 @@ public class ObjectSaver {
 	};
 	
 	public void saveAuthor(Editor editor){
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
 		try
 		{
@@ -64,7 +64,7 @@ public class ObjectSaver {
 	
 
 	public void saveNews (News news){
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
 		try
 		{
@@ -92,7 +92,7 @@ public class ObjectSaver {
 	};
 	
 	public void updateViewCount(String newsId){
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Transaction tx = graphDB.beginTx();
 		try
 		{

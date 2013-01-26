@@ -2,9 +2,11 @@ package com.coin2012.wikipulse.extraction;
 
 import java.util.List;
 
+import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
+import com.coin2012.wikipulse.models.ShortNews;
 
 public interface Extractable {
 
@@ -15,7 +17,7 @@ public interface Extractable {
 	 */
 	public abstract List<Page> getPagesForCategory(String category);
 	
-	public List<AggregatedChanges> getRecentChanges(int minChanges);
+	public List<Page> getPagesForIdentification();
 
 	public void enhanceNewsWithImages(List<News> news);
 
@@ -23,10 +25,9 @@ public interface Extractable {
 
 	public void enhancePagesWithRelevance(List<Page> pages);
 	
-	public void saveUserInteraction(String News);
-	
-	public List<News> getTop10MostReadNews();
-	
+	public List<AggregatedChanges> getRecentChanges(int minChanges);
+
+	//TODO do we need this here?
 	/**
 	 * Returns a sorted list of Editors  according to the  number of edits. 
 	 * @param editorsNames
@@ -34,6 +35,7 @@ public interface Extractable {
 	 */
 	public List<Editor> getWikipediaEditors(List<String> editorsNames);
 	
+	//TODO do we need this here?
 	/**
 	 * Tests whether two articles at least one editor in common.
 	 * @param firstArticle
@@ -42,8 +44,7 @@ public interface Extractable {
 	 */
 	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle);
 
-	public List<Page> getPagesForIdentification();
-	
+	//TODO do we need this here?
 	/**
 	 * Summarizes a page
 	 * @param url of the  page 
@@ -57,4 +58,16 @@ public interface Extractable {
 	void saveAuthor(Editor editor);
 
 	void saveNews(List<News> newsList);
+
+	public void saveUserInteraction(String News);
+
+	List<ShortNews> getMostViewedNews(int limit);
+
+	List<ShortNews> getLatestNews(int limit);
+
+	News getNews(String newsId);
+
+	List<ShortNews> getNewsForCategory(String title);
+
+	List<Category> getCategories(int limit);
 }

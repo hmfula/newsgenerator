@@ -1,21 +1,22 @@
 package com.coin2012.wikipulse.api;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.Extractor;
-import com.coin2012.wikipulse.identification.Identifier;
+import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;
+import com.coin2012.wikipulse.models.ShortNews;
 import com.google.gson.Gson;
 
 /**
  * Implementation of the WikipulseService interface.
- *
+ * 
  */
 public class WikipulseServiceImpl implements WikipulseService {
 
+	private Logger logger = Logger.getLogger(WikipulseServiceImpl.class.toString());
 	private Extractor extractor = new Extractor();
 	private Gson gson = new Gson();
 
@@ -32,82 +33,57 @@ public class WikipulseServiceImpl implements WikipulseService {
 
 		return result;
 	}
-	
+
 	@Override
-	public String getNews(String nprop) {
-		String result = null;
-		if(nprop.contains("top10")){
-			List<News> mostReadNews = extractor.getTop10MostReadNews();
-			result = gson.toJson(mostReadNews);
+	public String getNews(String sort, String limit) {
+		try {
+			List<ShortNews> shortNews;
+			if (sort.equals("views")) {
+				shortNews = extractor.getMostViewedNews(new Integer(limit));
+			} else {
+				shortNews = extractor.getLatestNews(new Integer(limit));
+			}
+			String result = gson.toJson(shortNews);
+			return result;
+		} catch (NumberFormatException e) {
+			logger.warning("The given limit: " + limit + " is not an Integer");
+			return null;
 		}
-		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public String getNews(String newsId) {
+		News news = extractor.getNews(newsId);
+		String result = gson.toJson(news);
 		return result;
 	}
 
 	@Override
-	public String getNewsForCategory(String category, String nprop) {
-		Identifier identifier = new Identifier();
-		List<News> news = identifier.getNews();
-		enhanceNewsWithProp(news, nprop);
-		
-		return gson.toJson(news);
+	public String getNewsForCategory(String category) {
+		List<ShortNews> shortNews = extractor.getNewsForCategory(category);
+		String result = gson.toJson(shortNews);
+		return result;
 	}
-	
+
 	@Override
-	public void saveUserInteraction(String News) {
-		extractor.saveUserInteraction(News);
-	}	
-	
-	@Override
-	public String getCategories(String nprop){
-		//TODO implement
-//		/*
-//		 * List<Category> categories = extractor.loadCategoriesFromDB();
-//		 */
-//		List<Category> categories = new ArrayList<Category>();
-//		categories.add(new Category("Economy_of_the_United_States","U.S."));
-//		categories.add(new Category("Europe","Europe"));
-//		categories.add(new Category("Asia","Asia"));
-//		categories.add(new Category("Recent_deaths","Recent Deaths"));
-//		categories.add(new Category("Current_events","Current Wikipedia Events"));
-//		categories.add(new Category("Current_sports_events","Current Sports Events"));
-//		return gson.toJson(categories);
-		return "";
+	public void saveUserInteraction(String newsId) {
+		extractor.saveUserInteraction(newsId);
+
 	}
-	
-	/**
-	 * Enhances the news with additional info.
-	 * 
-	 * @param news
-	 *            - the news to be enhanced.
-	 * @param nprop
-	 *            - additional info separated by |. Currentyl only img is
-	 *            supported.
-	 */
-	private void enhanceNewsWithProp(List<News> news, String nprop) {
-		Map<String, Boolean> parsedNewsProp = this.parseNewsProp(nprop);
-		if (parsedNewsProp.get("img")) {
-			extractor.enhanceNewsWithImages(news);
+
+	@Override
+	public String getCategories(String limit) {
+		try {
+			List<Category> categories = extractor.getCategories(new Integer(limit));
+			String result = gson.toJson(categories);
+			return result;
+		} catch (Exception e) {
+			logger.warning("The given limit: " + limit + " is not an Integer");
+			return null;
 		}
 	}
 
-	/**
-	 * Checks for all allowed properties. Currently only img is supported.
-	 * 
-	 * @param nprop
-	 *            - list of given properties
-	 * @return A map of properties and a boolean which indicated if the
-	 *         properties where specified.
-	 */
-	private Map<String, Boolean> parseNewsProp(String nprop) {
-		String[] props = { "img" };
-		Map<String, Boolean> properties = new HashMap<String, Boolean>();
-		for (String prop : props) {
-			properties.put(prop, nprop.contains(prop));
-		}
-		return properties;
-	}
-
+	// TODO do we need this here? Not based on DB
 	@Override
 	public String getEditors(List<String> editorNames) {
 		String result = gson.toJson(extractor.getWikipediaEditors(editorNames));
@@ -115,6 +91,7 @@ public class WikipulseServiceImpl implements WikipulseService {
 
 	}
 
+	// TODO do we need this here?
 	@Override
 	public String summarizeArticle(String url, String length) {
 		String result = gson.toJson(extractor.summarizeArticle(url, length));

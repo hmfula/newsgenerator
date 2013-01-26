@@ -6,13 +6,13 @@ import java.util.List;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
 
-import com.coin2012.wikipulse.extraction.neo4j.AuthorgraphDatabase;
+import com.coin2012.wikipulse.extraction.neo4j.WikipulseGraphDatabase;
 import com.coin2012.wikipulse.models.Page;
 
 public class DomainExperts {
 
 	public static void rankPages(List<Page> pages, int rankId) {
-		ExecutionEngine engine = new ExecutionEngine(AuthorgraphDatabase.getGraphDatabaseServiceInstance());
+		ExecutionEngine engine = new ExecutionEngine(WikipulseGraphDatabase.getGraphDatabaseServiceInstance());
 		
 		for (Page p: pages) {
 			ExecutionResult authors = engine.execute(buildQuery(p));

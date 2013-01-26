@@ -25,7 +25,7 @@ public class ObjectRetriever {
 	// TODO Add Categories to news Object?
 	public List<ShortNews> getNews() {
 		List<ShortNews> shortNews = new ArrayList<ShortNews>(); 
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
 		ExecutionResult result = engine.execute("START newsItems=node:news('*:*') MATCH (newsItems)-[:BASED_ON]->(page), (newsItems)-[:BASED_ON_EDIT_OF]->(author) RETURN newsItems,page.id,page.title,author ORDER BY newsItems.timestamp");
 		for (Map<String, Object> row : result) {
@@ -37,7 +37,7 @@ public class ObjectRetriever {
 
 	public List<ShortNews> getLatetestNews(int amount) {
 		List<ShortNews> shortNews = new ArrayList<ShortNews>(); 
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("amount", amount);
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
@@ -51,7 +51,7 @@ public class ObjectRetriever {
 
 	public List<ShortNews> getMostViewedNews(int amount) {
 		List<ShortNews> shortNews = new ArrayList<ShortNews>(); 
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("amount", amount);
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
@@ -65,7 +65,7 @@ public class ObjectRetriever {
 
 	public List<ShortNews> getNewsByCategory(Category category) {
 		List<ShortNews> shortNews = new ArrayList<ShortNews>(); 
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("title", category.getTitle());
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
@@ -79,7 +79,7 @@ public class ObjectRetriever {
 
 	public List<Category> getCategoriesWithHighestNewsCount(int amount) {
 		List<Category> categories = new ArrayList<Category>();
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("amount", amount);
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
@@ -96,7 +96,7 @@ public class ObjectRetriever {
 
 	public News getSingleNews(String id) {
 		News news = null;
-		graphDB = AuthorgraphDatabase.getGraphDatabaseServiceInstance();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", id);
 		ExecutionEngine engine = new ExecutionEngine(graphDB);

@@ -11,29 +11,6 @@ import java.util.List;
 public interface WikipulseService {
 
 	/**
-	 * Return a list of news as string in JSON format.
-	 * 
-	 * @param nprop
-	 *            - specifies additional content for the returned news sperated
-	 *            by |. img = news includes images
-	 *            relevance rating.
-	 * @return list of news as JSON string.
-	 */
-	public String getNews(String nprop);
-
-	/**
-	 * Returns a list of news for a given category as string in JSON format.
-	 * 
-	 * @param category
-	 *            - category of the returned news.
-	 * @param nprop
-	 *            - specifies additional content for the returned news sperated
-	 *            by |. img = news includes images
-	 * @return list of news as JSON string.
-	 */
-	public String getNewsForCategory(String category, String nprop);
-
-	/**
 	 * Returns a list of pages with changes in the last 2h as string in JSON
 	 * format.
 	 * 
@@ -43,7 +20,32 @@ public interface WikipulseService {
 	 * @return list of pages with recent changes as JSON string-
 	 */
 	public String getRecentChanges(String minChanges);
-	
+
+	/**
+	 * Return a list of news as string in JSON format.
+	 * 
+	 * @param nprop
+	 *            - specifies additional content for the returned news sperated
+	 *            by |. img = news includes images
+	 *            relevance rating.
+	 * @param limit 
+	 * @return list of news as JSON string.
+	 */
+	public String getNews(String sort, String limit);
+
+	public String getNews(String newsId);
+
+	/**
+	 * Returns a list of news for a given category as string in JSON format.
+	 * 
+	 * @param category
+	 *            - category of the returned news.
+	 * @return list of news as JSON string.
+	 */
+	public String getNewsForCategory(String category);
+
+	public void saveUserInteraction(String News);
+
 	/**
 	 * Return a list of categories as string in JSON format.
 	 * 
@@ -53,8 +55,7 @@ public interface WikipulseService {
 	 */
 	public String getCategories(String nprop);	
 	
-	public void saveUserInteraction(String News);
-
+	//TODO do we need this here?
 	/**
 	 * This method returns edit information of Wikipedians.
 	 * @param editorNames a list of Wikipedians user names which you would like to query
@@ -62,6 +63,7 @@ public interface WikipulseService {
 	 */
 	public String getEditors(List<String> editorNames);
 
+	//TODO do we need this here?
 	/**
 	 * Summarizes a page
 	 * @param url of the  page 
@@ -69,102 +71,4 @@ public interface WikipulseService {
 	 * @return JSON string  that contain the summary of the page
 	 */
 	public String  summarizeArticle(String url, String length);
-
-	//
-	// /**
-	// * Fetches pages for a given category.
-	// *
-	// * @param category
-	// * of articles
-	// * @return pages for a given category
-	// */
-	// public String getMostReadTitlesForCategory(String category);
-	//
-	// /**
-	// * Searches for pages matching given search text
-	// *
-	// * @param searchText used during search operation in Wikipedia API
-	// * @return page snippets (SnippetPage extends Page class) which contain
-	// matching <code>searchText<code>
-	// */
-	// public String searchForPagesThatMatch(String searchText);
-	//
-	// /**
-	// * Lists external pages referencing a given page
-	// *
-	// * @param url the source url
-	// * @return pages which externally link to url
-	// *
-	// */
-	// public String searchForPagesReferencing(String url);
-	//
-	// /**
-	// * Returns a list of Pages that contain images found in a given page
-	// * @param pageTitle used to search the page for images
-	// * @return page (s) with images
-	// */
-	// public String getPageWithImages(String pageTitle);
-
-	// public String getMostReadTitlesForCategory(String category);
-	//
-	// /**
-	// * Searches for pages matching given search text
-	// *
-	// * @param searchText used during search operation in Wikipedia API
-	// * @return page snippets (SnippetPage extends Page class) which contain
-	// matching <code>searchText<code>
-	// */
-	// public String searchForPagesThatMatch(String searchText);
-	//
-	// /**
-	// * Lists external pages referencing a given page
-	// *
-	// * @param url the source url
-	// * @return pages which externally link to url
-	// *
-	// */
-	// public String searchForPagesReferencing(String url);
-	//
-	// /**
-	// * Returns a list of Pages that contain images found in a given page
-	// * @param pageTitle used to search the page for images
-	// * @return page (s) with images
-	// */
-	// public String getPageWithImages(String pageTitle);
-
-	//
-	// /**
-	// * Fetches pages for a given category.
-	// *
-	// * @param category
-	// * of articles
-	// * @return pages for a given category
-	// */
-	// public String getMostReadTitlesForCategory(String category);
-	//
-	// /**
-	// * Searches for pages matching given search text
-	// *
-	// * @param searchText used during search operation in Wikipedia API
-	// * @return page snippets (SnippetPage extends Page class) which contain
-	// matching <code>searchText<code>
-	// */
-	// public String searchForPagesThatMatch(String searchText);
-	//
-	// /**
-	// * Lists external pages referencing a given page
-	// *
-	// * @param url the source url
-	// * @return pages which externally link to url
-	// *
-	// */
-	// public String searchForPagesReferencing(String url);
-	//
-	// /**
-	// * Returns a list of Pages that contain images found in a given page
-	// * @param pageTitle used to search the page for images
-	// * @return page (s) with images
-	// */
-	// public String getPageWithImages(String pageTitle);
-
 }
