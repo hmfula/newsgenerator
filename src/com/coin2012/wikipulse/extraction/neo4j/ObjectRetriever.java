@@ -122,6 +122,34 @@ public class ObjectRetriever {
 		}
 		return editors;	
 	}
+	
+	public List<Editor> getNewsContributors (int minNews){
+		List<Editor> editors = new ArrayList<Editor>();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("minNews", minNews);
+		ExecutionEngine engine = new ExecutionEngine(graphDB);
+		ExecutionResult result = engine.execute("START author = node:authors('*:*') MATCH ()-[based:BASED_ON_EDIT_OF]->author WITH distinct author , count(based) AS countedNews WHERE countedNews>={minNews} RETURN author", params);
+		for (Map<String, Object> row : result) {
+			Editor author = this.generateAuthorFrom(row);
+			editors.add(author);
+		}
+		return editors;	
+	}
+	
+	public List<Editor> getTopEditors (int amount){
+		List<Editor> editors = new ArrayList<Editor>();
+		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("amount", amount);
+		ExecutionEngine engine = new ExecutionEngine(graphDB);
+		ExecutionResult result = engine.execute("START author = node:authors('*:*') MATCH author-[edits:EDITED]->() RETURN distinct author , count(edits) AS editCount ORDER BY editCount desc LIMIT {amount}", params);
+		for (Map<String, Object> row : result) {
+			Editor author = this.generateAuthorFrom(row);
+			editors.add(author);
+		}
+		return editors;	
+	}
 
 	private Editor generateAuthorFrom(Map<String, Object> row) {
 		Node editorNode = (Node)row.get("author");

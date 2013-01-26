@@ -172,4 +172,20 @@ public class ObjectRetrieverTest {
 		List<Editor> editors =retriever.getDomainExperts(b, 2);
 		Assert.assertTrue(editors.size() == 1);
 	}
+	
+	@Test
+	public void getTopContributors(){
+		ObjectRetriever retriever = new ObjectRetriever();
+		List<Editor> editors =retriever.getTopEditors(1);
+		Assert.assertTrue(editors.size()==1);
+		Assert.assertEquals(editors.get(0).getUserid(), "user2");
+	}
+	
+	@Test
+	public void getNewsContributors(){
+		ObjectRetriever retriever = new ObjectRetriever();
+		List<Editor> editors =retriever.getNewsContributors(1);
+		Assert.assertTrue(editors.size()==1);
+		Assert.assertEquals(editors.get(0).getUserid(), "user1");
+	}
 }
