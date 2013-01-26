@@ -26,7 +26,7 @@ import com.coin2012.wikipulse.models.WikiEdit;
  * 
  */
 public class Extractor implements Extractable {
-	
+
 	private ObjectSaver saver = new ObjectSaver();
 	private ObjectRetriever retriever = new ObjectRetriever();
 
@@ -178,24 +178,29 @@ public class Extractor implements Extractable {
 		saver.updateViewCount(newsId);
 	}
 
+	@Override
 	public List<ShortNews> getMostViewedNews(int limit) {
 		return retriever.getMostViewedNews(limit);
 	}
 
+	@Override
 	public List<ShortNews> getLatestNews(int limit) {
 		return retriever.getLatetestNews(limit);
 	}
 
+	@Override
 	public News getNews(String newsId) {
 		return retriever.getSingleNews(newsId);
 	}
 
+	@Override
 	public List<ShortNews> getNewsForCategory(String title) {
 		Category category = new Category();
 		category.setTitle(title);
 		return retriever.getNewsByCategory(category);
 	}
 
+	@Override
 	public List<Category> getCategories(int limit) {
 		return retriever.getCategoriesWithHighestNewsCount(limit);
 	}
