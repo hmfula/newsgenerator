@@ -62,4 +62,10 @@ public interface Extractable {
 	List<ShortNews> getNewsForCategory(String title);
 
 	List<Category> getCategories(int limit);
+
+	List<Editor> getOneDomainExperts(Category category, int minEditsInCategory);
+
+	List<Editor> getTopContributors(int limit);
+
+	List<Editor> getNewsContributors(int minNews);
 }

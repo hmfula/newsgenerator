@@ -70,6 +70,8 @@ public class Extractor implements Extractable {
 		this.sortAggregatedChanges(aggregatedChanges);
 		return aggregatedChanges;
 	}
+	
+	
 
 	/**
 	 * Counts the changes for each title and returns a list of AggregatedChanges
@@ -190,5 +192,23 @@ public class Extractor implements Extractable {
 	@Override
 	public List<Category> getCategories(int limit) {
 		return retriever.getCategoriesWithHighestNewsCount(limit);
+	}
+	
+	@Override
+	public List<Editor> getOneDomainExperts(Category category, int minEditsInCategory){
+		List<Editor> editors =retriever.getDomainExperts(category, minEditsInCategory);
+		return editors;
+	}
+	
+	@Override
+	public List<Editor> getTopContributors(int limit){
+		List<Editor> editors =retriever.getTopEditors(limit);
+		return editors;
+	}
+	
+	@Override
+	public List<Editor> getNewsContributors(int minNews){
+		List<Editor> editors =retriever.getNewsContributors(minNews);
+		return editors;
 	}
 }
