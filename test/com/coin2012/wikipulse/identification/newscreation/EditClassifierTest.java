@@ -19,6 +19,7 @@ import com.coin2012.wikipulse.extraction.neo4j.ObjectSaver;
 import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
 import com.coin2012.wikipulse.extraction.smmry.SentenceFinder;
 import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
+import com.coin2012.wikipulse.identification.newscreation.wikiedit.classification.WikiEditClassifier;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
