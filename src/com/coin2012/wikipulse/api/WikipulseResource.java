@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.wikipedia.polling.RecentChangesRunnable;
+import com.coin2012.wikipulse.identification.Identifier;
 
 import spark.Request;
 import spark.Response;
@@ -40,6 +41,7 @@ public class WikipulseResource implements SparkApplication {
 	public static void main(String[] args) {
 		createRESTRoutes();
 		createInMemDb();
+		startIdentificationThread();
 	}
 
 	/**
@@ -48,6 +50,7 @@ public class WikipulseResource implements SparkApplication {
 	public void init() {
 		createRESTRoutes();
 		createInMemDb();
+		startIdentificationThread();
 	}
 
 	/**
@@ -216,5 +219,7 @@ public class WikipulseResource implements SparkApplication {
 		
 	}
 	
-	
+	private static void startIdentificationThread() {
+		Identifier.startIdentificationThread();
+	}
 }

@@ -7,12 +7,12 @@ import com.coin2012.wikipulse.models.Page;
 
 public class CommonWorkingSetAuthors {
 
-	public static void rankPages(List<Page> pages, Extractable extractor) {
+	public static void rankPages(List<Page> pages, int rankId, Extractable extractor) {
 		
 		for (Page p: pages) {
 			for (Page q: pages) {
 				if (extractor.doArticlesHaveAtleastOneCommonEditor(p, q)) {
-					p.increaseCommonWorkingSetAuthorsRank();
+					p.increaseRank(rankId);
 				}
 			}
 		}

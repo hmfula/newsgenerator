@@ -6,19 +6,14 @@ import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.extraction.neo4j.AuthorgraphDatabase;
 import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
-import com.coin2012.wikipulse.identification.newsselection.Authorgraph;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 
 public class Identifier implements Identifiable {
 	
-	Extractable extractor = new Extractor();
+	private static Extractable extractor = new Extractor();
+	private static Thread identificationThread;
 
-	public Identifier() {
-		// init Authorgraph thread if not running (TODO: probably better done in main init method from application)
-		Authorgraph.initAuthorgraphDatabaseThread(extractor);
-	}
-	
 	@Override
 	public List<News> getNews() {
 		
@@ -29,5 +24,12 @@ public class Identifier implements Identifiable {
 	public Page summarizeArticle(String url, String length) {
 		Page page = PageSummarizer.summarizeArticle(url, length);
 		return page;
+	}
+
+	public static void startIdentificationThread() {
+		if (identificationThread == null ) {
+			identificationThread = new Thread(new IdentificationRunnable(extractor));
+			identificationThread.run();
+		}
 	}
 }
