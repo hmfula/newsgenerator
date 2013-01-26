@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
+
 public class Page {
 
 	private String pageid;
@@ -16,6 +18,7 @@ public class Page {
 	private List<Image> images;
 	private List<String> imageUrlList = new ArrayList<String>();
 	private List<Category> categories = new ArrayList<Category>();
+	private String pageTextContent;
 	
 
 	public String getPageId() {
@@ -162,13 +165,14 @@ public class Page {
 		this.categories = categories;
 	}
 
-	public String getTextConten() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getPageUrl() {
+		return WikipulseConstants.WIKIPEDIA_API_BASE_URL + WikipulseConstants.SEPARATOR + getTitle();
 	}
 
 	public String getTextContent() {
-		// TODO Auto-generated method stub
-		return null;
+		return pageTextContent;
+	}
+	public void setTextContent(String content) {
+		pageTextContent = content;
 	}
 }
