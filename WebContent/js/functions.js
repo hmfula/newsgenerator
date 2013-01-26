@@ -1,12 +1,9 @@
 /* get current domain and create URLs to REST - routes */
 var wp_service_url = window.location.toString().substring(0, window.location.toString().lastIndexOf('/'));
-var wp_service_url_get_news = wp_service_url + "/news/";
+var wp_service_route_news = wp_service_url + "/news";
+var wp_service_route_categories = wp_service_url + "/categories";
+var wp_service_route_changes = wp_service_url + "/changes";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
-var wp_service_url_fetch_images = wp_service_url + "/FetchPageImages?titles=";
-var wp_service_url_changes = wp_service_url + "/Changes?minchanges=";
-var wp_service_url_MostReadArticles = wp_service_url + "/news?nprop=top10";
-var wp_service_url_UserInteraction = wp_service_url + "/news/";
-var wp_service_url_loadCategories =  wp_service_url + "/category";
 
 /* set wikipedia URL */
 var wiki_url = "http://en.wikipedia.org/wiki/";
@@ -107,7 +104,7 @@ function loadDoc(source) {
 function loadRecentChanges(minchanges){
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_url_changes + minchanges.toString(),
+	    url: wp_service_route_changes + "?minchanges=" + minchanges.toString(),
 	    dataType: 'json',
 	    success: function (data) {
 	    	$("#wait_recent_changes").html('');
@@ -163,7 +160,7 @@ function loadNewsDetail(url_parameter){
 	"<p>news_summary</p><a href='wikipedia_article'>see more on wikipedia</a>";
     $.ajax({
 	    type: 'GET',
-	    url: wp_service_url_get_news + "?id=" + url_parameter,
+	    url: wp_service_route_news + "/" + url_parameter,
 	    dataType: 'text',
 	    success: function (data) {
 	    	$.each(data,function(i,news){
@@ -184,9 +181,15 @@ function loadNewsDetail(url_parameter){
 	    }
 	});
 }
+function loadNews(type,url_parameter){
+	var url = "";
+	if (type=="home") url = wp_service_route_news + url_parameter;
+	else if (type=="category") url = wp_service_route_categories + "/" + url_parameter;
+	loadNewsImplementation(url);
+}
 
 /* load news for a category */
-function loadNews(url_parameter){
+function loadNewsImplementation(route){
 	
 	var news_template_big = "<h3><a href='#' id='news_id' data-toggle='modal'>news_title</a></h3>" +
 							"<a href='#'><div id='news_id'>img_slide_show</div></a>" +
@@ -196,7 +199,7 @@ function loadNews(url_parameter){
 							"<p class='p-small'>news_summary<a href='#' id='news_id' data-toggle='modal'>&nbsp;more information</a></p>";
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_url_get_news + url_parameter + "?nprop=img",
+	    url: route,
 	    dataType: 'json',
 	    success: function (data) {
 	    	$("#wait").html('');
@@ -290,7 +293,7 @@ function loadNews(url_parameter){
 function loadMostReadNews(){
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_url_MostReadArticles,
+	    url: wp_service_route_news + "?sort=views&limit=10",
 	    dataType: 'json',
 	    success: function (data) {	    	
 	    	var append_str = '<div class="nav-header p-small">Most Read Stories</div>'+
@@ -312,7 +315,7 @@ function loadMostReadNews(){
 function loadCategories(){
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_url_loadCategories,
+	    url: wp_service_route_categories,
 	    dataType: 'json',
 	    success: function (data) {	    	
 	    	$.each(data,function(i,category){
@@ -372,7 +375,7 @@ function loadCategories(){
 function increaseViewCounter(newsID){	
 	$.ajax({
 	    type: 'PUT',
-	    url: wp_service_url_UserInteraction + newsID,
+	    url: wp_service_route_news + "/" + newsID,
 	    dataType: 'json',
 	    success: function (data) {
 	    }
