@@ -27,14 +27,6 @@ public interface Extractable {
 	public void enhancePagesWithRelevance(List<Page> pages);
 	
 	public List<AggregatedChanges> getRecentChanges(int minChanges);
-
-	//TODO do we need this here?
-	/**
-	 * Returns a sorted list of Editors  according to the  number of edits. 
-	 * @param editorsNames
-	 * @return  a list of Editors in descending order
-	 */
-	public List<Editor> getWikipediaEditors(List<String> editorsNames);
 	
 	//TODO do we need this here?
 	/**
@@ -45,7 +37,6 @@ public interface Extractable {
 	 */
 	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle);
 
-	//TODO do we need this here?
 	/**
 	 * Summarizes a page
 	 * @param url of the  page 

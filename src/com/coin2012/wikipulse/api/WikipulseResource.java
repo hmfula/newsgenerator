@@ -6,17 +6,15 @@ import static spark.Spark.put;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
-
-import com.coin2012.wikipulse.extraction.wikipedia.polling.RecentChangesRunnable;
-import com.coin2012.wikipulse.identification.Identifier;
 
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.servlet.SparkApplication;
+
+import com.coin2012.wikipulse.extraction.wikipedia.polling.RecentChangesRunnable;
+import com.coin2012.wikipulse.identification.Identifier;
 
 /**
  * This class initializes and starts up the WikipulseResource through the main
@@ -124,54 +122,6 @@ public class WikipulseResource implements SparkApplication {
 					response.redirect(redirect_url);
 				}
 				return "success";
-			}
-		});
-
-		// TODO Clean up
-		/**
-		 * This route is used only for testing. Currently hard coded to show
-		 * only top 10 Wikipedians To be deleted after integration with
-		 * identification algorithm. Note:The list is randomized to test sort
-		 * functionality. Coded to return results in descending order(i.e return
-		 * biggest edit count first).
-		 */
-		get(new Route("/wikipedians_by_edit_counts") {
-			@Override
-			public Object handle(Request request, Response response) {
-				response.type("application/json; charset=utf-8");
-				// String editorNames = request.queryParams("ususers");
-				List<String> editorNames = new ArrayList<String>();
-				editorNames.add("Woohookitty");
-				editorNames.add("Bearcat");
-				editorNames.add("Dr. Blofeld");
-				editorNames.add("Tassedethe");
-				editorNames.add("Rjwilmsi");
-				editorNames.add("Koavf");
-				editorNames.add("Rich Farmbrough");
-				editorNames.add("Waacstats");
-				editorNames.add("Hmains");
-				editorNames.add("Ser Amantio di Nicolao");
-
-				return wikipulseService.getEditors(editorNames);
-			}
-		});
-
-		// TODO Clean up
-		// Example
-		// http://localhost:4567/create_summary?url=http://en.wikipedia.org/wiki/Finland&length=7
-		// Where:
-		// create_summary => route name
-		// http://en.wikipedia.org/wiki/Finland => article url
-		// length=7 => number of sentences in from the article
-		get(new Route("/create_summary") {
-			@Override
-			public Object handle(Request request, Response response) {
-				response.type("application/json; charset=utf-8");
-
-				String url = request.queryParams("url");
-				String length = request.queryParams("length");
-
-				return wikipulseService.summarizeArticle(url, length);
 			}
 		});
 	}

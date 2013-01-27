@@ -39,9 +39,9 @@ public class WikipulseServiceImpl implements WikipulseService {
 		try {
 			List<ShortNews> shortNews;
 			if (sort.equals("views")) {
-				shortNews = extractor.getMostViewedNews(new Integer(limit));
+				shortNews = extractor.getMostViewedNews(Integer.valueOf(limit));
 			} else {
-				shortNews = extractor.getLatestNews(new Integer(limit));
+				shortNews = extractor.getLatestNews(Integer.valueOf(limit));
 			}
 			String result = gson.toJson(shortNews);
 			return result;
@@ -81,20 +81,5 @@ public class WikipulseServiceImpl implements WikipulseService {
 			logger.warning("The given limit: " + limit + " is not an Integer");
 			return null;
 		}
-	}
-
-	// TODO do we need this here? Not based on DB
-	@Override
-	public String getEditors(List<String> editorNames) {
-		String result = gson.toJson(extractor.getWikipediaEditors(editorNames));
-		return result;
-
-	}
-
-	// TODO do we need this here?
-	@Override
-	public String summarizeArticle(String url, String length) {
-		String result = gson.toJson(extractor.summarizeArticle(url, length));
-		return result;
 	}
 }

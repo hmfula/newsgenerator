@@ -113,17 +113,6 @@ public class Extractor implements Extractable {
 		});
 	}
 
-	// TODO do we need this?
-	public List<Editor> getWikipediaEditors(List<String> editorsNames) {
-		List<Editor> editors = WikipediaExtractor.getWikipediaEditors(editorsNames);
-		Collections.sort(editors, new Comparator<Editor>() {
-			public int compare(Editor currentEditor, Editor nextEditor) {
-				return Integer.parseInt(nextEditor.getEditcount()) - Integer.parseInt(currentEditor.getEditcount());
-			}
-		});
-		return editors;
-	}
-
 	// TODO move to Identification?
 	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle) {
 
@@ -146,10 +135,7 @@ public class Extractor implements Extractable {
 		return doArticlesHaveAtleastOneCommonEditor;
 	}
 
-	/**
-	 * TODO : Method to be moved to identifier after fixing threading issue
-	 * 
-	 */
+	@Override
 	public PageSummary summarizeArticle(String url, String length) {
 		PageSummary pageSummary = PageSummarizer.summarizeArticle(url, length);
 		return pageSummary;

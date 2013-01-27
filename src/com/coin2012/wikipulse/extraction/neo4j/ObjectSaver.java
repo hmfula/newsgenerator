@@ -84,11 +84,12 @@ public class ObjectSaver {
 	 * @param news
 	 *            - object to be saved.
 	 */
-	public void saveNews(News news) {
+	public String saveNews(News news) {
+		String id = null;
 		if (news.getId() == null || news.getId().equals("")) {
 			// 2^122 Possibilities => nearly no chance for double
-			String id = UUID.randomUUID().toString();
-			int viewCount = 0;
+			id = UUID.randomUUID().toString();
+			long viewCount = 0;
 			graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 			Transaction tx = graphDB.beginTx();
 			try {
@@ -108,6 +109,7 @@ public class ObjectSaver {
 				tx.finish();
 			}
 		}
+		return id;
 	};
 
 	/**
@@ -121,7 +123,7 @@ public class ObjectSaver {
 		Transaction tx = graphDB.beginTx();
 		try {
 			Node newsNode = this.getOrCreateNodeWithUniqueFactory(newsId, "news");
-			Long viewCount = (Long) newsNode.getProperty("viewCount");
+			long viewCount = (Long)newsNode.getProperty("viewCount");
 			viewCount = viewCount + 1;
 			newsNode.setProperty("viewCount", viewCount);
 			tx.success();

@@ -1,6 +1,5 @@
 package com.coin2012.wikipulse.api;
 
-import java.util.List;
 
 /**
  * Defines the interface for the logic that is offered through the REST routes
@@ -54,21 +53,4 @@ public interface WikipulseService {
 	 * @return list of categories as JSON string.
 	 */
 	public String getCategories(String nprop);	
-	
-	//TODO do we need this here?
-	/**
-	 * This method returns edit information of Wikipedians.
-	 * @param editorNames a list of Wikipedians user names which you would like to query
-	 * @return JSON string of editor information
-	 */
-	public String getEditors(List<String> editorNames);
-
-	//TODO do we need this here?
-	/**
-	 * Summarizes a page
-	 * @param url of the  page 
-	 * @param length number sentences.  The minimum is 6 sentences.
-	 * @return JSON string  that contain the summary of the page
-	 */
-	public String  summarizeArticle(String url, String length);
 }

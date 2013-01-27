@@ -19,6 +19,8 @@ import com.coin2012.wikipulse.models.ShortNews;
 import com.coin2012.wikipulse.models.WikiEdit;
 
 public class ObjectRetrieverTest {
+	
+	private static String id;
 
 	@BeforeClass
 	public static void setUp() {
@@ -58,9 +60,7 @@ public class ObjectRetrieverTest {
 
 		ObjectSaver saver = new ObjectSaver();
 		saver.saveOrUpdatePage(page);
-		saver.saveNews(news);
-		saver.updateViewCount("1");
-
+		id = saver.saveNews(news);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class ObjectRetrieverTest {
 	@Test
 	public void getSingleNews() {
 		ObjectRetriever retriever = new ObjectRetriever();
-		News news = retriever.getSingleNews("1");
+		News news = retriever.getSingleNews(id);
 		Assert.assertTrue(news.getNews().equals("BigNews"));
 		Assert.assertTrue(news.getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(news.getEditor().getName().equals("USER1"));
