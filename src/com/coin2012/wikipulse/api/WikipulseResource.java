@@ -29,7 +29,7 @@ import spark.servlet.SparkApplication;
 public class WikipulseResource implements SparkApplication {
 
 	private static Logger logger = Logger.getLogger("WikipulseResource");
-	
+
 	private static WikipulseService wikipulseService = new WikipulseServiceImpl();
 
 	/**
@@ -75,8 +75,8 @@ public class WikipulseResource implements SparkApplication {
 				return wikipulseService.getNews(sort, limit);
 			}
 		});
-		
-		get(new Route("/news/:news"){
+
+		get(new Route("/news/:news") {
 			@Override
 			public Object handle(Request request, Response response) {
 				String newsId = request.params(":news");
@@ -93,7 +93,7 @@ public class WikipulseResource implements SparkApplication {
 				return wikipulseService.getRecentChanges(minChanges);
 			}
 		});
-		
+
 		get(new Route("/categories") {
 			@Override
 			public Object handle(Request request, Response response) {
@@ -102,7 +102,7 @@ public class WikipulseResource implements SparkApplication {
 				return wikipulseService.getCategories(limit);
 			}
 		});
-		
+
 		get(new Route("/categories/:category") {
 			@Override
 			public Object handle(Request request, Response response) {
@@ -111,8 +111,7 @@ public class WikipulseResource implements SparkApplication {
 				return wikipulseService.getNewsForCategory(category);
 			}
 		});
-		
-		
+
 		put(new Route("/news/:news") {
 			@Override
 			public Object handle(Request request, Response response) {
@@ -121,27 +120,27 @@ public class WikipulseResource implements SparkApplication {
 				wikipulseService.saveUserInteraction(news);
 
 				String redirect_url = request.queryParams("redirect_url");
-				if (redirect_url != ""){
-					response.redirect(redirect_url);	
-				}				
+				if (redirect_url != "") {
+					response.redirect(redirect_url);
+				}
 				return "success";
 			}
 		});
-		
-		
-		//TODO Clean up
+
+		// TODO Clean up
 		/**
-		 * This route is used only for testing.
-		 * Currently hard coded to show only top 10 Wikipedians
-		 * To be deleted after integration  with identification algorithm.
-		 * Note:The list is randomized to test sort functionality. Coded to return results in descending order(i.e return biggest edit count first).
+		 * This route is used only for testing. Currently hard coded to show
+		 * only top 10 Wikipedians To be deleted after integration with
+		 * identification algorithm. Note:The list is randomized to test sort
+		 * functionality. Coded to return results in descending order(i.e return
+		 * biggest edit count first).
 		 */
 		get(new Route("/wikipedians_by_edit_counts") {
 			@Override
 			public Object handle(Request request, Response response) {
 				response.type("application/json; charset=utf-8");
-//				String editorNames = request.queryParams("ususers");
-				List <String> editorNames = new ArrayList<String>();
+				// String editorNames = request.queryParams("ususers");
+				List<String> editorNames = new ArrayList<String>();
 				editorNames.add("Woohookitty");
 				editorNames.add("Bearcat");
 				editorNames.add("Dr. Blofeld");
@@ -152,29 +151,27 @@ public class WikipulseResource implements SparkApplication {
 				editorNames.add("Waacstats");
 				editorNames.add("Hmains");
 				editorNames.add("Ser Amantio di Nicolao");
-				
-				
-				
+
 				return wikipulseService.getEditors(editorNames);
 			}
 		});
-		
-		//TODO Clean up
+
+		// TODO Clean up
 		// Example
-		//http://localhost:4567/create_summary?url=http://en.wikipedia.org/wiki/Finland&length=7
-		//Where: 
-		//create_summary => route name
-		//http://en.wikipedia.org/wiki/Finland => article url
-		//length=7 => number of sentences in from the article
+		// http://localhost:4567/create_summary?url=http://en.wikipedia.org/wiki/Finland&length=7
+		// Where:
+		// create_summary => route name
+		// http://en.wikipedia.org/wiki/Finland => article url
+		// length=7 => number of sentences in from the article
 		get(new Route("/create_summary") {
 			@Override
 			public Object handle(Request request, Response response) {
 				response.type("application/json; charset=utf-8");
-			
-			String url = request.queryParams("url");
-			String length = request.queryParams("length");	
-			
-			return wikipulseService.summarizeArticle(url, length);
+
+				String url = request.queryParams("url");
+				String length = request.queryParams("length");
+
+				return wikipulseService.summarizeArticle(url, length);
 			}
 		});
 	}
@@ -186,9 +183,12 @@ public class WikipulseResource implements SparkApplication {
 	private static void createInMemDb() {
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
-			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-			connection.createStatement()
-					.execute("CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255), pageid varchar(255), UNIQUE (timestamp, pageTitle, pageid))");
+			Connection connection = DriverManager.getConnection(
+					"jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			connection
+					.createStatement()
+					.execute(
+							"CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255), pageid varchar(255), UNIQUE (timestamp, pageTitle, pageid))");
 			new Thread(new RecentChangesRunnable()).start();
 			addShutdownHook(connection);
 		} catch (SQLException e) {
@@ -200,30 +200,33 @@ public class WikipulseResource implements SparkApplication {
 	}
 
 	/**
-	 * Shuts down the in-memory database correctly in case of any shutdown command.
-	 * @param connection the connection to the in-memory database
+	 * Shuts down the in-memory database correctly in case of any shutdown
+	 * command.
+	 * 
+	 * @param connection
+	 *            the connection to the in-memory database
 	 */
 	private static void addShutdownHook(final Connection connection) {
-		  Runtime.getRuntime().addShutdownHook(new Thread() {  
-	            @Override  
-	            public void run() {  
-	            	try {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
 
-	        			if (connection != null) {
-	        				connection.close();
-	        			}
+					if (connection != null) {
+						connection.close();
+					}
 
-	        		} catch (Exception e) {
-	        			logger.info("Failed to close the connection to the database because of : "
-	        					+ e.getCause());
-	        			e.printStackTrace();
-	        		}
-	            	
-	            }  
-	        });  
-		
+				} catch (Exception e) {
+					logger.info("Failed to close the connection to the database because of : "
+							+ e.getCause());
+					e.printStackTrace();
+				}
+
+			}
+		});
+
 	}
-	
+
 	private static void startIdentificationThread() {
 		Identifier.startIdentificationThread();
 	}
