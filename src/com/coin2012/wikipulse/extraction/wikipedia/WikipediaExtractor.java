@@ -29,12 +29,12 @@ public class WikipediaExtractor {
 		return titles;
 	}
 
-	public static void updatePagesWithEdits(List<Page> pages) {
-		for (Page page : pages) {
-			ClientResource resource = WikipediaQueries.buildQueryForRevisions(page.getPageId());
+	public static void updateEditsWithContent(List<WikiEdit> edits) {
+		for (WikiEdit edit : edits) {
+			ClientResource resource = WikipediaQueries.buildQueryForRevisionContent(edit.getRevid());
 			String result = QueryUtils.executeQueryToResource(resource);
-			List<WikiEdit> edits = WikipediaResultParser.parseResultToEdits(result, page.getPageId());
-			page.setEdits(edits);
+			String content = WikipediaResultParser.parseResultToContent(result, edit.getRevid());
+			edit.setContent(content);
 		}
 	}
 
@@ -57,16 +57,16 @@ public class WikipediaExtractor {
 		List<Change> changes = WikipediaExtractor.getRecentChanges(currentTimestamp, queryTimestamp);
 		return changes;
 	}
-	
-	public static void enhanceNewsWithImages(List<News> news){
+
+	public static void enhanceNewsWithImages(List<News> news) {
 		for (News newsItem : news) {
 			ClientResource resource = WikipediaQueries.buildQueryForImagesFileNames(newsItem.getPagetTitle());
 			String result = QueryUtils.executeQueryToResource(resource);
 			List<String> imageFileNames = WikipediaResultParser.parseResultToImageFileNames(result);
-			if(!imageFileNames.isEmpty()){
+			if (!imageFileNames.isEmpty()) {
 				String imageTitles = imageFileNames.get(0);
 				imageFileNames.remove(0);
-				if(!imageFileNames.isEmpty()){
+				if (!imageFileNames.isEmpty()) {
 					for (String string : imageFileNames) {
 						imageTitles = imageTitles + "|" + string;
 					}
@@ -75,11 +75,11 @@ public class WikipediaExtractor {
 					List<String> imageUrls = WikipediaResultParser.parseResultToImageURLs(imgUrlQueryResult);
 					newsItem.getImageUrlList().addAll(imageUrls);
 				}
-				
+
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns a list of changes within a given time frame hours
 	 * 
@@ -105,11 +105,11 @@ public class WikipediaExtractor {
 		return changes;
 	}
 
-	public static List<Editor> getWikipediaEditors(List <String> editorNamesList) {
+	public static List<Editor> getWikipediaEditors(List<String> editorNamesList) {
 		String editorNames = null;
-		if(!editorNamesList.isEmpty()){
+		if (!editorNamesList.isEmpty()) {
 			editorNames = editorNamesList.remove(0);
-			
+
 			for (String currentEditorName : editorNamesList) {
 				editorNames = editorNames + "|" + currentEditorName;
 			}
@@ -119,18 +119,18 @@ public class WikipediaExtractor {
 		List<Editor> editors = WikipediaResultParser.parseResultToMatchingEditors(result);
 		return editors;
 	}
-	
-	public static List<Page> getPagesWithCategoriesForPageIds(List<String> pageids){
+
+	public static List<Page> getPagesWithCategoriesForPageIds(List<String> pageids) {
 		List<Page> pages = new ArrayList<Page>();
 		for (String pageid : pageids) {
 			ClientResource resource = WikipediaQueries.buildQueryForPageWithCategoriesByPageId(pageid);
 			String result = QueryUtils.executeQueryToResource(resource);
-			Page page = WikipediaResultParser.parseResultToPage(result,pageid);
+			Page page = WikipediaResultParser.parseResultToPage(result, pageid);
 			pages.add(page);
 		}
 		return pages;
 	}
-	
+
 	public static void updatePagesWithEditsFromTheLastTwoHours(List<Page> pages) {
 		for (Page page : pages) {
 			ClientResource resource = WikipediaQueries.buildQueryForRevisionsFromTheLastTwoHours(page.getPageId());

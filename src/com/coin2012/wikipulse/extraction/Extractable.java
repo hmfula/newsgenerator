@@ -8,6 +8,7 @@ import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.PageSummary;
 import com.coin2012.wikipulse.models.ShortNews;
+import com.coin2012.wikipulse.models.WikiEdit;
 
 public interface Extractable {
 
@@ -22,7 +23,7 @@ public interface Extractable {
 
 	public void enhanceNewsWithImages(List<News> news);
 
-	public void enhancePagesWithEdits(List<Page> pages);
+	public void enhanceEditsWithContent(List<WikiEdit> pages);
 
 	public void enhancePagesWithRelevance(List<Page> pages);
 	

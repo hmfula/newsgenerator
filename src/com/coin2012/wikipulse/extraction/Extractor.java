@@ -31,6 +31,7 @@ public class Extractor implements Extractable {
 	private ObjectSaver saver = new ObjectSaver();
 	private ObjectRetriever retriever = new ObjectRetriever();
 
+	//TODO needed?
 	@Override
 	public List<Page> getPagesForCategory(String category) {
 		List<Page> pages = WikipediaExtractor.getPagesForCategory(category);
@@ -50,8 +51,8 @@ public class Extractor implements Extractable {
 	}
 
 	@Override
-	public void enhancePagesWithEdits(List<Page> pages) {
-		WikipediaExtractor.updatePagesWithEdits(pages);
+	public void enhanceEditsWithContent(List<WikiEdit> edits) {
+		WikipediaExtractor.updateEditsWithContent(edits);
 	}
 
 	@Override

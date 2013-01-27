@@ -116,4 +116,14 @@ public abstract class WikipediaQueries {
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
 	}
+
+	public static ClientResource buildQueryForRevisionContent(String revid) {
+		ClientResource resource = new ClientResource(wikipediaApi);
+		resource.getReference().addQueryParameter("action", "query");
+		resource.getReference().addQueryParameter("revids", revid);
+		resource.getReference().addQueryParameter("prop", "revisions");
+		resource.getReference().addQueryParameter("rvprop", "content");
+		resource.getReference().addQueryParameter("format", "json");
+		return resource;
+	}
 }

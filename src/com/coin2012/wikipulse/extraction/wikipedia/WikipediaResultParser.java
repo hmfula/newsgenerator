@@ -118,4 +118,14 @@ public class WikipediaResultParser extends ResultParser {
 			page = gson.fromJson(pageAsJson, Page.class);
 		return page;
 	}
+
+	public static String parseResultToContent(String result, String revid) {
+		 Set<Entry<String, JsonElement>> page = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject().entrySet();
+		 for (Entry<String, JsonElement> entry : page) {
+			String content = entry.getValue().getAsJsonObject().get("revisions").getAsJsonArray().get(0).getAsJsonObject().get("*").toString();
+			return content;
+		}
+	
+		return null;
+	}
 }
