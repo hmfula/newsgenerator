@@ -79,7 +79,7 @@ public class IdentificationRunnable implements Runnable {
 			List <News> newsResults = Dummy.createNewsFromPages(resultSet); // dummy for now
 			List <News> news = SimpleNewsGenerator.createNewsFromPages(ex , resultSet);
 			System.err.println("############# Number of news items: ->  " + news.size());//for debugging only
-			
+			ex.saveNews(news);//Save test news //TODO remove dummy at some point
 			ex.saveNews(newsResults);
 			
 			try {
