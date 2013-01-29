@@ -1,16 +1,14 @@
 package com.coin2012.wikipulse.identification;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.newscreation.Dummy;
-import com.coin2012.wikipulse.identification.newscreation.SimpleNewsGenerator;
-import com.coin2012.wikipulse.identification.newscreation.NewsGenerator;
 import com.coin2012.wikipulse.identification.newsselection.AuthorsWithNews;
 import com.coin2012.wikipulse.identification.newsselection.CommonWorkingSetAuthors;
 import com.coin2012.wikipulse.identification.newsselection.DomainExperts;
@@ -82,6 +80,7 @@ public class IdentificationRunnable implements Runnable {
 			//List <News> news = SimpleNewsGenerator.createNewsFromPages(ex , resultSet);
 			//System.err.println("############# Number of news items: ->  " + news.size());//for debugging only
 			
+			ex.enhanceNewsWithImages(newsResults);
 			ex.saveNews(newsResults);
 			
 			try {
