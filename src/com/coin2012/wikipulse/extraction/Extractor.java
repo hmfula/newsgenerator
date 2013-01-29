@@ -196,7 +196,7 @@ public class Extractor implements Extractable {
 	}
 	
 	@Override
-	public List<Editor> getOneDomainExperts(Category category, int minEditsInCategory){
+	public List<Editor> getDomainExperts(Category category, int minEditsInCategory){
 		List<Editor> editors =retriever.getDomainExperts(category, minEditsInCategory);
 		return editors;
 	}

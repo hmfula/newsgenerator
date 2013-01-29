@@ -55,7 +55,7 @@ public class ObjectRetriever {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("amount", amount);
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
-		ExecutionResult result = engine.execute("START newsItems = node:news('*:*') MATCH (newsItems)-[:BASED_ON]->(page), (newsItems)-[:BASED_ON_EDIT_OF]->(author) RETURN newsItems,page.id,page.title,author ORDER BY newsItems.viewCount desc LIMIT {amount}", params);
+		ExecutionResult result = engine.execute("START newsItems = node:news('*:*') MATCH (newsItems)-[:BASED_ON]->(page), (newsItems)-[:BASED_ON_EDIT_OF]->(author) WHERE newsItems.viewCount>0 RETURN newsItems,page.id,page.title,author ORDER BY newsItems.viewCount desc LIMIT {amount}", params);
 
 		for (Map<String, Object> row : result) {
 			shortNews.add(this.generateShortNewsFromRow(row));

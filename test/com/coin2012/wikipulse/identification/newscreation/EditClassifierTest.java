@@ -305,9 +305,9 @@ public class EditClassifierTest {
 		editors.add(editor2);
 		editors.add(editor3);
 		when(objectRetriever.getDomainExperts(a,2)).thenReturn(editors);
-		System.err.println(" Number of Domain experts :  " + extractor.getOneDomainExperts(a, 2).size());
+		System.err.println(" Number of Domain experts :  " + extractor.getDomainExperts(a, 2).size());
 	
-		System.err.println("Domain experts :  " + extractor.getOneDomainExperts(a, 2).get(1).getUser());
+		System.err.println("Domain experts :  " + extractor.getDomainExperts(a, 2).get(1).getUser());
 //		WikiEditClassifier ec = new WikiEditClassifier();
 		
 //		public List<Editor> getOneDomainExperts(Category category, int minEditsInCategory){

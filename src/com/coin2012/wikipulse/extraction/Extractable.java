@@ -64,7 +64,7 @@ public interface Extractable {
 
 	List<Category> getCategories(int limit);
 
-	List<Editor> getOneDomainExperts(Category category, int minEditsInCategory);
+	List<Editor> getDomainExperts(Category category, int minEditsInCategory);
 
 	List<Editor> getTopContributors(int limit);
 

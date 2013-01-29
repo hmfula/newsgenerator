@@ -24,7 +24,7 @@ public abstract class AbstractClassifier implements Classifiable{
 	 */
 	public boolean isEditorADomainExpert(Extractable extractor, Category category,  WikiEdit wikiEdit, int numberOfEdits) {
 		List <String> editorNames = new ArrayList<String>();
-		List <Editor> editors =  extractor.getOneDomainExperts(category, numberOfEdits);
+		List <Editor> editors =  extractor.getDomainExperts(category, numberOfEdits);
 		for(Editor editor : editors){
 			editorNames.add(editor.getUser());	
 		}
