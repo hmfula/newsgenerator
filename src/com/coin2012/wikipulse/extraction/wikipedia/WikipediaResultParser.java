@@ -70,11 +70,16 @@ public class WikipediaResultParser extends ResultParser {
 		List<String> imageUrls = new ArrayList<String>();
 		Set<Entry<String, JsonElement>> set = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
 				.getAsJsonObject().entrySet();
+		String url;
 		for (Entry<String, JsonElement> entry : set) {
 			JsonObject page = entry.getValue().getAsJsonObject();
-			JsonArray imageinfo = page.get("imageinfo").getAsJsonArray();
-			JsonElement firstElement = imageinfo.get(0);
-			String url = firstElement.getAsJsonObject().get("url").getAsString();
+			if (page.has("imageinfo")) {
+				JsonArray imageinfo = page.get("imageinfo").getAsJsonArray();
+				JsonElement firstElement = imageinfo.get(0);
+				url = firstElement.getAsJsonObject().get("url").getAsString();
+			} else {
+				url = "NO IMAGE FOUND";
+			}
 			imageUrls.add(url);
 
 		}
@@ -111,21 +116,21 @@ public class WikipediaResultParser extends ResultParser {
 	}
 
 	public static Page parseResultToPage(String result, String pageid) {
-		System.out.println(result);
 		Page page = null;
-		JsonObject pageAsJson = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
-				.getAsJsonObject().get(pageid).getAsJsonObject();
-			page = gson.fromJson(pageAsJson, Page.class);
+		JsonObject pageAsJson = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject().get(pageid)
+				.getAsJsonObject();
+		page = gson.fromJson(pageAsJson, Page.class);
 		return page;
 	}
 
 	public static String parseResultToContent(String result, String revid) {
-		 Set<Entry<String, JsonElement>> page = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject().entrySet();
-		 for (Entry<String, JsonElement> entry : page) {
+		Set<Entry<String, JsonElement>> page = jsonParser.parse(result).getAsJsonObject().get("query").getAsJsonObject().get("pages")
+				.getAsJsonObject().entrySet();
+		for (Entry<String, JsonElement> entry : page) {
 			String content = entry.getValue().getAsJsonObject().get("revisions").getAsJsonArray().get(0).getAsJsonObject().get("*").toString();
 			return content;
 		}
-	
+
 		return null;
 	}
 }
