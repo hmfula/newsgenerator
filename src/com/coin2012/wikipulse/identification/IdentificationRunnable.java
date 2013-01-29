@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.newscreation.Dummy;
+import com.coin2012.wikipulse.identification.newscreation.SimpleNewsGenerator;
 import com.coin2012.wikipulse.identification.newsselection.AuthorsWithNews;
 import com.coin2012.wikipulse.identification.newsselection.CommonWorkingSetAuthors;
 import com.coin2012.wikipulse.identification.newsselection.DomainExperts;
@@ -76,6 +77,8 @@ public class IdentificationRunnable implements Runnable {
 			
 			// extract information from pages and generate news
 			List <News> newsResults = Dummy.createNewsFromPages(resultSet); // dummy for now
+			List <News> news = SimpleNewsGenerator.createNewsFromPages(ex , resultSet);
+			System.err.println("############# Number of news items: ->  " + news.size());//for debugging only
 			
 			ex.saveNews(newsResults);
 			

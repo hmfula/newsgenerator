@@ -104,17 +104,223 @@ public class EditClassifierTest {
 		
 		wikiEdit = mock(WikiEdit.class);
 		when(wikiEdit.getRevid()).thenReturn("1");
-		when(wikiEdit.getUserId()).thenReturn("Koavf");
-		when(wikiEdit.getUser()).thenReturn("Koavf");
+		when(wikiEdit.getUserId()).thenReturn("user1");
+		when(wikiEdit.getUser()).thenReturn("USER1");
 		
-		Assert.assertTrue("Sorry! The author is unknown by wikipulse",ec.isEditorANewsCreator(wikiEdit));
+		
+		
+		
+
+		List<Editor> editors = new ArrayList<Editor>();
+		Category a = new Category();
+		a.setTitle("a");
+		Category b = new Category();
+		b.setTitle("b");
+		List<Category> categories = new ArrayList<Category>();
+		categories.add(a);
+		categories.add(b);
+		
+		Extractor extractor =  new Extractor();
+		ObjectRetriever objectRetriever = mock(ObjectRetriever.class); 
+		
+		Editor editor1 =  new Editor();
+		editor1.setUserid("user1");
+		editor1.setName("USER1");
+		
+		Editor editor2 =  new Editor();
+		editor2.setUserid("user2");
+		editor2.setName("USER2");
+		
+		Editor editor3 =  new Editor();
+		editor3.setUserid("user3");
+		editor3.setName("USER3");
+		
+		editors.add(editor1);
+		editors.add(editor2);
+		editors.add(editor3);
+		when(objectRetriever.getDomainExperts(a,2)).thenReturn(editors);
+		
+		
+		
+		
+		Assert.assertTrue("Sorry! The author is unknown by wikipulse",ec.isEditorADomainExpert(extractor, a, wikiEdit, 1));
 		
 	}
 	
 	
+	@Test
+	public void summaryCreatedForEveryPageValidEditOnThePage() {
+		Category a = new Category();
+		a.setTitle("a");
+		Category b = new Category();
+		b.setTitle("b");
+		List<Category> categories = new ArrayList<Category>();
+		categories.add(a);
+		categories.add(b);
+
+		
+		WikiEdit  wikiEdit1 = new WikiEdit();
+		wikiEdit1.setParentid("200");
+		wikiEdit1.setRevid("999");
+		wikiEdit1.setUserid("user1");
+		wikiEdit1.setUser("USER1");
+		wikiEdit1.setContent("A journey of a thousand miles always start with one step. Before God all men are created equal.");
+		
+		WikiEdit  wikiEdit2 = new WikiEdit();
+		wikiEdit2.setRevid("1000");
+		wikiEdit2.setParentid("200");
+		wikiEdit2.setUserid("user2");
+		wikiEdit2.setUser("USER2");
+		wikiEdit2.setContent("A journey");
+		
+		WikiEdit  wikiEdit3 = new WikiEdit();
+		wikiEdit3.setParentid("200");
+		wikiEdit3.setRevid("10001");
+		wikiEdit3.setUserid("user3");
+		wikiEdit3.setUser("USER3");
+		wikiEdit3.setContent("A journey of a thousand miles always start with one step.");
+		
+		List<WikiEdit> edits = new ArrayList<WikiEdit>();
+		edits.add(wikiEdit1);
+		edits.add(wikiEdit2);
+		edits.add(wikiEdit3);
+
+		Page page = mock(Page.class);
+		when(page.getPageId()).thenReturn("1");
+		when(page.getTitle()).thenReturn("Page-A");
+		when(page.getCategories()).thenReturn(categories);
+		when(page.getEdits()).thenReturn(edits);
+		String pageContent = "Majority wins. One picture is worthy a thousand words. A journey of a thousand miles always start with one step.  Before God all men are created equal.";
+		when(page.getTextContent()).thenReturn(pageContent);
+
+		Editor editor = mock(Editor.class);
+		when(editor.getUserid()).thenReturn("user1");
+		when(editor.getName()).thenReturn("USER1");	
+		
+		System.out.println(page.getEdits().size());
+		System.out.println(page.getEdits().get(0).getUser());
+		System.out.println(page.getEdits().get(1).getUser());
+		System.out.println(page.getEdits().get(2).getUser());
+		System.out.println(page.getEdits().get(0).getContent());
+		System.out.println(page.getEdits().get(1).getContent());
+		System.out.println(page.getEdits().get(2).getContent());
+	
+		
+		WikiEditClassifier ec = new WikiEditClassifier();
+		boolean editWorhtiness = ec.isEditNewsWorthy(wikiEdit3);
+		System.err.println("news worthy: " + editWorhtiness);
+	
+		//filter minor edits
+		List<WikiEdit>  listOfValuableWikiEdits = ec.filterEditsBasedOnNewsWorthiness(page);
+		System.err.println("Number of valid edits: " + listOfValuableWikiEdits.size());
+		
+		//are edits based on the same page  
+		boolean areEditsBasedOnTheSamePage = ec.areEditsBasedOnTheSamePage(wikiEdit1, wikiEdit2 );
+		System.err.println("areEditsBasedOnTheSamePage: " + areEditsBasedOnTheSamePage);
+		
+		//find sentences in a wiki edit
+		List<String> sentencesInAWikiEdit = ec.findSentencesInAWikiEdit(wikiEdit1);
+		System.err.println("number of sentencesInAWikiEdit (wikiedit1) : " + sentencesInAWikiEdit.size());
+		System.err.println("sentencesInAWikiEdit: " + sentencesInAWikiEdit.get(0) +sentencesInAWikiEdit.get(1) );
+		
+		
+		
+		//find sentences in a wiki edit3
+		sentencesInAWikiEdit = ec.findSentencesInAWikiEdit(wikiEdit3);
+		System.err.println("number of sentencesInAWikiEdit (wikiedit3) : " + sentencesInAWikiEdit.size());
+		System.err.println("sentencesInAWikiEdit: " + sentencesInAWikiEdit.get(0) );
+		
+		//find sentences that occur in both edits
+		
+				List<String> commonSentencesInWikiEdits = ec.findCommonSentencesInWikiEdits(wikiEdit1,wikiEdit3);
+				System.err.println("number of commonSentencesInWikiEdits (wikiedit1 and wikiedit3) : " + commonSentencesInWikiEdits.size());
+				System.err.println("number of commonSentencesInWikiEdits (wikiedit1 and wikiedit3) : " + commonSentencesInWikiEdits);
+				
+				//remove a sentences from an edit used to filter edits that appear in that occur in both edits
+				System.err.println("removeTextFromAWikiEdit (wikiedit1) Berfore removal : " + wikiEdit1.getContent());
+				String contentToRemove = "A journey of a thousand miles always start with one step.";
+				WikiEdit removeTextFromAWikiEdit = ec.removeTextFromAWikiEdit(wikiEdit1,contentToRemove);
+				
+				System.err.println("removeTextFromAWikiEdit (wikiedit1)  After removal ) : " + removeTextFromAWikiEdit.getContent());
+				
+				
+				//summarize a wikiedit wikiedit 2 - not a sentence so no buffering
+				System.err.println("summarizedWikiEdit(wikiedit3)  Before summarization : " + wikiEdit2.getContent());
+				WikiEdit summarizedWikiEdit = ec.summarizeWikiEditWithBufferSentences(page,wikiEdit2);
+				
+				
+				System.err.println("summarizedWikiEdit (wikiedit3) After summarization : " + summarizedWikiEdit.getContent());
+				
+				
+				//summarize a wikiedit wikiedit 3 - sentence between to sentences from the page  gets buffering before & after wikiedit content
+				System.err.println("summarizedWikiEdit(wikiedit3)  Before summarization : " + wikiEdit3.getContent());
+				
+//				summarizedWikiEdit = ec.summarizeWikiEditWithBufferSentences(page,wikiEdit3);
+				
+				
+				System.err.println("summarizedWikiEdit (wikiedit3) After summarization : " + summarizedWikiEdit.getContent());
+				
+				//get a combined list of non overlapping sentences from two edits on the same page
+				List<String> nonOverllappingWikiEditSentencesFromSamePage = ec.processDuplicateSentencesFromWikiEditsOnTheSamePage(wikiEdit1, wikiEdit3);
+				
+				
+				System.err.println("nonOverllappingWikiEditSentencesFromSamePage (wikiedit1 & wikiedit3) After summarization : " + nonOverllappingWikiEditSentencesFromSamePage);
+				
+				//Summarize nonOverllappingWikiEditSentencesFromSamePage
+				String nonOverlappingWikiEditSummarySentencesForSamePageWikiEdit = ec.getNonOverlappingSummarySentencesForSamePageWikiEdits(page,wikiEdit1, wikiEdit3);
+				System.err.println("nonOverlappingWikiEditSummarySentencesForSamePageWikiEdit (wikiedit1 & wikiedit2) Processed sentences  : " + nonOverlappingWikiEditSummarySentencesForSamePageWikiEdit);
+				
+	
+	}
+	
+	@Test
+	public void isEditortADomainExpert() {
+		
+		
+		List<Editor> editors = new ArrayList<Editor>();
+		Category a = new Category();
+		a.setTitle("a");
+		Category b = new Category();
+		b.setTitle("b");
+		List<Category> categories = new ArrayList<Category>();
+		categories.add(a);
+		categories.add(b);
+		
+		Extractor extractor =  new Extractor();
+		ObjectRetriever objectRetriever = mock(ObjectRetriever.class); 
+		
+		Editor editor1 =  new Editor();
+		editor1.setUserid("user1");
+		editor1.setName("USER1");
+		
+		Editor editor2 =  new Editor();
+		editor2.setUserid("user2");
+		editor2.setName("USER2");
+		
+		Editor editor3 =  new Editor();
+		editor3.setUserid("user3");
+		editor3.setName("USER3");
+		
+		editors.add(editor1);
+		editors.add(editor2);
+		editors.add(editor3);
+		when(objectRetriever.getDomainExperts(a,2)).thenReturn(editors);
+		System.err.println(" Number of Domain experts :  " + extractor.getOneDomainExperts(a, 2).size());
+	
+		System.err.println("Domain experts :  " + extractor.getOneDomainExperts(a, 2).get(1).getName());
+		WikiEditClassifier ec = new WikiEditClassifier();
+		
+//		public List<Editor> getOneDomainExperts(Category category, int minEditsInCategory){
+	}
+//	A journey of a thousand miles always start with one step. Before God all men are created equal.
+//	
+//	A journey
+//	
+//	A journey of a thousand miles always start with one step.
 //	extractor.summarizeArticle(url, length);
 	
-
+//One picture is worthy a thousand words. A journey of a thousand miles always start with one step. Before God all men are created equal.
+	//processed edits: A journey , Before God all men are created equal.
 
 //	public static List<News> createNewsFromPages(List<Page> pages) {
 //		List<News> resultSet = new LinkedList<News>();
@@ -151,4 +357,9 @@ public class EditClassifierTest {
 //			newsList.add(item);
 //		}
 //		return newsList;
+	
+	
+	
+//    
+
 }
