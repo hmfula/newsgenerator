@@ -3,6 +3,8 @@ package com.coin2012.wikipulse.api;
 import static spark.Spark.get;
 import static spark.Spark.put;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,7 +28,7 @@ import com.coin2012.wikipulse.identification.Identifier;
  */
 public class WikipulseResource implements SparkApplication {
 
-	private static Logger logger = Logger.getLogger("WikipulseResource");
+	private static Logger logger = Logger.getLogger(WikipulseResource.class.toString());
 
 	private static WikipulseService wikipulseService = new WikipulseServiceImpl();
 
@@ -105,8 +107,15 @@ public class WikipulseResource implements SparkApplication {
 			@Override
 			public Object handle(Request request, Response response) {
 				String category = request.params(":category");
-				response.type("application/json; charset=utf-8");
-				return wikipulseService.getNewsForCategory(category);
+				try {
+					category = URLDecoder.decode(category, "x-www-form-urlencoded");
+					response.type("application/json; charset=utf-8");
+					return wikipulseService.getNewsForCategory(category);
+				} catch (UnsupportedEncodingException e) {
+					logger.warning("Category: " + category + " could not be decoded");
+					response.status(400);
+					return response;
+				}
 			}
 		});
 
@@ -133,8 +142,7 @@ public class WikipulseResource implements SparkApplication {
 	private static void createInMemDb() {
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
-			Connection connection = DriverManager.getConnection(
-					"jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
 			connection
 					.createStatement()
 					.execute(
@@ -167,8 +175,7 @@ public class WikipulseResource implements SparkApplication {
 					}
 
 				} catch (Exception e) {
-					logger.info("Failed to close the connection to the database because of : "
-							+ e.getCause());
+					logger.info("Failed to close the connection to the database because of : " + e.getCause());
 					e.printStackTrace();
 				}
 
