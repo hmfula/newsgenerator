@@ -4,7 +4,10 @@ var wp_service_route_news = wp_service_url + "/news";
 var wp_service_route_categories = wp_service_url + "/categories";
 var wp_service_route_changes = wp_service_url + "/changes";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
-
+var category_news_limit = "15";
+var category_no_limit = "4";
+var homepage_limit = "15";
+var mostreadstories_limit = "6";
 /* set wikipedia URL */
 var wiki_url = "http://en.wikipedia.org/wiki/";
 
@@ -139,6 +142,7 @@ function loadNewsDetail(url_parameter){
     		$("#wait").html('');
 	    	if (news !== null){	 							
 				append_str = news_template;
+				document.title = news.pageTitle;
 				append_str = append_str.replace(/news_id/g, '"' + news.id + '"');
 				append_str = append_str.replace(/news_title/g,news.pageTitle);
 				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.id,0,news.imageUrlList));
@@ -161,7 +165,7 @@ function loadNewsDetail(url_parameter){
 function loadNews(type,url_parameter){
 	var url = "";
 	if (type=="home") url = wp_service_route_news + url_parameter;
-	else if (type=="category") url = wp_service_route_categories + "/" + url_parameter + "?limit=10";
+	else if (type=="category") url = wp_service_route_categories + "/" + url_parameter + "?limit=" + category_news_limit;
 	loadNewsImplementation(url);
 }
 
@@ -173,6 +177,7 @@ function loadNewsImplementation(url){
 	var news_template_small = "<h6><a href='#newsid=news_id' class='show_detail' news_id='news_id'>news_title</a></h6>" +
 							"<div id='news_id'>img_slide_show</div>" +
 							"<p class='p-small'>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
+	if (getUrlVars()["cat"] !== undefined) document.title = getUrlVars()["cat"];
 	$.ajax({
 	    type: 'GET',
 	    url: url,
@@ -232,7 +237,8 @@ function loadNewsImplementation(url){
 	    	$("#row2").append(news_rows);
 	    },
 	    error: function(){
-	    	alert('sorry, category not available');
+	    	$("#wait").html('sorry, category not available');
+	    	//alert('sorry, category not available');
 	    }	    
 	});
 }
@@ -262,7 +268,7 @@ function loadNewsImplementation(url){
 function loadMostReadNews(){
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_route_news + "?sort=views&limit=10",
+	    url: wp_service_route_news + "?sort=views&limit=" + mostreadstories_limit,
 	    dataType: 'json',
 	    success: function (data) {	    	
 	    	var append_str = '<div class="nav-header p-small">Most Read Stories</div>'+
@@ -284,7 +290,7 @@ function loadMostReadNews(){
 function loadCategories(){
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_route_categories + "?limit=4",
+	    url: wp_service_route_categories + "?limit=" + category_no_limit,
 	    dataType: 'json',
 	    success: function (data) {	    	
 	    	$.each(data,function(i,category){
@@ -305,7 +311,7 @@ function loadCategories(){
 	    				loadDoc('home.html');
 	    				setActiveClass("home");
 	    				break;
-	    			case "home":
+	    			case "Home":
 	    				loadDoc('home.html');
 	    				setActiveClass("home");
 	    				break;
