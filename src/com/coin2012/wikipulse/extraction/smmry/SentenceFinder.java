@@ -102,6 +102,10 @@ public class SentenceFinder {
 								+ "(?=\\s|$)", Pattern.MULTILINE
 								| Pattern.COMMENTS);
 
+		if(textToProcess == null){
+			return indexSentenceMap;
+		}
+			
 		Matcher reMatcher = re.matcher(textToProcess);
 		Integer count = 0;
 

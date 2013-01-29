@@ -117,9 +117,9 @@ public class Page {
 	}
 
 	public String getPageUrl() {
-		return WikipulseConstants.WIKIPEDIA_API_BASE_URL + WikipulseConstants.SEPARATOR + getTitle();
+		return WikipulseConstants.WIKIPEDIA_PAGE_BASE_URL + getTitle();
 	}
-
+	
 	public String getTextContent() {
 		return pageTextContent;
 	}

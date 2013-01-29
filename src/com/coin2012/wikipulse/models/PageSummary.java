@@ -2,7 +2,10 @@ package com.coin2012.wikipulse.models;
 
 import java.util.List;
 
+import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
+
 public class PageSummary {
+	
 	
 	
 	String sm_api_message;
@@ -22,7 +25,7 @@ public class PageSummary {
 		this.sm_api_title = sm_api_title;
 	}
 	public String getSm_api_content() {
-		return sm_api_content;
+		return sm_api_content.replaceAll("[\\[BREAK\\]]", WikipulseConstants.EMPTY);
 	}
 	public void setSm_api_content(String sm_api_content) {
 		this.sm_api_content = sm_api_content;
