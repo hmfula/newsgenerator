@@ -97,6 +97,7 @@ public abstract class WikipediaQueries {
 		resource.getReference().addQueryParameter("rclimit", "500");
 		resource.getReference().addQueryParameter("rcend", rcend);
 		resource.getReference().addQueryParameter("rcstart", rcstart);
+		resource.getReference().addQueryParameter("rcnamespace", "0");
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;
 	}
