@@ -5928,6 +5928,8 @@ a.badge:hover {
 .img_size_news_small {
   height: 160px;
   display: block;
+  margin-left: auto;
+  margin-right: auto; 
   padding: 4px;
   line-height: 20px;
   border: 1px solid #ddd;
@@ -5945,6 +5947,8 @@ a.badge:hover {
 .img_size_news_big {
   max-height: 420px;
   display: block;
+  margin-left: auto;
+  margin-right: auto; 
   padding: 4px;
   line-height: 20px;
   border: 1px solid #ddd;

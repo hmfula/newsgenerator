@@ -49,13 +49,11 @@ $('.bottom_nav_link').click(function(){
 /* catch click event of TOP navigation (dynamic categories) */
 $('#navigation').on('click','.nav_link', function(){
 	/* retrieve link-information, remove active-class, load either home.html or dynamic content, set new active-class*/
-	
 	var value = $(this).attr("href");
 	value = value.replace('#cat=','');
 	$(this).parent().siblings().removeClass('active');
 	if (value == "home" ) loadDoc('home.html');
 	else loadDoc('news.html');
-	//alert(value);
 	$(this).parent().addClass('active');
 });
 
@@ -77,11 +75,16 @@ $('#navigation').on('click','.nav_link', function(){
 
 /* add click event to all news records in order, increase user interaction (counter) and load news detail*/
 $('#main_div').on("click",'.show_detail', function(){
-    var news_id = $(this).attr('news_id');
+    var news_id = $(this).attr('newsid');
     increaseViewCounter(news_id);
     loadDoc('news_detail.html');
 });
 
+$('#most_read_stories').on("click",'.show_detail', function(){
+    var news_id = $(this).attr('newsid');
+    increaseViewCounter(news_id);
+    loadDoc('news_detail.html');
+});
 
 /* set class=active for navigation item based on attribute href */
 function setActiveClass(href){
@@ -113,18 +116,16 @@ function loadRecentChanges(minchanges){
 	    	$("#wait_recent_changes").html('');
 	    	$("#recent_changes ul").html('');
 	    	$("#recent_changes ul").append('<li class="nav-header">Recent Changes</li>');
-	    	$.each(data,function(i,news){
-    			if(news.title.indexOf(":") < 0)
+	    	$.each(data,function(i,changes){
+    			if(changes.title.indexOf(":") < 0)
     				{
-	    				var append_str = '<li><a href="http://' +  news.url + '">' + news.title + '&nbsp;(&nbsp;' + news.count + '&nbsp;edits)&nbsp;' +'</a></li>';
+	    				var append_str = '<li><a href="http://' +  changes.url + '">' + changes.title + '&nbsp;(&nbsp;' + changes.count + '&nbsp;edits)&nbsp;' +'</a></li>';
 		      			$("#recent_changes ul").append(append_str);	    				
     				}	    			
 	    	});
 	    }
 	});	
 }
-
-
 
 /* get news detail from service and display */
 function loadNewsDetail(url_parameter){
@@ -134,19 +135,15 @@ function loadNewsDetail(url_parameter){
 	    type: 'GET',
 	    url: wp_service_route_news + "/" + url_parameter,
 	    dataType: 'json',
-	    success: function (data) {
+	    success: function (news) {
     		$("#wait").html('');
-	    	if (data !== null){	    	
-		    	$.each(data,function(i,news){
-					//alert(page.pageTitle);		
-					//clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');					
-					append_str = news_template;
-					append_str = append_str.replace(/news_id/g, '"' + news.id + '"');
-					append_str = append_str.replace(/news_title/g,news.pageTitle);
-					append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.imageUrlList));
-					append_str = append_str.replace(/news_summary/g,news.shortNews);
-					append_str = append_str.replace(/wikipedia_article/g, news.BASE_URL + news.pageTitle);				
-	    		});
+	    	if (news !== null){	 							
+				append_str = news_template;
+				append_str = append_str.replace(/news_id/g, '"' + news.id + '"');
+				append_str = append_str.replace(/news_title/g,news.pageTitle);
+				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.id,0,news.imageUrlList));
+				append_str = append_str.replace(/news_summary/g,news.news);
+				append_str = append_str.replace(/wikipedia_article/g, news.BASE_URL + news.pageTitle);				
 	    		$("#wp_service_news_detail_results").html(append_str);	  
 	    	}
 	    	else {
@@ -170,7 +167,6 @@ function loadNews(type,url_parameter){
 
 /* load news for a category */
 function loadNewsImplementation(url){
-	//alert(url);
 	var news_template_big = "<h3><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h3>" +
 							"<div id='news_id'>img_slide_show</div>" +
 							"<p>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
@@ -188,57 +184,47 @@ function loadNewsImplementation(url){
 	    	var counter = 0;
 	    	var subcounter = 0;
 	    	var news_rows = '';
-	    	$.each(data,function(i,news){
-	    		if ((Number(news.yesterdaysRelevance) > 0.00 ) && (news.pageTitle.indexOf(":") < 0)) {
-	    			//alert(page.pageTitle);
-	    			//load_images_for_news_item(page.pageTitle);
-	    			//clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
-	    			
-	    			found = false;
-	    			append_str = (counter == 0 ) ? news_template_big : news_template_small;
-	    			//append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+news.pageTitle);
-	    			//append_str = append_str.replace(/user_interaction_id/g, '"' + encodeURIComponent(news.pageTitle) + '"');
-	    			append_str = append_str.replace(/news_id/g, '"' + news.id + '"');
-    				append_str = append_str.replace(/news_title/g,news.pageTitle);
-    				
-    				//append_str = append_str.replace(/clean_newstitle/g,clean_news_title);
-    				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.imageUrlList));
-    				append_str = append_str.replace(/news_summary/g,news.shortNews);
-    				
-	    			if(counter == 0 && (found == false)){
-	    				$("#news_1").html(append_str);
-		    			counter += 1;
-		    			found = true;
-	    			}
-	    			if(counter==1 && (found == false)){						
-	    				$("#news_2").html(append_str);
-		    			counter += 1;
-		    			found = true;
-	    			}
-	    			if(counter==2 && (found == false)){
-	    				$("#news_3").html(append_str);
-		    			counter += 1;
-		    			found = true;
-	    			}
-	    			if(counter>2 && (found == false) && (subcounter==0)){
-	    				news_rows += '<div class="row-fluid"><div class="span3">' + append_str +'</div>'; // only for first news item in row
-	    				subcounter += 1;
-		    			counter += 1;
-		    			found = true;
-    				}
-	    			if(counter>2 && (found == false) && (subcounter==1)){
-	    				news_rows += '<div class="span3">' + append_str +'</div>';
-	    				subcounter += 1;
-		    			counter += 1;
-		    			found = true;
-    				}	
-	    			if(counter>2 && (found == false) && (subcounter==2)){
-	    				news_rows += '<div class="span3">' + append_str +'</div></div>';
-	    				subcounter = 0; // only 3rd news item
-		    			counter += 1;
-		    			found = true;
-    				}
-    			} // close relevance - if
+	    	$.each(data,function(i,news){	    		
+    			found = false;
+    			append_str = (counter == 0 ) ? news_template_big : news_template_small;
+    			append_str = append_str.replace(/news_id/g, news.id);
+				append_str = append_str.replace(/news_title/g,news.pageTitle);
+				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.id,counter,news.imageUrlList));				
+				append_str = append_str.replace(/news_shortsummary/g,news.shortNews);
+
+    			if(counter == 0 && (found == false)){
+    				$("#news_1").html(append_str);
+	    			counter += 1;
+	    			found = true;
+    			}
+    			if(counter==1 && (found == false)){						
+    				$("#news_2").html(append_str);
+	    			counter += 1;
+	    			found = true;
+    			}
+    			if(counter==2 && (found == false)){
+    				$("#news_3").html(append_str);
+	    			counter += 1;
+	    			found = true;
+    			}
+    			if(counter>2 && (found == false) && (subcounter==0)){
+    				news_rows += '<div class="row-fluid"><div class="span3">' + append_str +'</div>'; // only for first news item in row
+    				subcounter += 1;
+	    			counter += 1;
+	    			found = true;
+				}
+    			if(counter>2 && (found == false) && (subcounter==1)){
+    				news_rows += '<div class="span3">' + append_str +'</div>';
+    				subcounter += 1;
+	    			counter += 1;
+	    			found = true;
+				}	
+    			if(counter>2 && (found == false) && (subcounter==2)){
+    				news_rows += '<div class="span3">' + append_str +'</div></div>';
+    				subcounter = 0; // only 3rd news item
+	    			counter += 1;
+	    			found = true;
+				}
 	    	}); // close for-each loop
 	    	if(subcounter != 0){
 	    		news_rows += '</div>';	    		
@@ -283,10 +269,10 @@ function loadMostReadNews(){
 	    					'<div class="row-fluid"><div class="span12" style="text-align:center;">'+
 	    						'<table class="table table-condensed" style="margin-bottom:0px"><tr>';
 	    	$.each(data,function(i,news){
-    			if(news.title.indexOf(":") < 0)
+    			if(news.pageTitle.indexOf(":") < 0)
     				{
-    					append_str += "<td><a href='#' class='show_detail' news_id='" + news.newsId + "'>" + news.pageTitle + '&nbsp;(&nbsp;' + news.viewCount + '&nbsp;click(s))&nbsp;' +'</a></td>';
-	    				//append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.title) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
+    					append_str += "<td><a href='#newsid=" + news.id + "' class='show_detail' newsid='" + news.id + "'>" + news.pageTitle + '&nbsp;(&nbsp;' + news.viewCount + '&nbsp;click(s))&nbsp;' +'</a></td>';
+	    				//append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.pageTitle) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
     				}	    			
 	    	});
 	    	append_str += "</tr></table></div></div>";	    	
@@ -376,10 +362,10 @@ function increaseViewCounter(newsID){
 }
 
 /* create HTML-code for image slide show in news category and news detail */
-function createImageSlideshow(newsId,urlList){
+function createImageSlideshow(newsId,news_counter,urlList){
 	var img_url_list_str = "";
-	img_url_list_str = urlList;
-	if (img_url_list_str == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
+	//img_url_list_str = urlList;
+	if (jQuery.isEmptyObject(urlList) || urlList == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
 	
 	var div_slideshow = '<div id="myCarousel_' + newsId
 	+ '" class="carousel slide"><div class="carousel-inner">';
