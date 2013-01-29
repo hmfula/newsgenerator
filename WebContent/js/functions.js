@@ -47,12 +47,15 @@ $('.bottom_nav_link').click(function(){
 });
 
 /* catch click event of TOP navigation (dynamic categories) */
-$('.nav_link').on("click", function(){
+$('#navigation').on('click','.nav_link', function(){
 	/* retrieve link-information, remove active-class, load either home.html or dynamic content, set new active-class*/
+	
 	var value = $(this).attr("href");
+	value = value.replace('#cat=','');
 	$(this).parent().siblings().removeClass('active');
-	if (value.replace('#cat=','') == "home" ) loadDoc('home.html');
-	else loadDoc('news.html?content=' + value.replace('#cat=',''));
+	if (value == "home" ) loadDoc('home.html');
+	else loadDoc('news.html');
+	//alert(value);
 	$(this).parent().addClass('active');
 });
 
@@ -76,7 +79,7 @@ $('.nav_link').on("click", function(){
 $('#main_div').on("click",'.show_detail', function(){
     var news_id = $(this).attr('news_id');
     increaseViewCounter(news_id);
-    loadDoc('news_detail.html?news_id=' + news_id);
+    loadDoc('news_detail.html');
 });
 
 
@@ -121,85 +124,62 @@ function loadRecentChanges(minchanges){
 	});	
 }
 
-/* create HTML-code for image slide show in news category and news detail */
-function createImageSlideshow(newsId,urlList){
-	var img_url_list_str = "";
-	img_url_list_str = urlList;
-	if (img_url_list_str == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
-	
-	var div_slideshow = '<div id="myCarousel_' + newsId
-	+ '" class="carousel slide"><div class="carousel-inner">';
-	
-	var img_list = img_url_list_str.toString().split(',');
-	for(var j=0;j<img_list.length;j++){
-		if(j==0){
-			div_slideshow += '<div class="item active">';
-		}
-		else {
-			div_slideshow += '<div class="item">';
-		} 
-		if (news_counter >= 3)
-			div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
-		else if (news_counter >= 1)
-			div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
-		else 
-			div_slideshow += '<img class="img-rounded img_size_news_big" src="'+ img_list[j] +'" alt="">';
-		
-		div_slideshow += '</div>';
-    };
-    div_slideshow += '</div>';
-    div_slideshow += '<a class="left carousel-control" href="#myCarousel_'+ newsId + '" data-slide="prev">&lsaquo;</a>';
-    div_slideshow += '<a class="right carousel-control" href="#myCarousel_'+ newsId + '" data-slide="next">&rsaquo;</a>';
-    div_slideshow += '</div>';
-    return div_slideshow;
-}
+
 
 /* get news detail from service and display */
 function loadNewsDetail(url_parameter){
-	var news_template = "<h3>news_title</h3>" + "<div id='clean_newstitle'>img_slide_show</div>" +
+	var news_template = "<h3>news_title</h3>" + "<div id='news_id'>img_slide_show</div>" +
 	"<p>news_summary</p><a href='wikipedia_article'>see more on wikipedia</a>";
     $.ajax({
 	    type: 'GET',
 	    url: wp_service_route_news + "/" + url_parameter,
-	    dataType: 'text',
+	    dataType: 'json',
 	    success: function (data) {
-	    	$.each(data,function(i,news){
-	    			//alert(page.pageTitle);
-	    			//load_images_for_news_item(page.pageTitle);
-	    			//clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
-	    			
-	    			append_str = news_template;
-	    			append_str = append_str.replace(/news_id/g, '"' + news.NewsId + '"');
-    				append_str = append_str.replace(/news_title/g,news.pageTitle);
-    				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.imageUrlList));
-    				append_str = append_str.replace(/news_summary/g,news.newsSummary);
-    				append_str = append_str.replace(/wikipedia_article/g, news.newsTitle);
-    				
-	    	});
+    		$("#wait").html('');
+	    	if (data !== null){	    	
+		    	$.each(data,function(i,news){
+					//alert(page.pageTitle);		
+					//clean_news_title = news.pageTitle.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');					
+					append_str = news_template;
+					append_str = append_str.replace(/news_id/g, '"' + news.id + '"');
+					append_str = append_str.replace(/news_title/g,news.pageTitle);
+					append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.imageUrlList));
+					append_str = append_str.replace(/news_summary/g,news.shortNews);
+					append_str = append_str.replace(/wikipedia_article/g, news.BASE_URL + news.pageTitle);				
+	    		});
+	    		$("#wp_service_news_detail_results").html(append_str);	  
+	    	}
+	    	else {
+	    		$("#wp_service_news_detail_results").html("sorry, news not found");	  
+	    	}
+	    },
+	    error: function(){
 	    	$("#wait").html('');
-	    	$("#wp_service_news_detail_results").html(append_str);	    	
+	    	$("#wp_service_news_detail_results").html("sorry, news not found");	
 	    }
 	});
 }
+
+/* load news for specific category or home-page */
 function loadNews(type,url_parameter){
 	var url = "";
 	if (type=="home") url = wp_service_route_news + url_parameter;
-	else if (type=="category") url = wp_service_route_categories + "/" + url_parameter;
+	else if (type=="category") url = wp_service_route_categories + "/" + url_parameter + "?limit=10";
 	loadNewsImplementation(url);
 }
 
 /* load news for a category */
-function loadNewsImplementation(route){
-	
-	var news_template_big = "<h3><a href='#' id='news_id' data-toggle='modal'>news_title</a></h3>" +
-							"<a href='#'><div id='news_id'>img_slide_show</div></a>" +
-							"<p>news_title<a href='#' id='news_id' data-toggle='modal'>&nbsp;more information</a></p>";
-	var news_template_small = "<h6><a href='#' id='news_id' data-toggle='modal'>news_title</a></h6>" +
-							"<a href='#' id='news_id' data-toggle='modal'><div id='news_id'>img_slide_show</div></a>" +
-							"<p class='p-small'>news_summary<a href='#' id='news_id' data-toggle='modal'>&nbsp;more information</a></p>";
+function loadNewsImplementation(url){
+	//alert(url);
+	var news_template_big = "<h3><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h3>" +
+							"<div id='news_id'>img_slide_show</div>" +
+							"<p>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
+	var news_template_small = "<h6><a href='#newsid=news_id' class='show_detail' news_id='news_id'>news_title</a></h6>" +
+							"<div id='news_id'>img_slide_show</div>" +
+							"<p class='p-small'>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
 	$.ajax({
 	    type: 'GET',
-	    url: route,
+	    url: url,
 	    dataType: 'json',
 	    success: function (data) {
 	    	$("#wait").html('');
@@ -218,12 +198,12 @@ function loadNewsImplementation(route){
 	    			append_str = (counter == 0 ) ? news_template_big : news_template_small;
 	    			//append_str = append_str.replace(/url_to_page/g,"http://en.wikipedia.org/wiki/"+news.pageTitle);
 	    			//append_str = append_str.replace(/user_interaction_id/g, '"' + encodeURIComponent(news.pageTitle) + '"');
-	    			append_str = append_str.replace(/news_id/g, '"' + news.NewsId + '"');
+	    			append_str = append_str.replace(/news_id/g, '"' + news.id + '"');
     				append_str = append_str.replace(/news_title/g,news.pageTitle);
     				
     				//append_str = append_str.replace(/clean_newstitle/g,clean_news_title);
     				append_str = append_str.replace(/img_slide_show/g,createImageSlideshow(news.imageUrlList));
-    				append_str = append_str.replace(/news_summary/g,news.Summary);
+    				append_str = append_str.replace(/news_summary/g,news.shortNews);
     				
 	    			if(counter == 0 && (found == false)){
 	    				$("#news_1").html(append_str);
@@ -264,7 +244,10 @@ function loadNewsImplementation(route){
 	    		news_rows += '</div>';	    		
 	    	}
 	    	$("#row2").append(news_rows);
-	    }
+	    },
+	    error: function(){
+	    	alert('sorry, category not available');
+	    }	    
 	});
 }
 
@@ -302,7 +285,7 @@ function loadMostReadNews(){
 	    	$.each(data,function(i,news){
     			if(news.title.indexOf(":") < 0)
     				{
-    					append_str += "<td><a href='#' id='" + news.newsId + "' data-toggle='modal'>" + decodeURIComponent(news.title) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';
+    					append_str += "<td><a href='#' class='show_detail' news_id='" + news.newsId + "'>" + news.pageTitle + '&nbsp;(&nbsp;' + news.viewCount + '&nbsp;click(s))&nbsp;' +'</a></td>';
 	    				//append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.title) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
     				}	    			
 	    	});
@@ -315,20 +298,21 @@ function loadMostReadNews(){
 function loadCategories(){
 	$.ajax({
 	    type: 'GET',
-	    url: wp_service_route_categories,
+	    url: wp_service_route_categories + "?limit=4",
 	    dataType: 'json',
 	    success: function (data) {	    	
 	    	$.each(data,function(i,category){
 	    		$('.top_nav').append($('<li/>').append($('<a/>', {
-	    		    'href': '#cat=' + category.categoryId,
+	    		    'href': '#cat=' + category.title,
 	    		    'class': 'nav_link',
-	    		    'text': category.categoryTitle
+	    		    'text': category.title
 	    		})));
 	    		$('.top_nav').append($('<li/>', { 'class': "divider-vertical" }));
 	    	});
-	    	if (window.location.toString().indexOf("#cat=", 0) > 0 && (data.success == true)){
+	    	if (window.location.toString().indexOf("#cat=", 0) > 0){
 	    		var current_doc = "";
-	    		current_doc = window.location.toString().substring(window.location.toString().lastIndexOf('#cat=')+1,window.location.toString().length).toLowerCase();
+	    		current_doc = window.location.toString().substring(window.location.toString().lastIndexOf('#cat=')+5,window.location.toString().length).toLowerCase();
+	    		//alert(current_doc);
 	    		switch(current_doc)
 	    		{
 	    			case "":
@@ -348,23 +332,25 @@ function loadCategories(){
 	    				setActiveClass("");
 	    				break;
 	    			default:
-	    				//alert(current_doc);
-	    				loadDoc('news.html?content=' + current_doc);
+	    				loadDoc('news.html');
 	    				setActiveClass(current_doc);
 	    				break;
 	    		}
 	    	}
-	    	else if (window.location.toString().indexOf("#news_id=", 0) > 0 && (data.success == true)){
-	    		var news_id = "";
-	    		news_id = window.location.toString().substring(window.location.toString().lastIndexOf('#news_id=')+1,window.location.toString().length).toLowerCase();
-	    		loadDoc('news_detail.html?news_id=' + news_id);
+	    	else if (window.location.toString().indexOf("#newsid=", 0) > 0){
+	    		//var news_id = "";
+	    		//news_id = window.location.toString().substring(window.location.toString().lastIndexOf('#newsid=')+9,window.location.toString().length).toLowerCase();
+	    		//alert(news_id);
+	    		loadDoc('news_detail.html');
 	    	}
 	    	else {
+	    		//alert('load home, no parameter passed');
 	    		loadDoc('home.html');
 	    		setActiveClass("home");
 	    	} 
 	    },
 	    error: function(){
+	    	//alert('error, no result');
 			loadDoc('home.html');
 			setActiveClass("home");
 	    }
@@ -387,6 +373,39 @@ function increaseViewCounter(newsID){
 		window.open(wiki_url + news, '_blank');
 		window.focus();	
 	}*/
+}
+
+/* create HTML-code for image slide show in news category and news detail */
+function createImageSlideshow(newsId,urlList){
+	var img_url_list_str = "";
+	img_url_list_str = urlList;
+	if (img_url_list_str == "") img_url_list_str = wp_service_url + "/img/img_not_found.jpg";
+	
+	var div_slideshow = '<div id="myCarousel_' + newsId
+	+ '" class="carousel slide"><div class="carousel-inner">';
+	
+	var img_list = img_url_list_str.toString().split(',');
+	for(var j=0;j<img_list.length;j++){
+		if(j==0){
+			div_slideshow += '<div class="item active">';
+		}
+		else {
+			div_slideshow += '<div class="item">';
+		} 
+		if (news_counter >= 3)
+			div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
+		else if (news_counter >= 1)
+			div_slideshow += '<img class="img-rounded img_size_news_small" src="'+ img_list[j] +'" alt="">';
+		else 
+			div_slideshow += '<img class="img-rounded img_size_news_big" src="'+ img_list[j] +'" alt="">';
+		
+		div_slideshow += '</div>';
+    };
+    div_slideshow += '</div>';
+    div_slideshow += '<a class="left carousel-control" href="#myCarousel_'+ newsId + '" data-slide="prev">&lsaquo;</a>';
+    div_slideshow += '<a class="right carousel-control" href="#myCarousel_'+ newsId + '" data-slide="next">&rsaquo;</a>';
+    div_slideshow += '</div>';
+    return div_slideshow;
 }
 
 /* returns url parameter as an array, whole parameter string must start with a '#' */
