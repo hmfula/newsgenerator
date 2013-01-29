@@ -26,7 +26,7 @@ public abstract class AbstractClassifier implements Classifiable{
 		List <String> editorNames = new ArrayList<String>();
 		List <Editor> editors =  extractor.getOneDomainExperts(category, numberOfEdits);
 		for(Editor editor : editors){
-			editorNames.add(editor.getName());	
+			editorNames.add(editor.getUser());	
 		}
 		return editorNames.contains(wikiEdit.getUser());
 	}
@@ -42,7 +42,7 @@ public abstract class AbstractClassifier implements Classifiable{
 		List <String> editorNames = new ArrayList<String>();
 		List <Editor> editors =  extractor.getNewsContributors(minNews);
 		for(Editor editor : editors){
-			editorNames.add(editor.getName());	
+			editorNames.add(editor.getUser());	
 		}
 		return editorNames.contains(wikiEdit.getUser());
 	}
@@ -58,7 +58,7 @@ public abstract class AbstractClassifier implements Classifiable{
 		List <String> editorNames = new ArrayList<String>();
 		List <Editor> editors =  extractor.getTopContributors(limit);
 		for(Editor editor : editors){
-			editorNames.add(editor.getName());	
+			editorNames.add(editor.getUser());	
 		}
 		return editorNames.contains(wikiEdit.getUser());
 	}

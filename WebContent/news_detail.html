@@ -3,8 +3,10 @@
 			<div class="span6 offset3" id="wp_service_news_detail_results">
 			</div>
 </div>
-<script type="text/javascript">  
-loadNewsDetail(getUrlVars()[0]);
+<script type="text/javascript">
+//alert(window.location.href);
+//alert(getUrlVars()["newsid"]);
+loadNewsDetail(getUrlVars()["newsid"]);
 
 $(document).ready(function() {
     $('.carousel').carousel();		

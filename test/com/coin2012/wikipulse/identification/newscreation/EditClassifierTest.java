@@ -57,7 +57,7 @@ public class EditClassifierTest {
 
 		Editor editor = mock(Editor.class);
 		when(editor.getUserid()).thenReturn("user1");
-		when(editor.getName()).thenReturn("USER1");
+		when(editor.getUser()).thenReturn("USER1");
 
 		news = mock(News.class);
 		when(news.getPageId()).thenReturn("1");
@@ -87,7 +87,7 @@ public class EditClassifierTest {
 		ShortNews shortNews = shortNewsList.get(0);
 		Assert.assertTrue(shortNews.getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.getShortNews().equals("ShortNews"));
-		Assert.assertTrue(shortNews.getEditor().getName().equals("USER1"));
+		Assert.assertTrue(shortNews.getEditor().getUser().equals("USER1"));
 		Assert.assertTrue(shortNews.getPageLink().equals("testUrl"));
 		
 		WikiEditClassifier ec = new WikiEditClassifier();
@@ -125,15 +125,15 @@ public class EditClassifierTest {
 		
 		Editor editor1 =  new Editor();
 		editor1.setUserid("user1");
-		editor1.setName("USER1");
+		editor1.setUser("USER1");
 		
 		Editor editor2 =  new Editor();
 		editor2.setUserid("user2");
-		editor2.setName("USER2");
+		editor2.setUser("USER2");
 		
 		Editor editor3 =  new Editor();
 		editor3.setUserid("user3");
-		editor3.setName("USER3");
+		editor3.setUser("USER3");
 		
 		editors.add(editor1);
 		editors.add(editor2);
@@ -195,7 +195,7 @@ public class EditClassifierTest {
 
 		Editor editor = mock(Editor.class);
 		when(editor.getUserid()).thenReturn("user1");
-		when(editor.getName()).thenReturn("USER1");	
+		when(editor.getUser()).thenReturn("USER1");	
 		
 		System.out.println(page.getEdits().size());
 		System.out.println(page.getEdits().get(0).getUser());
@@ -291,15 +291,15 @@ public class EditClassifierTest {
 		
 		Editor editor1 =  new Editor();
 		editor1.setUserid("user1");
-		editor1.setName("USER1");
+		editor1.setUser("USER1");
 		
 		Editor editor2 =  new Editor();
 		editor2.setUserid("user2");
-		editor2.setName("USER2");
+		editor2.setUser("USER2");
 		
 		Editor editor3 =  new Editor();
 		editor3.setUserid("user3");
-		editor3.setName("USER3");
+		editor3.setUser("USER3");
 		
 		editors.add(editor1);
 		editors.add(editor2);
@@ -307,8 +307,8 @@ public class EditClassifierTest {
 		when(objectRetriever.getDomainExperts(a,2)).thenReturn(editors);
 		System.err.println(" Number of Domain experts :  " + extractor.getOneDomainExperts(a, 2).size());
 	
-		System.err.println("Domain experts :  " + extractor.getOneDomainExperts(a, 2).get(1).getName());
-		WikiEditClassifier ec = new WikiEditClassifier();
+		System.err.println("Domain experts :  " + extractor.getOneDomainExperts(a, 2).get(1).getUser());
+//		WikiEditClassifier ec = new WikiEditClassifier();
 		
 //		public List<Editor> getOneDomainExperts(Category category, int minEditsInCategory){
 	}

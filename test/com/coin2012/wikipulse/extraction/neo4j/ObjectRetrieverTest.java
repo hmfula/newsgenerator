@@ -69,7 +69,7 @@ public class ObjectRetrieverTest {
 
 		Editor editor = mock(Editor.class);
 		when(editor.getUserid()).thenReturn("user1");
-		when(editor.getName()).thenReturn("USER1");
+		when(editor.getUser()).thenReturn("USER1");
 
 		News news = mock(News.class);
 		when(news.getPageId()).thenReturn("1");
@@ -109,7 +109,7 @@ public class ObjectRetrieverTest {
 		News news = retriever.getSingleNews(id);
 		Assert.assertTrue(news.getNews().equals("BigNews"));
 		Assert.assertTrue(news.getPagetTitle().equals("Page-A"));
-		Assert.assertTrue(news.getEditor().getName().equals("USER1"));
+		Assert.assertTrue(news.getEditor().getUser().equals("USER1"));
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class ObjectRetrieverTest {
 		Assert.assertTrue(shortNews.size() == 1);
 		Assert.assertTrue(shortNews.get(0).getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.get(0).getShortNews().equals("ShortNews"));
-		Assert.assertTrue(shortNews.get(0).getEditor().getName().equals("USER1"));
+		Assert.assertTrue(shortNews.get(0).getEditor().getUser().equals("USER1"));
 
 	}
 
@@ -130,7 +130,7 @@ public class ObjectRetrieverTest {
 		Assert.assertTrue(shortNews.size() == 1);
 		Assert.assertTrue(shortNews.get(0).getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.get(0).getShortNews().equals("ShortNews"));
-		Assert.assertTrue(shortNews.get(0).getEditor().getName().equals("USER1"));
+		Assert.assertTrue(shortNews.get(0).getEditor().getUser().equals("USER1"));
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class ObjectRetrieverTest {
 		Assert.assertTrue(shortNews.size() == 1);
 		Assert.assertTrue(shortNews.get(0).getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.get(0).getShortNews().equals("ShortNews"));
-		Assert.assertTrue(shortNews.get(0).getEditor().getName().equals("USER1"));
+		Assert.assertTrue(shortNews.get(0).getEditor().getUser().equals("USER1"));
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class ObjectRetrieverTest {
 		Assert.assertTrue(shortNews.size() == 1);
 		Assert.assertTrue(shortNews.get(0).getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.get(0).getShortNews().equals("ShortNews"));
-		Assert.assertTrue(shortNews.get(0).getEditor().getName().equals("USER1"));
+		Assert.assertTrue(shortNews.get(0).getEditor().getUser().equals("USER1"));
 	}
 
 	@Test
