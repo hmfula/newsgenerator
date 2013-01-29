@@ -43,7 +43,7 @@ public class ObjectSaver {
 			pageNode.setProperty("type", "page");
 			for (WikiEdit edit : page.getEdits()) {
 				Node editorNode = this.getOrCreateNodeWithUniqueFactory(edit.getUserId(), "authors");
-				editorNode.setProperty("name", edit.getUser());
+				editorNode.setProperty("user", edit.getUser());
 				this.createUniqueRelationshipWithProperty(editorNode, Relationships.EDITED, pageNode, "revid", edit.getRevid());
 			}
 			for (Category category : page.getCategories()) {
@@ -68,7 +68,7 @@ public class ObjectSaver {
 		Transaction tx = graphDB.beginTx();
 		try {
 			Node editorNode = this.getOrCreateNodeWithUniqueFactory(editor.getUserid(), "authors");
-			editorNode.setProperty("name", editor.getName());
+			editorNode.setProperty("user", editor.getUser());
 			tx.success();
 		} finally {
 			tx.finish();

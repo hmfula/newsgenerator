@@ -57,7 +57,7 @@ public class EditClassifierTest {
 
 		Editor editor = mock(Editor.class);
 		when(editor.getUserid()).thenReturn("user1");
-		when(editor.getName()).thenReturn("USER1");
+		when(editor.getUser()).thenReturn("USER1");
 
 		news = mock(News.class);
 		when(news.getPageId()).thenReturn("1");
@@ -87,7 +87,7 @@ public class EditClassifierTest {
 		ShortNews shortNews = shortNewsList.get(0);
 		Assert.assertTrue(shortNews.getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.getShortNews().equals("ShortNews"));
-		Assert.assertTrue(shortNews.getEditor().getName().equals("USER1"));
+		Assert.assertTrue(shortNews.getEditor().getUser().equals("USER1"));
 		Assert.assertTrue(shortNews.getPageLink().equals("testUrl"));
 		
 		WikiEditClassifier ec = new WikiEditClassifier();

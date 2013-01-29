@@ -154,7 +154,7 @@ public class ObjectRetriever {
 	private Editor generateAuthorFrom(Map<String, Object> row) {
 		Node editorNode = (Node)row.get("author");
 		String userId = editorNode.getProperty("id").toString();
-		String name = editorNode.getProperty("name").toString();
+		String name = editorNode.getProperty("user").toString();
 		Editor editor = new Editor(userId, name);
 		return editor;
 	}

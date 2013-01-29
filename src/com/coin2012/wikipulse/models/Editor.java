@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Editor{
 	String userid;
-	String name;
+	String user;
 	String editcount;
 	String registration;
 	String title;
@@ -20,18 +20,18 @@ public class Editor{
 	public Editor() {
 	}
 
-	public Editor(String userid, String name, String editcount, String registration, List<String> groups) {
+	public Editor(String userid, String user, String editcount, String registration, List<String> groups) {
 		setUserid(userid);
-		setName(name);
+		setUser(user);
 		setEditcount(editcount);
 		setTitle(title);
 		setGroups(groups);
 		setRegistration(registration);
 	}
 
-	public Editor(String userid, String name) {
+	public Editor(String userid, String user) {
 		this.userid = userid;
-		this.name = name;
+		this.user = user;
 	}
 
 	public String getUserid() {
@@ -42,12 +42,12 @@ public class Editor{
 		this.userid = userid;
 	}
 
-	public String getName() {
-		return name;
+	public String getUser() {
+		return user;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUser(String name) {
+		this.user = name;
 	}
 
 	public String getEditcount() {

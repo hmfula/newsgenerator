@@ -43,7 +43,7 @@ public class NewsGenerator {
 		
 			Editor editor = new Editor();
 			editor.setUserid(wikiEdit.getUserId());
-			editor.setName(wikiEdit.getUser());
+			editor.setUser(wikiEdit.getUser());
 			item.setEditor(editor);
 		
 			newsList.add(item);
