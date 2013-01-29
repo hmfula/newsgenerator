@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.newscreation.Dummy;
 import com.coin2012.wikipulse.identification.newscreation.SimpleNewsGenerator;
+import com.coin2012.wikipulse.identification.newscreation.NewsGenerator;
 import com.coin2012.wikipulse.identification.newsselection.AuthorsWithNews;
 import com.coin2012.wikipulse.identification.newsselection.CommonWorkingSetAuthors;
 import com.coin2012.wikipulse.identification.newsselection.DomainExperts;
@@ -53,8 +54,8 @@ public class IdentificationRunnable implements Runnable {
 		
 			// Get list of new edits/pages and save them to the database
 			List<Page> pages = ex.getPagesForIdentification();
-			//ex.enhancePagesWithEdits(pages);
 			ex.enhancePagesWithRelevance(pages);
+			//ex.enhancePagesWithEdits(pages);
 			
 			ex.savePages(pages);
 			
@@ -76,14 +77,15 @@ public class IdentificationRunnable implements Runnable {
 			List<Page> resultSet = createRankedList(pages, MIN_RANK);
 			
 			// extract information from pages and generate news
-			List <News> newsResults = Dummy.createNewsFromPages(resultSet); // dummy for now
-			List <News> news = SimpleNewsGenerator.createNewsFromPages(ex , resultSet);
-			System.err.println("############# Number of news items: ->  " + news.size());//for debugging only
-			ex.saveNews(news);//Save test news //TODO remove dummy at some point
+			List <News> newsResults = Dummy.createNewsFromPages(resultSet);
+			//List <News> newsResults = NewsGenerator.createNewsFromPages(resultSet);
+			//List <News> news = SimpleNewsGenerator.createNewsFromPages(ex , resultSet);
+			//System.err.println("############# Number of news items: ->  " + news.size());//for debugging only
+			
 			ex.saveNews(newsResults);
 			
 			try {
-				Thread.sleep(120000);
+				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

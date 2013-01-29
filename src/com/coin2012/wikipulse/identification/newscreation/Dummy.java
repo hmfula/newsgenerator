@@ -22,7 +22,9 @@ public class Dummy {
 			
 			// TODO
 			Editor e = new Editor();
-			e.setUserid("1");
+			if (p.getEdits().listIterator().hasNext()) {
+				e.setUserid(p.getEdits().listIterator().next().getUserId());
+			}
 			item.setEditor(e);
 			
 			resultSet.add(item);
