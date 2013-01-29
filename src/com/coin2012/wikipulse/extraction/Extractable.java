@@ -2,6 +2,7 @@ package com.coin2012.wikipulse.extraction;
 
 import java.util.List;
 
+import com.coin2012.wikipulse.extraction.hsqldb.AggregatedChanges;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;

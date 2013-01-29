@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import com.coin2012.wikipulse.extraction.hsqldb.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
 import com.coin2012.wikipulse.extraction.neo4j.ObjectRetriever;
 import com.coin2012.wikipulse.extraction.neo4j.ObjectSaver;

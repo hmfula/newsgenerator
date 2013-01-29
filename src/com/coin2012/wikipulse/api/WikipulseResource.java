@@ -108,7 +108,7 @@ public class WikipulseResource implements SparkApplication {
 			public Object handle(Request request, Response response) {
 				String category = request.params(":category");
 				try {
-					category = URLDecoder.decode(category, "x-www-form-urlencoded");
+					category = URLDecoder.decode(category, "UTF-8");
 					response.type("application/json; charset=utf-8");
 					return wikipulseService.getNewsForCategory(category);
 				} catch (UnsupportedEncodingException e) {

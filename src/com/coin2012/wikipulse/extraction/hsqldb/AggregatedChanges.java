@@ -1,4 +1,4 @@
-package com.coin2012.wikipulse.extraction;
+package com.coin2012.wikipulse.extraction.hsqldb;
 
 public class AggregatedChanges {
 

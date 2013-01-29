@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.coin2012.wikipulse.extraction.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
 
@@ -31,7 +30,7 @@ public class HsqldbManager {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			logger.warning("Failed to get timestamp of last saved change from database because of : " + e.getCause());
 			e.printStackTrace();
 		} finally {
 			closeDatabaseConnections(connection, prepStatement);
@@ -53,11 +52,11 @@ public class HsqldbManager {
 					prepStatement.setString(3, change.getPageid());
 					prepStatement.executeUpdate();
 				} catch (SQLException e) {
-					logger.info("Ignored double: " + change.getTitle() + " " + change.getTimestamp());
+					logger.fine("Ignored double: " + change.getTitle() + " " + change.getTimestamp());
 				}
 			}
 		} catch (SQLException e) {
-			logger.info("Failed to create a Preparedstatement because of  " + e.getCause());
+			logger.warning("Failed to create a Preparedstatement because of  " + e.getCause());
 			e.printStackTrace();
 		} finally {
 			closeDatabaseConnections(connection, prepStatement);
@@ -107,7 +106,7 @@ public class HsqldbManager {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			logger.warning("Failed to aggregate all changes from the database because of : " + e.getCause());
 			e.printStackTrace();
 		} finally {
 			closeDatabaseConnections(connection, prepStatement);
@@ -127,7 +126,7 @@ public class HsqldbManager {
 				connection.close();
 			}
 		} catch (SQLException e) {
-			logger.info("Failed to close the connection to the database because of : " + e.getCause());
+			logger.warning("Failed to close the connection to the database because of : " + e.getCause());
 			e.printStackTrace();
 		}
 	}

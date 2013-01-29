@@ -99,7 +99,6 @@ public class WikipediaExtractor {
 			parsedResult = WikipediaResultParser.parseResultToRecentChangesQueryResult(result);
 			rcstart = parsedResult.getRcstart();
 			changes.addAll(parsedResult.getChanges());
-			logger.info("Currently queried amount of changes: " + changes.size());
 		}
 		logger.info("Extraction done. Total amount of extracted changes: " + changes.size());
 		return changes;
