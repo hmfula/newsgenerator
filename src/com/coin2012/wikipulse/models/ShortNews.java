@@ -22,7 +22,7 @@ public class ShortNews {
 
 	private String pageURL = BASE_URL + pageTitle;
 
-	private List<Editor> editors;
+	private List<Editor> editors = new ArrayList<Editor>();
 
 	public ShortNews(String id, String shortNews, List<String> imageUrlList, long viewCount, String timestamp) {
 		this.id = id;
