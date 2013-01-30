@@ -27,9 +27,9 @@ public abstract class WikipulseConstants {
 	 * Constants for page indentification
 	 */
 	public static final boolean WRITE_RANK_DATA_FILE = true;
-	public static final int MIN_PAGERANK = 100;
-	public static final int AUTHORS_WITH_NEWS_MODIFIER = 50;
-	public static final int DOMAIN_EXPERTS_MODIFIER = 50;
+	public static final double MIN_PAGERANK = 1.0;
+	public static final int AUTHORS_WITH_NEWS_MODIFIER = 3;
+	public static final int DOMAIN_EXPERTS_MODIFIER = 2;
 	public static final int COMMON_AUTHROS_MODIFIER = 1;
-	public static final int RELEVANCE_MODIFIER = 100;
+	public static final int RELEVANCE_MODIFIER = 1;
 }

@@ -76,8 +76,8 @@ public class Page {
 	}
 
 
-	public int getTotalRank() {
-		int totalrank = (int) (yesterdaysRelevance * WikipulseConstants.RELEVANCE_MODIFIER); 
+	public double getTotalRank() {
+		double totalrank = yesterdaysRelevance * WikipulseConstants.RELEVANCE_MODIFIER; 
 		
 		totalrank += ranks[0] * WikipulseConstants.AUTHORS_WITH_NEWS_MODIFIER;
 		totalrank += ranks[1] * WikipulseConstants.DOMAIN_EXPERTS_MODIFIER;

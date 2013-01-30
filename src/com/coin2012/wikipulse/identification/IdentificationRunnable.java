@@ -94,11 +94,11 @@ public class IdentificationRunnable implements Runnable {
 			ex.enhanceNewsWithImages(newsResults);
 			ex.saveNews(newsResults);
 			
-
+			logger.info("news generation run finished.");
 		}
 	}
 
-	private List<Page> createRankedList(List<Page> pages, int minRank) {
+	private List<Page> createRankedList(List<Page> pages, double minRank) {
 		List<Page> resultSet = new LinkedList<Page>();
 		
 		for (Page p: pages) {
