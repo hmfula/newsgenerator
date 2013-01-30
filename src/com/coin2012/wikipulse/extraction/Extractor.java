@@ -36,7 +36,7 @@ public class Extractor implements Extractable {
 	@Override
 	public List<Page> getPagesForIdentification(Timespan timespan) {
 		//TODO switch to conf file
-		List<AggregatedChanges> recentChanges = this.getRecentChanges(10, timespan);
+		List<AggregatedChanges> recentChanges = this.getRecentChangesForTimespan(10, timespan);
 		List<String> pageids = new ArrayList<String>();
 		for (AggregatedChanges aggregatedChanges : recentChanges) {
 			pageids.add(aggregatedChanges.getPageid());
@@ -47,16 +47,11 @@ public class Extractor implements Extractable {
 		return pages;
 	}
 
-	private List<AggregatedChanges> getRecentChanges(int minChanges, Timespan timer) {
-		List<AggregatedChanges> aggregatedChanges = this.aggregateChangesFromMemDB(minChanges, timer);
+	private List<AggregatedChanges> getRecentChangesForTimespan(int minChanges, Timespan timer) {
+		HashMap<String, AggregatedChanges> map = HsqldbManager.getAllAggregatedChangesFromMemDB(timer);
+		List<AggregatedChanges> aggregatedChanges = cleanUpAggregatedChanges(map, minChanges);
 		this.sortAggregatedChanges(aggregatedChanges);
 		return aggregatedChanges;
-	}
-
-	private List<AggregatedChanges> aggregateChangesFromMemDB(int minChanges, Timespan timer) {
-		HashMap<String, AggregatedChanges> map = HsqldbManager.getAllAggregatedChangesFromMemDB(timer);
-		List<AggregatedChanges> resultList = cleanUpAggregatedChanges(map, minChanges);
-		return resultList;
 	}
 
 	@Override
@@ -76,22 +71,10 @@ public class Extractor implements Extractable {
 
 	@Override
 	public List<AggregatedChanges> getRecentChanges(int minChanges) {
-		List<AggregatedChanges> aggregatedChanges = this.aggregateChangesFromMemDB(minChanges);
+		HashMap<String, AggregatedChanges> map = HsqldbManager.getAllAggregatedChangesFromMemDB();
+		List<AggregatedChanges> aggregatedChanges = cleanUpAggregatedChanges(map, minChanges);
 		this.sortAggregatedChanges(aggregatedChanges);
 		return aggregatedChanges;
-	}
-	
-	
-
-	/**
-	 * Counts the changes for each title and returns a list of AggregatedChanges
-	 * 
-	 * @return list of AggregatedChanges
-	 */
-	private List<AggregatedChanges> aggregateChangesFromMemDB(int minChanges) {
-		HashMap<String, AggregatedChanges> map = HsqldbManager.getAllAggregatedChangesFromMemDB();
-		List<AggregatedChanges> resultList = cleanUpAggregatedChanges(map, minChanges);
-		return resultList;
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class HsqldbManager {
 		PreparedStatement prepStatement = null;
 		try {
 			connection = getConnection();
-			prepStatement = connection.prepareStatement("SELECT * FROM changes");
+			prepStatement = connection.prepareStatement("SELECT * FROM changes FOR UPDATE");
 			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				if (rs.isFirst()) {
@@ -71,7 +71,7 @@ public class HsqldbManager {
 		PreparedStatement prepStatement = null;
 		try {
 			connection = getConnection();
-			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			prepStatement = connection.prepareStatement("SELECT * FROM changes FOR UPDATE");
 			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				if (rs.getLong(1) < timeAsLong) {
@@ -93,7 +93,7 @@ public class HsqldbManager {
 		PreparedStatement prepStatement = null;
 		try {
 			connection = getConnection();
-			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			prepStatement = connection.prepareStatement("SELECT * FROM changes FOR UPDATE");
 			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
 				String title = rs.getString(2);
@@ -143,21 +143,21 @@ public class HsqldbManager {
 		PreparedStatement prepStatement = null;
 		try {
 			connection = getConnection();
-			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			prepStatement = connection.prepareStatement("SELECT * FROM changes WHERE timestamp <= ? AND timestamp > ? FOR UPDATE");
+			prepStatement.clearParameters();
+			prepStatement.setString(1, timespan.getEnd());
+			prepStatement.setString(2, timespan.getStart());
 			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
-				long timestamp = rs.getLong(1);
-				if (timestamp <= Long.valueOf(timespan.getEnd()) && timestamp > Long.valueOf(timespan.getStart())) {
 					String title = rs.getString(2);
 					String pageid = rs.getString(3);
+					
 					AggregatedChanges change = map.get(title);
-
 					if (change == null) {
 						map.put(title, new AggregatedChanges(title, pageid));
 					} else {
 						change.addToCount();
 					}
-				}
 			}
 		} catch (SQLException e) {
 			logger.warning("Failed to aggregate all changes from the database because of : " + e.getCause());

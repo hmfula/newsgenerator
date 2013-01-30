@@ -146,7 +146,7 @@ public class WikipulseResource implements SparkApplication {
 			connection
 					.createStatement()
 					.execute(
-							"CREATE TABLE changes (timestamp varchar(20), pageTitle varchar(255), pageid varchar(255), UNIQUE (timestamp, pageTitle, pageid))");
+							"CREATE TABLE changes (timestamp bigint, pageTitle varchar(255), pageid varchar(255), UNIQUE (timestamp, pageTitle, pageid))");
 			new Thread(new RecentChangesRunnable()).start();
 			addShutdownHook(connection);
 		} catch (SQLException e) {
