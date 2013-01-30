@@ -24,8 +24,10 @@ public class CommonAuthors {
 		for (Page p: pages) {
 			ExecutionResult commonauthorcount = engine.execute(buildQueryForCommonAuthors(p));
 			
-			if (commonauthorcount.columnAs("commoncount").hasNext()) {
-				p.setRank(rankId, ((Long) commonauthorcount.columnAs("commoncount").next() / authorcountLong));
+			if (commonauthorcount.columnAs("count").hasNext()) {
+				double d = ((Long) commonauthorcount.columnAs("count").next()).doubleValue();
+				double e = authorcountLong.doubleValue();
+				p.setRank(rankId, d/e);
 			}
 			
 		}
@@ -35,7 +37,7 @@ public class CommonAuthors {
 		String querystring = "start n=node:pages(id=\""+p.getPageId()+"\")";
 		
 		querystring += " MATCH n<-[:EDITED]-a-[:EDITED]->n";
-		querystring += " RETURN COUNT(DISTINCT a) AS commoncount";
+		querystring += " RETURN COUNT(DISTINCT a) AS count";
 		
 		return querystring;
 	}

@@ -1,6 +1,5 @@
 package com.coin2012.wikipulse.identification.newsselection;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
@@ -14,27 +13,37 @@ public class DomainExperts {
 	public static void rankPages(List<Page> pages, int rankId) {
 		ExecutionEngine engine = new ExecutionEngine(WikipulseGraphDatabase.getGraphDatabaseServiceInstance());
 		
+		ExecutionResult authorcount = engine.execute(buildQueryForAllAuthors());
+		
+		Long authorcountLong = new Long(0);
+		
+		if (authorcount.columnAs("count").hasNext()) {
+			authorcountLong = (Long) authorcount.columnAs("count").next();
+		}
+		
 		for (Page p: pages) {
-			ExecutionResult authors = engine.execute(buildQuery(p));
-			Iterator<Long> it = authors.columnAs("authorcount");
+			ExecutionResult newsauthorcount = engine.execute(buildQueryForPage(p));
 			
-			if (it.hasNext()) {
-				Long l = it.next();
-				
-				//System.out.println("query: "+buildQuery(p)+" -  result: "+l);
-				p.setRank(rankId, l.intValue());
+			if (newsauthorcount.columnAs("count").hasNext()) {
+				double d = ((Long) newsauthorcount.columnAs("count").next()).doubleValue();
+				double e = authorcountLong.doubleValue();
+				p.setRank(rankId, d/e);
 			}
 			
 		}
 	}
 	
-	private static String buildQuery(Page p) {
+	private static String buildQueryForPage(Page p) {
 		String querystring = "start n=node:pages(id=\""+p.getPageId()+"\")";
 		
 		querystring += " MATCH n<-[:EDITED]-a-[:EDITED]->m-[:HAS]->c<-[:HAS]-n";
-		querystring += " RETURN COUNT(DISTINCT a) AS authorcount";
+		querystring += " RETURN COUNT(DISTINCT a) AS count";
 		
 		return querystring;
 	}
 
+	private static String buildQueryForAllAuthors() {
+		return "START n=node:authors(\"*:*\") RETURN COUNT (n) AS count";
+	}
+	
 }
