@@ -26,6 +26,8 @@ public abstract class WikipulseConstants {
 	/**
 	 * Constants for page indentification
 	 */
+	public static final float YESTERDAY_RELEVANCE_DEFAULT_VALUE = 0.1f;
+	
 	public static final boolean WRITE_RANK_DATA_FILE = true;
 	public static final double MIN_PAGERANK = 0.3d;
 	public static final double AUTHORS_WITH_NEWS_MODIFIER = 3d;

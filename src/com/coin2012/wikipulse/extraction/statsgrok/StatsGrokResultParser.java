@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 
+import com.coin2012.wikipulse.conf.WikipulseConstants;
 import com.coin2012.wikipulse.extraction.utils.ResultParser;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,7 +31,7 @@ public abstract class StatsGrokResultParser extends ResultParser {
 		}
 
 		if (totalViews == 0) {
-			return 0;
+			return WikipulseConstants.YESTERDAY_RELEVANCE_DEFAULT_VALUE;
 		} else {
 			float relevance_result = yesterdaysViews / totalViews;
 			return relevance_result;
