@@ -1,9 +1,19 @@
 package com.coin2012.wikipulse.identification.newscreation;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.parser.ParserDelegator;
+
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.extraction.smmry.SentenceFinder;
@@ -81,7 +91,8 @@ public class NewsCreator {
 			betterNewsText.append(sentence + " ");
 		}
 		newsText =  betterNewsText.toString().trim();
-		pageNews.setNews(newsText);
+		
+		pageNews.setNews(removeMarkup(newsText));
 		pageNews.setPageId(page.getPageId());
 		pageNews.setPagetTitle(page.getTitle());
 		pageNews.setEditor(editors);
@@ -89,4 +100,38 @@ public class NewsCreator {
 		return pageNews;
 	}
 
+	private String removeMarkup(String text) {
+		
+		StringWriter writer = new StringWriter();
+
+        HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+        builder.setEmitAsDocument(false);
+
+        MarkupParser parser = new MarkupParser(new MediaWikiLanguage());
+        
+        parser.setBuilder(builder);
+        parser.parse(text);
+
+        final String html = writer.toString();
+        final StringBuilder cleaned = new StringBuilder();
+
+        HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback() {
+                public void handleText(char[] data, int pos) {
+                    cleaned.append(new String(data)).append(' ');
+                }
+        };
+        
+        try {
+			new ParserDelegator().parse(new StringReader(html), callback, false);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        if (cleaned.length() == 0) {
+        	return text;
+        } else {
+        	return cleaned.toString();
+        }
+	}
 }

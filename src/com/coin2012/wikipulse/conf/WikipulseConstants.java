@@ -28,7 +28,7 @@ public abstract class WikipulseConstants {
 	 */
 	public static final float YESTERDAY_RELEVANCE_DEFAULT_VALUE = 0.1f;
 	
-	public static final int IDENTIFICATION_RUNNER_SLEEP = 120000;
+	public static final int IDENTIFICATION_RUNNER_SLEEP = 300000;
 	public static final boolean WRITE_RANK_DATA_FILE = true;
 	
 	public static final double MIN_PAGERANK = 0.3d;

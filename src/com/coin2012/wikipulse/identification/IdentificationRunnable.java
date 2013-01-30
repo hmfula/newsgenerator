@@ -54,14 +54,20 @@ public class IdentificationRunnable implements Runnable {
 			e.printStackTrace();
 		}
 		
+		logger.info("initial news creation run started");
+		
 		createNews(10);
 
+		logger.info("initial news creation run finished");
+		
 		while (true) {
 			try {
 				Thread.sleep(WikipulseConstants.IDENTIFICATION_RUNNER_SLEEP);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			logger.info("news generation run started");
 		
 			createNews(3);
 			
