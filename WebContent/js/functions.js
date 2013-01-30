@@ -281,11 +281,8 @@ function loadMostReadNews(){
 	    					"<div class='row-fluid'><div class='span12' style='text-align:center;'>"+
 	    						"<table class='table table-condensed' style='margin-bottom:0px'><tr>";
 	    	$.each(data,function(i,news){
-    			if(news.pageTitle.indexOf(":") < 0)
-    				{
-    					append_str += "<td><a href='#newsid=" + news.id + "' class='show_detail' newsid='" + news.id + "'>" + news.pageTitle + '&nbsp;(&nbsp;' + news.viewCount + '&nbsp;click(s))&nbsp;' +'</a></td>';
-	    				//append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.pageTitle) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';		
-    				}	    			
+				append_str += "<td><a href='#newsid=" + news.id + "' class='show_detail' newsid='" + news.id + "'>" + news.pageTitle + '&nbsp;(&nbsp;' + news.viewCount + '&nbsp;click(s))&nbsp;' +'</a></td>';
+				//append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.pageTitle) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';			    			
 	    	});
 	    	append_str += "</tr></table></div></div>";	    	
 	    	$("#most_read_stories").html(append_str);
