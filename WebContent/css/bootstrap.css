@@ -5846,8 +5846,8 @@ a.badge:hover {
 }
 
 .hero-unit {
-  padding: 60px;
-  margin-bottom: 30px;
+  padding: 20px;
+  margin-bottom: 20px;
   font-size: 18px;
   font-weight: 200;
   line-height: 30px;
@@ -5962,4 +5962,12 @@ a.badge:hover {
      -moz-transition: all 0.2s ease-in-out;
        -o-transition: all 0.2s ease-in-out;
           transition: all 0.2s ease-in-out;
+}
+.nav_link {
+	white-space:nowrap; 
+	width:180px; 
+	overflow:hidden; 
+    max-height: 20px;
+    overflow: hidden;
+	text-overflow:ellipsis;
 }
