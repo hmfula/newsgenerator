@@ -47,20 +47,30 @@ public class IdentificationRunnable implements Runnable {
 				e1.printStackTrace();
 			}
 		}
+		
+		createNews(10);
 
 		while (true) {
 			try {
-				Thread.sleep(60000);
+				Thread.sleep(WikipulseConstants.IDENTIFICATION_RUNNER_SLEEP);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		
+			createNews(3);
+			
+			logger.info("news generation run finished.");
+		}
+	}
+	
+	
+	private void createNews(int minChanges) {
 		// Testdata start
 		//LinkedList<Page> pages = createTestData();
 		//Testdata end
 		
 			// Get list of new edits/pages and save them to the database
-			List<Page> pages = ex.getPagesForIdentification(timer);
+			List<Page> pages = ex.getPagesForIdentification(timer, minChanges);
 			ex.enhancePagesWithRelevance(pages);
 			//ex.enhancePagesWithEdits(pages);
 			
@@ -98,9 +108,6 @@ public class IdentificationRunnable implements Runnable {
 			List <News> newsResults = creator.createNews(resultSet);
 			ex.enhanceNewsWithImages(newsResults);
 			ex.saveNews(newsResults);
-			
-			logger.info("news generation run finished.");
-		}
 	}
 
 	private List<Page> createRankedList(List<Page> pages, double minRank) {

@@ -34,9 +34,9 @@ public class Extractor implements Extractable {
 	private ObjectRetriever retriever = new ObjectRetriever();
 
 	@Override
-	public List<Page> getPagesForIdentification(Timespan timespan) {
+	public List<Page> getPagesForIdentification(Timespan timespan, int minChanges) {
 		//TODO switch to conf file
-		List<AggregatedChanges> recentChanges = this.getRecentChangesForTimespan(10, timespan);
+		List<AggregatedChanges> recentChanges = this.getRecentChangesForTimespan(minChanges, timespan);
 		List<String> pageids = new ArrayList<String>();
 		for (AggregatedChanges aggregatedChanges : recentChanges) {
 			pageids.add(aggregatedChanges.getPageid());

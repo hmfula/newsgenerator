@@ -14,7 +14,7 @@ import com.coin2012.wikipulse.models.WikiEdit;
 
 public interface Extractable {
 
-	public List<Page> getPagesForIdentification(Timespan timer);
+	public List<Page> getPagesForIdentification(Timespan timer, int minChanges);
 
 	public void enhanceNewsWithImages(List<News> news);
 
