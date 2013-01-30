@@ -77,11 +77,11 @@ public class Page {
 
 
 	public double getTotalRank() {
-		double totalrank = yesterdaysRelevance * WikipulseConstants.RELEVANCE_MODIFIER; 
+		double totalrank = ( yesterdaysRelevance * WikipulseConstants.RELEVANCE_MODIFIER ); 
 		
-		totalrank += ranks[0] * WikipulseConstants.AUTHORS_WITH_NEWS_MODIFIER;
-		totalrank += ranks[1] * WikipulseConstants.DOMAIN_EXPERTS_MODIFIER;
-		totalrank += ranks[2] * WikipulseConstants.COMMON_AUTHROS_MODIFIER;
+		totalrank += ( ranks[0] * WikipulseConstants.AUTHORS_WITH_NEWS_MODIFIER );
+		totalrank += ( ranks[1] * WikipulseConstants.DOMAIN_EXPERTS_MODIFIER );
+		totalrank += ( ranks[2] * WikipulseConstants.COMMON_AUTHROS_MODIFIER );
 		
 		return totalrank;
 	}

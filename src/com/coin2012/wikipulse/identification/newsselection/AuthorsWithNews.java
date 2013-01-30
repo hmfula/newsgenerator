@@ -27,7 +27,12 @@ public class AuthorsWithNews {
 			if (newsauthorcount.columnAs("count").hasNext()) {
 				double d = ((Long) newsauthorcount.columnAs("count").next()).doubleValue();
 				double e = authorcountLong.doubleValue();
-				p.setRank(rankId, d/e);
+				
+				if (e == 0.0d) {
+					p.setRank(rankId, 0);
+				} else {
+					p.setRank(rankId, d/e);
+				}
 			}
 			
 		}

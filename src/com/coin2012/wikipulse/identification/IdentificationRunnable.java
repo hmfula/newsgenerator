@@ -42,7 +42,7 @@ public class IdentificationRunnable implements Runnable {
 		if (WikipulseConstants.WRITE_RANK_DATA_FILE) {
 			try {
 				fileWriter = new PrintWriter(new FileWriter(FILENAME));
-				fileWriter.println("timestamp;pageid;pagetitle;totalrank;singleranks0;singleranks1;singleranks2");
+				fileWriter.println("timestamp;pageid;pagetitle;totalrank;authorswithnews;domainexperts;commonauthors;yesterdayRelevance");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -76,8 +76,8 @@ public class IdentificationRunnable implements Runnable {
 			// save ranking data to textfile
 			if (WikipulseConstants.WRITE_RANK_DATA_FILE) {
 				for (Page p: pages) {
-					fileWriter.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]);
-					System.out.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]); // TODO
+					fileWriter.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]+";"+p.getRelYesterday());
+					System.out.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]+";"+p.getRelYesterday()); // TODO
 				}
 				fileWriter.flush();
 			}
@@ -85,7 +85,12 @@ public class IdentificationRunnable implements Runnable {
 			// create and sort result set
 			List<Page> resultSet = createRankedList(pages, WikipulseConstants.MIN_PAGERANK);
 			
-			// extract information from pages and generate news
+			// enhance result set with content
+			for (Page p: resultSet) {
+				ex.enhanceEditsWithContent(p.getEdits());
+			}
+			
+			// extract content from pages and generate news
 			List <News> newsResults = Dummy.createNewsFromPages(resultSet);
 			//List <News> newsResults = NewsGenerator.createNewsFromPages(resultSet);
 			//List <News> news = SimpleNewsGenerator.createNewsFromPages(ex , resultSet);

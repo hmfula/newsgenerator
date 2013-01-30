@@ -29,8 +29,12 @@ public abstract class StatsGrokResultParser extends ResultParser {
 			totalViews = totalViews + entry.getValue().getAsFloat();
 		}
 
-		float relevance_result = yesterdaysViews / totalViews;
-		return relevance_result;
+		if (totalViews == 0) {
+			return 0;
+		} else {
+			float relevance_result = yesterdaysViews / totalViews;
+			return relevance_result;
+		}
 	}
 
 	private static String generateTimestampForYesterday() {
