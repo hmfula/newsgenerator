@@ -45,6 +45,14 @@ public class Extractor implements Extractable {
 			pageids.add(aggregatedChanges.getPageid());
 		}
 		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForPageIds(pageids);
+		for (Page page : pages) {
+			for (AggregatedChanges aggregated : recentChanges) {
+				if(aggregated.getPageid().equals(page.getPageId())){
+					page.setRecentChanges(aggregated.getCount());
+					break;
+				}
+			}
+		}
 		WikipediaExtractor.updatePagesWithEditsInTimespan(pages, timespan);
 		List<Page> crapList = new ArrayList<Page>();
 		for (Page page : pages) {

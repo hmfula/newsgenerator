@@ -9,6 +9,7 @@ import com.coin2012.wikipulse.conf.WikipulseConstants;
 public class Page {
 
 	private String pageid;
+	private int recentChanges;
 	private float yesterdaysRelevance;
 	private double[] ranks = new double[3];
 	private String ns;
@@ -125,5 +126,13 @@ public class Page {
 	}
 	public void setTextContent(String content) {
 		pageTextContent = content;
+	}
+
+	public int getRecentChanges() {
+		return recentChanges;
+	}
+
+	public void setRecentChanges(int recentChanges) {
+		this.recentChanges = recentChanges;
 	}
 }
