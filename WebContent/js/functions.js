@@ -120,11 +120,8 @@ function loadRecentChanges(minchanges){
 	    	$("#recent_changes ul").html("");
 	    	$("#recent_changes ul").append("<li class='nav-header'>Recent Changes</li>");
 	    	$.each(data,function(i,changes){
-    			if(changes.title.indexOf(":") < 0)
-    				{
-	    				var append_str = "<li><a href='http://" +  changes.url + "'>" + changes.title + "&nbsp;(&nbsp;" + changes.count + "&nbsp;edits)&nbsp;" +"</a></li>";
-		      			$("#recent_changes ul").append(append_str);	    				
-    				}	    			
+				var append_str = "<li><a href='http://" +  changes.url + "'>" + changes.title + "&nbsp;(&nbsp;" + changes.count + "&nbsp;edits)&nbsp;" +"</a></li>";
+	  			$("#recent_changes ul").append(append_str);	    				    			
 	    	});
 	    }
 	});	
