@@ -2,9 +2,11 @@ package com.coin2012.wikipulse.identification.newscreation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.smmry.SentenceFinder;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
@@ -73,6 +75,12 @@ public class NewsCreator {
 			Editor editor = new Editor(wikiEdit.getUserId(), wikiEdit.getUser());
 			editors.add(editor);
 		}
+		StringBuffer betterNewsText = new StringBuffer();;
+		Map<Integer, String> sentences = SentenceFinder.findSentences(newsText);
+		for (String sentence : sentences.values()) {
+			betterNewsText.append(sentence + " ");
+		}
+		newsText =  betterNewsText.toString().trim();
 		pageNews.setNews(newsText);
 		pageNews.setPageId(page.getPageId());
 		pageNews.setPagetTitle(page.getTitle());
