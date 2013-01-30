@@ -138,6 +138,7 @@ public class NewsCreator {
 				e.printStackTrace();
 			}
 		}
+		result = result.replace("\\n", "").replace("\"", "");
         return result;
 	}
 }

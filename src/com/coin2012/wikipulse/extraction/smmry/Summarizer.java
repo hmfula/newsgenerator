@@ -6,6 +6,7 @@ import org.restlet.data.Form;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
+import com.coin2012.wikipulse.conf.WikipulseConstants;
 import com.coin2012.wikipulse.models.PageSummary;
 import com.google.gson.Gson;
 
@@ -24,7 +25,6 @@ public class Summarizer {
 		resource.getReference().addSegment("&amp;SM_WITH_BREAK");
 
 		Form textForm = new Form();
-		text = text.replace("\\n", "").replace("\"", "");
 		textForm.set("sm_api_input", text);
 		Representation response = resource.post(textForm);
 
@@ -34,6 +34,11 @@ public class Summarizer {
 			String result = response.getText();
 			PageSummary summary = gson.fromJson(result, PageSummary.class);
 			content = summary.getSm_api_content();
+			if (content == null) {
+				content = text;
+			}else{
+				content = content.replaceAll("[\\[BREAK\\]]", WikipulseConstants.EMPTY);
+			}
 		} catch (IOException e) {
 			// TODO;
 			e.printStackTrace();
