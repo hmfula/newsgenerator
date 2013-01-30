@@ -3,13 +3,8 @@ package com.coin2012.wikipulse.api;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.neo4j.cypher.javacompat.ExecutionEngine;
-import org.neo4j.cypher.javacompat.ExecutionResult;
-import org.neo4j.graphdb.GraphDatabaseService;
-
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.extraction.hsqldb.AggregatedChanges;
-import com.coin2012.wikipulse.extraction.neo4j.WikipulseGraphDatabase;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.ShortNews;

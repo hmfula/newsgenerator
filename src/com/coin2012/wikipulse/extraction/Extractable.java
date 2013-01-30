@@ -13,13 +13,6 @@ import com.coin2012.wikipulse.models.WikiEdit;
 
 public interface Extractable {
 
-	/**
-	 * Returns a list of pages (articles, categories, etc.).
-	 * @param category
-	 * @return
-	 */
-	public abstract List<Page> getPagesForCategory(String category);
-	
 	public List<Page> getPagesForIdentification();
 
 	public void enhanceNewsWithImages(List<News> news);
@@ -30,15 +23,6 @@ public interface Extractable {
 	
 	public List<AggregatedChanges> getRecentChanges(int minChanges);
 	
-	//TODO do we need this here?
-	/**
-	 * Tests whether two articles at least one editor in common.
-	 * @param firstArticle
-	 * @param secondArticle
-	 * @return true if two articles at least one editor in common other returns false
-	 */
-	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle);
-
 	/**
 	 * Summarizes a page
 	 * @param url of the  page 
@@ -48,8 +32,6 @@ public interface Extractable {
 	public PageSummary summarizeArticle(String url, String length);
 
 	void savePages(List<Page> pages);
-
-	void saveAuthor(Editor editor);
 
 	void saveNews(List<News> newsList);
 

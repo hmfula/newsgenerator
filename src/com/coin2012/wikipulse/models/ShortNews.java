@@ -7,26 +7,23 @@ public class ShortNews {
 	private final String BASE_URL = "http://en.wikipedia.org/wiki/";
 
 	private String id;
-	
+
 	protected String shortNews;
-	
+
 	private String timestamp;
-	
+
 	private List<String> imageUrlList = new ArrayList<String>();
-	
-	private long viewCount=0;
-	
-	
+
+	private long viewCount = 0;
+
 	private String pageId = "";
 
 	private String pageTitle = "";
 
 	private String pageURL = BASE_URL + pageTitle;
 
-	
-	private Editor editor;
-	
-	
+	private List<Editor> editors;
+
 	public ShortNews(String id, String shortNews, List<String> imageUrlList, long viewCount, String timestamp) {
 		this.id = id;
 		this.shortNews = shortNews;
@@ -70,14 +67,14 @@ public class ShortNews {
 		return imageUrlList;
 	}
 
-	public Editor getEditor() {
-		return editor;
+	public List<Editor> getEditors() {
+		return editors;
 	}
 
-	public void setEditor(Editor editor) {
-		this.editor = editor;
+	public void setEditor(List<Editor> editors) {
+		this.editors = editors;
 	}
-	
+
 	public String getId() {
 		return id;
 	}

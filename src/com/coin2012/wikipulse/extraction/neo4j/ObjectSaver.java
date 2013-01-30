@@ -58,24 +58,6 @@ public class ObjectSaver {
 	};
 
 	/**
-	 * Saves a Editor object.
-	 * 
-	 * @param editor
-	 *            - object to be saved
-	 */
-	public void saveAuthor(Editor editor) {
-		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
-		Transaction tx = graphDB.beginTx();
-		try {
-			Node editorNode = this.getOrCreateNodeWithUniqueFactory(editor.getUserid(), "authors");
-			editorNode.setProperty("user", editor.getUser());
-			tx.success();
-		} finally {
-			tx.finish();
-		}
-	};
-
-	/**
 	 * Saves a News object if it has no id. Therefore generates an UUID and
 	 * saves the news object as a node. Furthermore a Relationship with the page
 	 * the news is BASED_ON and a BASED_ON_EDIT_OF Relationship with the
@@ -102,8 +84,10 @@ public class ObjectSaver {
 				newsNode.setProperty("imageUrlList", gson.toJson(news.getImageUrlList()));
 				Node pageNode = this.getOrCreateNodeWithUniqueFactory(news.getPageId(), "pages");
 				this.createUniqueRelationship(newsNode, Relationships.BASED_ON, pageNode);
-				Node editorNode = this.getOrCreateNodeWithUniqueFactory(news.getEditor().getUserid(), "authors");
-				this.createUniqueRelationship(newsNode, Relationships.BASED_ON_EDIT_OF, editorNode);
+				for (Editor editor : news.getEditors()) {
+					Node editorNode = this.getOrCreateNodeWithUniqueFactory(editor.getUserid(), "authors");
+					this.createUniqueRelationship(newsNode, Relationships.BASED_ON_EDIT_OF, editorNode);
+				}
 				tx.success();
 			} finally {
 				tx.finish();

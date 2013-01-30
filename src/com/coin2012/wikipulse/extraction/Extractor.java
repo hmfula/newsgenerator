@@ -32,13 +32,6 @@ public class Extractor implements Extractable {
 	private ObjectSaver saver = new ObjectSaver();
 	private ObjectRetriever retriever = new ObjectRetriever();
 
-	//TODO needed?
-	@Override
-	public List<Page> getPagesForCategory(String category) {
-		List<Page> pages = WikipediaExtractor.getPagesForCategory(category);
-		return pages;
-	}
-
 	@Override
 	public List<Page> getPagesForIdentification() {
 		List<AggregatedChanges> recentChanges = this.getRecentChanges(10);
@@ -150,11 +143,6 @@ public class Extractor implements Extractable {
 		for (Page page : pages) {
 			saver.saveOrUpdatePage(page);
 		}
-	}
-
-	@Override
-	public void saveAuthor(Editor editor) {
-		saver.saveAuthor(editor);
 	}
 
 	@Override
