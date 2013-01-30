@@ -47,7 +47,8 @@ public class ObjectSaver {
 				this.createUniqueRelationshipWithProperty(editorNode, Relationships.EDITED, pageNode, "revid", edit.getRevid());
 			}
 			for (Category category : page.getCategories()) {
-				Node categoryNode = this.getOrCreateNodeWithUniqueFactory("title", category.getTitle(), "categories");
+				Node categoryNode = this.getOrCreateNodeWithUniqueFactory("id", category.getId(), "categories");
+				categoryNode.setProperty("title", category.getTitle());
 				categoryNode.setProperty("type", "category");
 				this.createUniqueRelationship(pageNode, Relationships.HAS, categoryNode);
 			}
