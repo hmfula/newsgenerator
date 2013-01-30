@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.hsqldb.AggregatedChanges;
 import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
@@ -29,6 +30,8 @@ import com.coin2012.wikipulse.models.WikiEdit;
  * 
  */
 public class Extractor implements Extractable {
+	
+	Logger logger = Logger.getLogger(Extractor.class.toString());
 
 	private ObjectSaver saver = new ObjectSaver();
 	private ObjectRetriever retriever = new ObjectRetriever();
@@ -43,6 +46,16 @@ public class Extractor implements Extractable {
 		}
 		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForPageIds(pageids);
 		WikipediaExtractor.updatePagesWithEditsInTimespan(pages, timespan);
+		List<Page> crapList = new ArrayList<Page>();
+		for (Page page : pages) {
+			if (page.getEdits().size() == 0){
+				crapList.add(page);
+			}
+		}
+		for (Page page : crapList) {
+			pages.remove(page);
+			logger.info("Removing page:" + page.getPageId());
+		}
 		timespan.setStart(timespan.getEnd());
 		return pages;
 	}

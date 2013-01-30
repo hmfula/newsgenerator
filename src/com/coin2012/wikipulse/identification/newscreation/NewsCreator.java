@@ -17,6 +17,7 @@ import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 
 import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.extraction.smmry.SentenceFinder;
+import com.coin2012.wikipulse.extraction.smmry.Summarizer;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
@@ -92,7 +93,8 @@ public class NewsCreator {
 		}
 		newsText =  betterNewsText.toString().trim();
 		
-		pageNews.setNews(removeMarkup(newsText));
+		String beautifulNews = Summarizer.summerize(removeMarkup(newsText));
+		pageNews.setNews(removeMarkup(beautifulNews));
 		pageNews.setPageId(page.getPageId());
 		pageNews.setPagetTitle(page.getTitle());
 		pageNews.setEditor(editors);
@@ -136,7 +138,6 @@ public class NewsCreator {
 				e.printStackTrace();
 			}
 		}
-
         return result;
 	}
 }

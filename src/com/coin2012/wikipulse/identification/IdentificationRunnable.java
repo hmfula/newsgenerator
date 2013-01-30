@@ -81,17 +81,43 @@ public class IdentificationRunnable implements Runnable {
 		//LinkedList<Page> pages = createTestData();
 		//Testdata end
 		
+		long current = System.currentTimeMillis() / 1000;
+		long last = current;
+		long diff = current - last;
+		logger.info("starting:" + diff );
+		
+		
 			// Get list of new edits/pages and save them to the database
 			List<Page> pages = ex.getPagesForIdentification(timer, minChanges);
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("gotPagesForIdentification:" + diff );
+			last = current;
+			
 			ex.enhancePagesWithRelevance(pages);
 			//ex.enhancePagesWithEdits(pages);
 			
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("added Relevance:" + diff );
+			last = current;
+			
 			ex.savePages(pages);
+			
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("saved Pages:" + diff );
+			last = current;
 			
 			// select pages that are news-worthy
 			AuthorsWithNews.rankPages(pages, 0);
 			DomainExperts.rankPages(pages, 1);
 			CommonAuthors.rankPages(pages, 2);
+			
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("ranked Pages:" + diff );
+			last = current;
 			
 			
 			// save ranking data to textfile
@@ -103,13 +129,27 @@ public class IdentificationRunnable implements Runnable {
 				fileWriter.flush();
 			}
 			
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("saved to File:" + diff );
+			last = current;
+			
 			// create and sort result set
 			List<Page> resultSet = createRankedList(pages, WikipulseConstants.MIN_PAGERANK);
+			
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("create Ranked List:" + diff );
+			last = current;
 			
 			// enhance result set with content
 			for (Page p: resultSet) {
 				ex.enhanceEditsWithContent(p.getEdits());
 			}
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("added content:" + diff );
+			last = current;
 			
 			// extract content from pages and generate news
 //			List <News> newsResults = Dummy.createNewsFromPages(resultSet);
@@ -118,6 +158,10 @@ public class IdentificationRunnable implements Runnable {
 			//System.err.println("############# Number of news items: ->  " + news.size());//for debugging only
 			NewsCreator creator = new NewsCreator();
 			List <News> newsResults = creator.createNews(resultSet);
+			current = System.currentTimeMillis() / 1000;
+		    diff = current - last;
+			logger.info("created News:" + diff );
+			last = current;
 			ex.enhanceNewsWithImages(newsResults);
 			ex.saveNews(newsResults);
 	}
