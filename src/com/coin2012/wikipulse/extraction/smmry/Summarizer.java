@@ -24,6 +24,7 @@ public class Summarizer {
 		resource.getReference().addSegment("&amp;SM_WITH_BREAK");
 
 		Form textForm = new Form();
+		text = text.replace("\\n", "").replace("\"", "");
 		textForm.set("sm_api_input", text);
 		Representation response = resource.post(textForm);
 
