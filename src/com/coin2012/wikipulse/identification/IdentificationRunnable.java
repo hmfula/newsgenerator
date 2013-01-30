@@ -62,7 +62,7 @@ public class IdentificationRunnable implements Runnable {
 		
 		while (true) {
 			try {
-				Thread.sleep(WikipulseConstants.IDENTIFICATION_RUNNER_SLEEP * 5);
+				Thread.sleep(WikipulseConstants.IDENTIFICATION_RUNNER_SLEEP * 50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -31,9 +31,9 @@ public abstract class WikipulseConstants {
 	public static final int IDENTIFICATION_RUNNER_SLEEP = 60000;
 	public static final boolean WRITE_RANK_DATA_FILE = true;
 	
-	public static final double MIN_PAGERANK = 0.3d;
+	public static final double MIN_PAGERANK = 0.25d;
 	public static final double AUTHORS_WITH_NEWS_MODIFIER = 3d;
 	public static final double DOMAIN_EXPERTS_MODIFIER = 2d;
-	public static final double COMMON_AUTHROS_MODIFIER = 1d;
+	public static final double COMMON_AUTHROS_MODIFIER = 2d;
 	public static final double RELEVANCE_MODIFIER = 1d;
 }
