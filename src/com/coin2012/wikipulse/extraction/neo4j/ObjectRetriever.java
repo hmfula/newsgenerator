@@ -57,9 +57,9 @@ public class ObjectRetriever {
 		List<ShortNews> shortNews = new ArrayList<ShortNews>(); 
 		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("title", category.getTitle());
+		params.put("id", category.getId());
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
-		ExecutionResult result = engine.execute("START category = node:categories(title={title}) MATCH category<-[:HAS]-page<-[:BASED_ON]-newsItems-[:BASED_ON_EDIT_OF]->author  RETURN newsItems,page.id,page.title,author ORDER BY newsItems.timestamp desc", params);
+		ExecutionResult result = engine.execute("START category = node:categories(id={id}) MATCH category<-[:HAS]-page<-[:BASED_ON]-newsItems-[:BASED_ON_EDIT_OF]->author  RETURN newsItems,page.id,page.title,author ORDER BY newsItems.timestamp desc", params);
 
 		for (Map<String, Object> row : result) {
 			shortNews.add(this.generateShortNewsFromRow(row));
@@ -107,10 +107,10 @@ public class ObjectRetriever {
 		List<Editor> editors = new ArrayList<Editor>();
 		graphDB = WikipulseGraphDatabase.getGraphDatabaseServiceInstance();
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("title", category.getTitle());
+		params.put("id", category.getId());
 		params.put("minEdits", minEditsInCategory);
 		ExecutionEngine engine = new ExecutionEngine(graphDB);
-		ExecutionResult result = engine.execute("START category = node:categories(title={title}) MATCH category<-[:HAS]-page<-[:EDITED]-author WITH distinct author , count(author) AS domainEdits WHERE domainEdits>={minEdits} RETURN author", params);
+		ExecutionResult result = engine.execute("START category = node:categories(id={id}) MATCH category<-[:HAS]-page<-[:EDITED]-author WITH distinct author , count(author) AS domainEdits WHERE domainEdits>={minEdits} RETURN author", params);
 		for (Map<String, Object> row : result) {
 			Editor author = this.generateAuthorFrom(row);
 			editors.add(author);
