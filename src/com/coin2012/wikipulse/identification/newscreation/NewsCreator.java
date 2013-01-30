@@ -101,37 +101,42 @@ public class NewsCreator {
 	}
 
 	private String removeMarkup(String text) {
+		// see http://stackoverflow.com/questions/2863272/wikipedia-java-library-to-remove-wikipedia-text-markup-removal
+		// and http://wiki.eclipse.org/Mylyn/Incubator/WikiText
+		// needs to be done sentence by sentence, or java will crash
 		
-		StringWriter writer = new StringWriter();
-
-        HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
-        builder.setEmitAsDocument(false);
-
-        MarkupParser parser = new MarkupParser(new MediaWikiLanguage());
-        
-        parser.setBuilder(builder);
-        parser.parse(text);
-
-        final String html = writer.toString();
-        final StringBuilder cleaned = new StringBuilder();
-
-        HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback() {
-                public void handleText(char[] data, int pos) {
-                    cleaned.append(new String(data)).append(' ');
-                }
-        };
-        
-        try {
-			new ParserDelegator().parse(new StringReader(html), callback, false);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Map<Integer, String> sentences = SentenceFinder.findSentences(text);
+		String result = "";
+		
+		for (String sentence : sentences.values()) {
+			StringWriter writer = new StringWriter();
+	
+	        HtmlDocumentBuilder builder = new HtmlDocumentBuilder(writer);
+	        builder.setEmitAsDocument(false);
+	
+	        MarkupParser parser = new MarkupParser(new MediaWikiLanguage());
+	        
+	        parser.setBuilder(builder);
+	        parser.parse(sentence);
+	
+	        final String html = writer.toString();
+	        final StringBuilder cleaned = new StringBuilder();
+	
+	        HTMLEditorKit.ParserCallback callback = new HTMLEditorKit.ParserCallback() {
+	                public void handleText(char[] data, int pos) {
+	                    cleaned.append(new String(data)).append(' ');
+	                }
+	        };
+	        
+	        try {
+				new ParserDelegator().parse(new StringReader(html), callback, false);
+				result = result + cleaned;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
-        if (cleaned.length() == 0) {
-        	return text;
-        } else {
-        	return cleaned.toString();
-        }
+        return result;
 	}
 }
