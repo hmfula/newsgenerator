@@ -31,7 +31,7 @@ public class CommonAuthors {
 	private static String buildQuery(Page p) {
 		String querystring = "start n=node:pages(id=\""+p.getPageId()+"\")";
 		
-		querystring += " MATCH n<-[:EDITED]-a-[:EDITED]->m-[:HAS]->c<-[:HAS]-n";
+		querystring += " MATCH n<-[:EDITED]-a-[:EDITED]->n";
 		querystring += " RETURN COUNT(a) AS authorcount";
 		
 		return querystring;

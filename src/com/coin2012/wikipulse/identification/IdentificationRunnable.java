@@ -9,8 +9,9 @@ import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.newscreation.Dummy;
+import com.coin2012.wikipulse.identification.newscreation.NewsGenerator;
 import com.coin2012.wikipulse.identification.newsselection.AuthorsWithNews;
-import com.coin2012.wikipulse.identification.newsselection.CommonWorkingSetAuthors;
+import com.coin2012.wikipulse.identification.newsselection.CommonAuthors;
 import com.coin2012.wikipulse.identification.newsselection.DomainExperts;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;
@@ -60,7 +61,7 @@ public class IdentificationRunnable implements Runnable {
 			// select pages that are news-worthy
 			AuthorsWithNews.rankPages(pages, 0);
 			DomainExperts.rankPages(pages, 1);
-			CommonWorkingSetAuthors.rankPages(pages, 2, ex);
+			CommonAuthors.rankPages(pages, 2);
 			
 			
 			// save ranking data to textfile
