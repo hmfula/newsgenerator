@@ -114,7 +114,7 @@ public class ObjectRetrieverTest {
 		List<Category> categories = retriever.getCategoriesWithHighestNewsCount(3);
 		Assert.assertTrue(categories.size() == 2);
 		for (Category category : categories) {
-			Assert.assertTrue(category.getNewsCount() == 1);
+			Assert.assertTrue(category.getNewsCount() == 2);
 		}
 	}
 
@@ -131,7 +131,7 @@ public class ObjectRetrieverTest {
 	public void getgetLatetestNews() {
 		ObjectRetriever retriever = new ObjectRetriever();
 		List<ShortNews> shortNews = retriever.getLatetestNews(3);
-		Assert.assertTrue(shortNews.size() == 1);
+		Assert.assertTrue(shortNews.size() == 2);
 		Assert.assertTrue(shortNews.get(0).getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.get(0).getShortNews().equals("ShortNews"));
 		Assert.assertTrue(shortNews.get(0).getEditors().get(0).getUser().equals("USER1"));
@@ -153,7 +153,7 @@ public class ObjectRetrieverTest {
 		Category b = new Category();
 		b.setTitle("b");
 		List<ShortNews> shortNews =retriever.getNewsByCategory(b);
-		Assert.assertTrue(shortNews.size() == 1);
+		Assert.assertTrue(shortNews.size() == 2);
 		Assert.assertTrue(shortNews.get(0).getPagetTitle().equals("Page-A"));
 		Assert.assertTrue(shortNews.get(0).getShortNews().equals("ShortNews"));
 		Assert.assertTrue(shortNews.get(0).getEditors().get(0).getUser().equals("USER1"));
@@ -189,8 +189,7 @@ public class ObjectRetrieverTest {
 	public void getNewsContributors(){
 		ObjectRetriever retriever = new ObjectRetriever();
 		List<Editor> editors =retriever.getNewsContributors(1);
-		Assert.assertTrue(editors.size()==1);
-		Assert.assertEquals(editors.get(0).getUserid(), "user1");
+		Assert.assertTrue(editors.size()==2);
 	}
 	
     // Deletes all files and subdirectories under dir.
