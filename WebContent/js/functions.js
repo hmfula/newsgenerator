@@ -180,7 +180,7 @@ function loadNewsImplementation(url){
 	var news_template_big = "<h3><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h3>" +
 							"<div id='news_id'>img_slide_show</div>" +
 							"<p>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
-	var news_template_small = "<h6><a href='#newsid=news_id' class='show_detail' news_id='news_id'>news_title</a></h6>" +
+	var news_template_small = "<h6><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h6>" +
 							"<div id='news_id'>img_slide_show</div>" +
 							"<p class='p-small'>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
 	
