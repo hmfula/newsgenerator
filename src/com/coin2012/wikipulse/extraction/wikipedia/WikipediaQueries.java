@@ -56,8 +56,8 @@ public abstract class WikipediaQueries {
 		resource.getReference().addQueryParameter("prop", "revisions");
 		resource.getReference().addQueryParameter("rvprop", "ids|timestamp|user|userid");
 		resource.getReference().addQueryParameter("rvlimit", "500");
-		resource.getReference().addQueryParameter("rvend", timespan.getEnd());
-		resource.getReference().addQueryParameter("rvstart", timespan.getStart());
+		resource.getReference().addQueryParameter("rvend", timespan.getStart());
+		resource.getReference().addQueryParameter("rvstart", timespan.getEnd());
 		resource.getReference().addQueryParameter("rvdir", "older");
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;

@@ -1,9 +1,11 @@
 package com.coin2012.wikipulse.identification;
 
+import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
+
 public class Timespan {
 
-	private String start ="0";
-	private String end ="0";
+	private String start = TimestampGenerator.generateTimestampFromTwoHoursAgo();
+	private String end = "0";
 
 	public String getEnd() {
 		return end;
