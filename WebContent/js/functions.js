@@ -130,7 +130,7 @@ function loadRecentChanges(minchanges){
 /* get news detail from service and display */
 function loadNewsDetail(url_parameter){
 	var news_template = "<h3>news_title</h3>" + "<div id='news_id'>img_slide_show</div>" +
-	"<p>news_summary</p><a href='wikipedia_article'>see more on wikipedia</a><p class='p-small'>edited by:<br/> editor_list</p>";
+	"<p>news_summary</p><br /><a href='wikipedia_article' target='_blank'>see more on wikipedia</a><p class='p-small'>edited by:<br/> editor_list</p>";
     $.ajax({
 	    type: "GET",
 	    url: wp_service_route_news + "/" + url_parameter,
@@ -154,15 +154,15 @@ function loadNewsDetail(url_parameter){
 				}
 				append_str = append_str.replace(/editor_list/g,editor_list);
 				
-	    		$("#wp_service_news_detail_results").html(append_str);	  
+	    		$("#wp_service_news_detail_results").html(append_str);
+	    		$('html,body').scrollTop(0);
 	    	}
 	    	else {
-	    		$("#wp_service_news_detail_results").html("sorry, news not found");	  
+	    		loadDoc("error.html");	  
 	    	}
 	    },
 	    error: function(){
-	    	$("#wait").html("");
-	    	$("#wp_service_news_detail_results").html("sorry, news not found");	
+	    	loadDoc("error.html");
 	    }
 	});
 }
@@ -179,10 +179,10 @@ function loadNews(type,url_parameter){
 function loadNewsImplementation(url){
 	var news_template_big = "<h3><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h3>" +
 							"<div id='news_id'>img_slide_show</div>" +
-							"<p>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
+							"<p>news_shortsummary <br /><a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
 	var news_template_small = "<h6><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h6>" +
 							"<div id='news_id'>img_slide_show</div>" +
-							"<p class='p-small'>news_shortsummary<a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
+							"<p class='p-small'>news_shortsummary <br /><a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
 	
 	$.ajax({
 	    type: "GET",
@@ -241,10 +241,10 @@ function loadNewsImplementation(url){
 	    		news_rows += "</div>";	    		
 	    	}
 	    	$("#row2").append(news_rows);
+	    	$('html,body').scrollTop(0);
 	    },
 	    error: function(){
-	    	$("#wait").html("sorry, category not available");
-	    	//alert("sorry, category not available");
+	    	loadDoc("error.html");
 	    } 
 	});
 }
@@ -345,9 +345,7 @@ function loadCategories(){
 	    	} 
 	    },
 	    error: function(){
-	    	//alert("error, no result");
-			loadDoc("home.html");
-			setActiveClass("home");
+	    	loadDoc("error.html");
 	    }
 	});
 }
