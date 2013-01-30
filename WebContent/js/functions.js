@@ -179,10 +179,10 @@ function loadNews(type,url_parameter){
 function loadNewsImplementation(url){
 	var news_template_big = "<h3><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h3>" +
 							"<div id='news_id'>img_slide_show</div>" +
-							"<p>news_shortsummary <br /><a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
+							"<p>news_shortsummary <br /><a href='#newsid=news_id' class='show_detail' newsid='news_id'>more information</a></p>";
 	var news_template_small = "<h6><a href='#newsid=news_id' class='show_detail' newsid='news_id'>news_title</a></h6>" +
 							"<div id='news_id'>img_slide_show</div>" +
-							"<p class='p-small'>news_shortsummary <br /><a href='#newsid=news_id' class='show_detail' newsid='news_id'>&nbsp;more information</a></p>";
+							"<p class='p-small'>news_shortsummary <br /><a href='#newsid=news_id' class='show_detail' newsid='news_id'>more information</a></p>";
 	
 	$.ajax({
 	    type: "GET",
@@ -281,8 +281,8 @@ function loadMostReadNews(){
 	    					"<div class='row-fluid'><div class='span12' style='text-align:center;'>"+
 	    						"<table class='table table-condensed' style='margin-bottom:0px'><tr>";
 	    	$.each(data,function(i,news){
-				append_str += "<td><a href='#newsid=" + news.id + "' class='show_detail' newsid='" + news.id + "'>" + news.pageTitle + '&nbsp;(&nbsp;' + news.viewCount + '&nbsp;click(s))&nbsp;' +'</a></td>';
-				//append_str += '<td><a href="http://' +  news.url + '">' + decodeURIComponent(news.pageTitle) + '&nbsp;(&nbsp;' + news.count + '&nbsp;click(s))&nbsp;' +'</a></td>';			    			
+	    		append_str += "<td><a href='#newsid=" + news.id + "' class='show_detail' newsid='" + news.id + "'>" + news.pageTitle + '</a></td>';
+				//append_str += "<td><a href='#newsid=" + news.id + "' class='show_detail' newsid='" + news.id + "'>" + news.pageTitle + '&nbsp;(&nbsp;' + news.viewCount + '&nbsp;click(s))&nbsp;' +'</a></td>';			    			
 	    	});
 	    	append_str += "</tr></table></div></div>";	    	
 	    	$("#most_read_stories").html(append_str);
@@ -386,8 +386,10 @@ function createImageSlideshow(newsId,news_counter,IMGurlList){
 		div_slideshow += "</div>";
     };
     div_slideshow += "</div>";
-    div_slideshow += "<a class='left carousel-control' href='#myCarousel_"+ newsId + "' data-slide='prev'>&lsaquo;</a>";
-    div_slideshow += "<a class='right carousel-control' href='#myCarousel_" + newsId + "' data-slide='next'>&rsaquo;</a>";
+    if (IMGurlList.length > 1){
+    	div_slideshow += "<a class='left carousel-control' href='#myCarousel_"+ newsId + "' data-slide='prev'>&lsaquo;</a>";
+    	div_slideshow += "<a class='right carousel-control' href='#myCarousel_" + newsId + "' data-slide='next'>&rsaquo;</a>";
+    }
     div_slideshow += "</div>";
     return div_slideshow;
 }
