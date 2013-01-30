@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.coin2012.wikipulse.conf.WikipulseConstants;
 import com.coin2012.wikipulse.extraction.smmry.SentenceFinder;
-import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
 

@@ -3,10 +3,12 @@ package com.coin2012.wikipulse.identification;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.coin2012.wikipulse.conf.WikipulseConstants;
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.identification.newscreation.Dummy;
 import com.coin2012.wikipulse.identification.newscreation.NewsGenerator;
@@ -19,8 +21,6 @@ import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
 
 public class IdentificationRunnable implements Runnable {
-
-	public static final int MIN_RANK = 1;
 	
 	private Logger logger = Logger.getLogger("AuthorgraphRunnable.class");
 	
@@ -37,15 +37,22 @@ public class IdentificationRunnable implements Runnable {
 	public void run() {
 		logger.info("Starting identification algorithm.");
 		
-		try {
-			fileWriter = new PrintWriter(new FileWriter(FILENAME));
-			fileWriter.println("pageid;pagetitle;totalrank;singleranks0;singleranks1;singleranks2");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		if (WikipulseConstants.WRITE_RANK_DATA_FILE) {
+			try {
+				fileWriter = new PrintWriter(new FileWriter(FILENAME));
+				fileWriter.println("timestamp;pageid;pagetitle;totalrank;singleranks0;singleranks1;singleranks2");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 
 		while (true) {
+			try {
+				Thread.sleep(60000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		
 		// Testdata start
 		//LinkedList<Page> pages = createTestData();
@@ -65,15 +72,16 @@ public class IdentificationRunnable implements Runnable {
 			
 			
 			// save ranking data to textfile
-			for (Page p: pages) {
-				fileWriter.println(p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]);
-				System.out.println(p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]); // TODO
+			if (WikipulseConstants.WRITE_RANK_DATA_FILE) {
+				for (Page p: pages) {
+					fileWriter.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]);
+					System.out.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]); // TODO
+				}
+				fileWriter.flush();
 			}
-			fileWriter.flush();
-			
 			
 			// create and sort result set
-			List<Page> resultSet = createRankedList(pages, MIN_RANK);
+			List<Page> resultSet = createRankedList(pages, WikipulseConstants.MIN_PAGERANK);
 			
 			// extract information from pages and generate news
 			List <News> newsResults = Dummy.createNewsFromPages(resultSet);
@@ -84,11 +92,7 @@ public class IdentificationRunnable implements Runnable {
 			ex.enhanceNewsWithImages(newsResults);
 			ex.saveNews(newsResults);
 			
-			try {
-				Thread.sleep(60000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
 		}
 	}
 

@@ -32,7 +32,7 @@ public class AuthorsWithNews {
 		String querystring = "start n=node:pages(id=\""+p.getPageId()+"\")";
 		
 		querystring += " MATCH n<-[:EDITED]-a<-[:BASED_ON_EDIT_OF]-e";
-		querystring += " RETURN COUNT(a) AS authorcount";
+		querystring += " RETURN COUNT(DISTINCT a) AS authorcount";
 		
 		return querystring;
 	}

@@ -25,7 +25,9 @@ public class Dummy {
 			if (p.getEdits().listIterator().hasNext()) {
 				e.setUserid(p.getEdits().listIterator().next().getUserId());
 			}
-			item.setEditor(e);
+			LinkedList<Editor> al = new LinkedList<Editor>();
+			al.add(e);
+			item.setEditor(al);
 			
 			resultSet.add(item);
 		}

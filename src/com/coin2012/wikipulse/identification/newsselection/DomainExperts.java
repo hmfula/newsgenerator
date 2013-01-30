@@ -32,7 +32,7 @@ public class DomainExperts {
 		String querystring = "start n=node:pages(id=\""+p.getPageId()+"\")";
 		
 		querystring += " MATCH n<-[:EDITED]-a-[:EDITED]->m-[:HAS]->c<-[:HAS]-n";
-		querystring += " RETURN COUNT(a) AS authorcount";
+		querystring += " RETURN COUNT(DISTINCT a) AS authorcount";
 		
 		return querystring;
 	}

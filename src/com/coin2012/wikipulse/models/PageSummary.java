@@ -2,7 +2,7 @@ package com.coin2012.wikipulse.models;
 
 import java.util.List;
 
-import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
+import com.coin2012.wikipulse.conf.WikipulseConstants;
 
 public class PageSummary {
 	

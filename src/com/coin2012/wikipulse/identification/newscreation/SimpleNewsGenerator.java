@@ -6,9 +6,10 @@ package com.coin2012.wikipulse.identification.newscreation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.coin2012.wikipulse.conf.WikipulseConstants;
 import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
-import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
 import com.coin2012.wikipulse.identification.newscreation.classification.WikiEditClassifier;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;

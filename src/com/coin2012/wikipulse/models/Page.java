@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.coin2012.wikipulse.extraction.utils.WikipulseConstants;
+import com.coin2012.wikipulse.conf.WikipulseConstants;
 
 public class Page {
 
 	private String pageid;
 	private float yesterdaysRelevance;
-	private int[] ranks = new int[3];
+	private double[] ranks = new double[3];
 	private String ns;
 	private String title;
 	private String timestamp;
@@ -77,11 +77,11 @@ public class Page {
 
 
 	public int getTotalRank() {
-		int totalrank = (int) (yesterdaysRelevance * 100); 
+		int totalrank = (int) (yesterdaysRelevance * WikipulseConstants.RELEVANCE_MODIFIER); 
 		
-		for (int i = 0; i < ranks.length; i++) {
-			totalrank += ranks[i];
-		}
+		totalrank += ranks[0] * WikipulseConstants.AUTHORS_WITH_NEWS_MODIFIER;
+		totalrank += ranks[1] * WikipulseConstants.DOMAIN_EXPERTS_MODIFIER;
+		totalrank += ranks[2] * WikipulseConstants.COMMON_AUTHROS_MODIFIER;
 		
 		return totalrank;
 	}
@@ -89,14 +89,14 @@ public class Page {
 	/**
 	 * @return the ranks
 	 */
-	public int[] getRanks() {
+	public double[] getRanks() {
 		return ranks;
 	}
 
 	/**
 	 * @param ranks the ranks to set
 	 */
-	public void setRank(int id, int rank) {
+	public void setRank(int id, double rank) {
 		ranks[id] = rank;
 	}
 	
