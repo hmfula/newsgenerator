@@ -25,8 +25,6 @@ public class CommonAuthors {
 			ExecutionResult commonauthorcount = engine.execute(buildQueryForCommonAuthors(p));
 			
 			if (commonauthorcount.columnAs("commoncount").hasNext()) {
-				System.out.println((Long) commonauthorcount.columnAs("commoncount").next());
-				System.out.println(authorcountLong);
 				p.setRank(rankId, ((Long) commonauthorcount.columnAs("commoncount").next() / authorcountLong));
 			}
 			
