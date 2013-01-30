@@ -6,7 +6,7 @@ var wp_service_route_changes = wp_service_url + "/changes";
 var wp_service_url_free_text_search = wp_service_url + "/FreeTextSearch?&srsearch=";
 var category_news_limit = "15";
 var category_no_limit = "4";
-var homepage_limit = "15";
+var homepage_limit = "35";
 var mostreadstories_limit = "6";
 /* set wikipedia URL */
 var wiki_url = "http://en.wikipedia.org/wiki/";
