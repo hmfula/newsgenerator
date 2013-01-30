@@ -76,6 +76,7 @@ public class NewsCreator {
 		pageNews.setNews(newsText);
 		pageNews.setPageId(page.getPageId());
 		pageNews.setPagetTitle(page.getTitle());
+		pageNews.setEditor(editors);
 		
 		return pageNews;
 	}
