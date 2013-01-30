@@ -3,6 +3,7 @@ package com.coin2012.wikipulse.extraction.wikipedia;
 import org.restlet.resource.ClientResource;
 
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
+import com.coin2012.wikipulse.identification.Timespan;
 
 public abstract class WikipediaQueries {
 	private final static String wikipediaApi = "http://en.wikipedia.org/w/api.php";
@@ -48,14 +49,15 @@ public abstract class WikipediaQueries {
 		return resource;
 	}
 	
-	public static ClientResource buildQueryForRevisionsFromTheLastTwoHours(String pageId) {
+	public static ClientResource buildQueryForRevisionsFromTheLastTwoHours(String pageId, Timespan timespan) {
 		ClientResource resource = new ClientResource(wikipediaApi);
 		resource.getReference().addQueryParameter("action", "query");
 		resource.getReference().addQueryParameter("pageids", pageId);
 		resource.getReference().addQueryParameter("prop", "revisions");
 		resource.getReference().addQueryParameter("rvprop", "ids|timestamp|user|userid");
 		resource.getReference().addQueryParameter("rvlimit", "500");
-		resource.getReference().addQueryParameter("rvend", TimestampGenerator.generateTimestampFromTwoHoursAgo());
+		resource.getReference().addQueryParameter("rvend", timespan.getEnd());
+		resource.getReference().addQueryParameter("rvstart", timespan.getStart());
 		resource.getReference().addQueryParameter("rvdir", "older");
 		resource.getReference().addQueryParameter("format", "json");
 		return resource;

@@ -12,6 +12,7 @@ import com.coin2012.wikipulse.extraction.utils.QueryUtils;
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
 import com.coin2012.wikipulse.extraction.utils.models.RecentChangesQueryResult;
+import com.coin2012.wikipulse.identification.Timespan;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
@@ -130,9 +131,9 @@ public class WikipediaExtractor {
 		return pages;
 	}
 
-	public static void updatePagesWithEditsFromTheLastTwoHours(List<Page> pages) {
+	public static void updatePagesWithEditsInTimespan(List<Page> pages, Timespan timespan) {
 		for (Page page : pages) {
-			ClientResource resource = WikipediaQueries.buildQueryForRevisionsFromTheLastTwoHours(page.getPageId());
+			ClientResource resource = WikipediaQueries.buildQueryForRevisionsFromTheLastTwoHours(page.getPageId(), timespan);
 			String result = QueryUtils.executeQueryToResource(resource);
 			List<WikiEdit> edits = WikipediaResultParser.parseResultToEdits(result, page.getPageId());
 			page.setEdits(edits);

@@ -28,9 +28,11 @@ public class IdentificationRunnable implements Runnable {
 	private PrintWriter fileWriter;
 
 	private Extractable ex;
+	private Timespan timer;
 
 	public IdentificationRunnable(Extractable extractor) {
 		ex = extractor;
+		timer = new Timespan();
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class IdentificationRunnable implements Runnable {
 		//Testdata end
 		
 			// Get list of new edits/pages and save them to the database
-			List<Page> pages = ex.getPagesForIdentification();
+			List<Page> pages = ex.getPagesForIdentification(timer);
 			ex.enhancePagesWithRelevance(pages);
 			//ex.enhancePagesWithEdits(pages);
 			

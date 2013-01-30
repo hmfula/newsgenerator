@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.utils.TimestampGenerator;
 import com.coin2012.wikipulse.extraction.utils.models.Change;
+import com.coin2012.wikipulse.identification.Timespan;
 
 public class HsqldbManager {
 	static Logger logger = Logger.getLogger(HsqldbManager.class.getSimpleName());
@@ -133,5 +134,37 @@ public class HsqldbManager {
 
 	private static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
+	}
+
+	public static HashMap<String, AggregatedChanges> getAllAggregatedChangesFromMemDB(Timespan timespan) {
+		timespan.setEnd(getTimestampForLastSavedChange());
+		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
+		Connection connection = null;
+		PreparedStatement prepStatement = null;
+		try {
+			connection = getConnection();
+			prepStatement = connection.prepareStatement("SELECT * FROM changes for update");
+			ResultSet rs = prepStatement.executeQuery();
+			while (rs.next()) {
+				long timestamp = rs.getLong(1);
+				if (timestamp <= Long.valueOf(timespan.getEnd()) && timestamp > Long.valueOf(timespan.getStart())) {
+					String title = rs.getString(2);
+					String pageid = rs.getString(3);
+					AggregatedChanges change = map.get(title);
+
+					if (change == null) {
+						map.put(title, new AggregatedChanges(title, pageid));
+					} else {
+						change.addToCount();
+					}
+				}
+			}
+		} catch (SQLException e) {
+			logger.warning("Failed to aggregate all changes from the database because of : " + e.getCause());
+			e.printStackTrace();
+		} finally {
+			closeDatabaseConnections(connection, prepStatement);
+		}
+		return map;
 	}
 }

@@ -3,6 +3,7 @@ package com.coin2012.wikipulse.extraction;
 import java.util.List;
 
 import com.coin2012.wikipulse.extraction.hsqldb.AggregatedChanges;
+import com.coin2012.wikipulse.identification.Timespan;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
@@ -13,7 +14,7 @@ import com.coin2012.wikipulse.models.WikiEdit;
 
 public interface Extractable {
 
-	public List<Page> getPagesForIdentification();
+	public List<Page> getPagesForIdentification(Timespan timer);
 
 	public void enhanceNewsWithImages(List<News> news);
 

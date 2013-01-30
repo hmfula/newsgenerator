@@ -13,6 +13,7 @@ import com.coin2012.wikipulse.extraction.neo4j.ObjectSaver;
 import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
 import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
 import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
+import com.coin2012.wikipulse.identification.Timespan;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
 import com.coin2012.wikipulse.models.News;
@@ -33,15 +34,29 @@ public class Extractor implements Extractable {
 	private ObjectRetriever retriever = new ObjectRetriever();
 
 	@Override
-	public List<Page> getPagesForIdentification() {
-		List<AggregatedChanges> recentChanges = this.getRecentChanges(10);
+	public List<Page> getPagesForIdentification(Timespan timespan) {
+		//TODO switch to conf file
+		List<AggregatedChanges> recentChanges = this.getRecentChanges(10, timespan);
 		List<String> pageids = new ArrayList<String>();
 		for (AggregatedChanges aggregatedChanges : recentChanges) {
 			pageids.add(aggregatedChanges.getPageid());
 		}
 		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForPageIds(pageids);
-		WikipediaExtractor.updatePagesWithEditsFromTheLastTwoHours(pages);
+		WikipediaExtractor.updatePagesWithEditsInTimespan(pages, timespan);
+		timespan.setStart(timespan.getEnd());
 		return pages;
+	}
+
+	private List<AggregatedChanges> getRecentChanges(int minChanges, Timespan timer) {
+		List<AggregatedChanges> aggregatedChanges = this.aggregateChangesFromMemDB(minChanges, timer);
+		this.sortAggregatedChanges(aggregatedChanges);
+		return aggregatedChanges;
+	}
+
+	private List<AggregatedChanges> aggregateChangesFromMemDB(int minChanges, Timespan timer) {
+		HashMap<String, AggregatedChanges> map = HsqldbManager.getAllAggregatedChangesFromMemDB(timer);
+		List<AggregatedChanges> resultList = cleanUpAggregatedChanges(map, minChanges);
+		return resultList;
 	}
 
 	@Override
