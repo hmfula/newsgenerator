@@ -86,14 +86,14 @@ public class NewsCreator {
 			Editor editor = new Editor(wikiEdit.getUserId(), wikiEdit.getUser());
 			editors.add(editor);
 		}
-		StringBuffer betterNewsText = new StringBuffer();;
-		Map<Integer, String> sentences = SentenceFinder.findSentences(newsText);
-		for (String sentence : sentences.values()) {
-			betterNewsText.append(sentence + " ");
-		}
-		newsText =  betterNewsText.toString().trim();
 		
-		String beautifulNews = Summarizer.summerize(removeMarkup(newsText));
+		try {
+			newsText = removeMarkup(newsText);
+		} catch (OutOfMemoryError e) {
+			logger.warning("Wiki markup removal failed. Newstext is only summarized. Cause" + e.getStackTrace());
+		}
+		
+		String beautifulNews = Summarizer.summerize(newsText);
 		pageNews.setNews(removeMarkup(beautifulNews));
 		pageNews.setPageId(page.getPageId());
 		pageNews.setPagetTitle(page.getTitle());
@@ -107,6 +107,7 @@ public class NewsCreator {
 		// and http://wiki.eclipse.org/Mylyn/Incubator/WikiText
 		// needs to be done sentence by sentence, or java will crash
 		
+		text = text.replace("\\n", "").replace("\"", "");
 		Map<Integer, String> sentences = SentenceFinder.findSentences(text);
 		String result = "";
 		
@@ -138,7 +139,6 @@ public class NewsCreator {
 				e.printStackTrace();
 			}
 		}
-		result = result.replace("\\n", "").replace("\"", "");
         return result;
 	}
 }
