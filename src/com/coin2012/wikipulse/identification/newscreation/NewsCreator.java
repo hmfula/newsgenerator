@@ -162,8 +162,6 @@ class Task implements Callable<Map<Integer, String>> {
 		Logger logger = Logger.getLogger(Task.class.toString());
 		Map<Integer, String> map = new HashMap<Integer, String>();
 		try {
-			System.out.println(text.length());
-
 			text = Jsoup.parse(text).text();
 
 			StringWriter writer = new StringWriter();

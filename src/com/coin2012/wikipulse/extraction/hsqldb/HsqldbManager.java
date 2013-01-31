@@ -23,16 +23,15 @@ public class HsqldbManager {
 		PreparedStatement prepStatement = null;
 		try {
 			connection = getConnection();
-			prepStatement = connection.prepareStatement("SELECT * FROM changes FOR UPDATE");
+			prepStatement = connection.prepareStatement("SELECT MAX(timestamp) FROM changes FOR UPDATE");
 			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
-				if (rs.isFirst()) {
 					timestamp = rs.getString(1);
-				}
 			}
 		} catch (SQLException e) {
 			logger.warning("Failed to get timestamp of last saved change from database because of : " + e.getCause());
 			e.printStackTrace();
+			timestamp="0";
 		} finally {
 			closeDatabaseConnections(connection, prepStatement);
 		}
