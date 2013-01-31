@@ -11,7 +11,7 @@ public class Page {
 	private String pageid;
 	private int recentChanges;
 	private float yesterdaysRelevance;
-	private double[] ranks = new double[3];
+	private double[] ranks = new double[4];
 	private String ns;
 	private String title;
 	private String timestamp;
@@ -83,6 +83,7 @@ public class Page {
 		totalrank += ( ranks[0] * WikipulseConstants.AUTHORS_WITH_NEWS_MODIFIER );
 		totalrank += ( ranks[1] * WikipulseConstants.DOMAIN_EXPERTS_MODIFIER );
 		totalrank += ( ranks[2] * WikipulseConstants.COMMON_AUTHROS_MODIFIER );
+		totalrank += ( ranks[3] * WikipulseConstants.RECENT_CHANGES_MODIFIER );
 		
 		return totalrank;
 	}

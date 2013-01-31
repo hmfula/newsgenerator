@@ -14,6 +14,7 @@ import com.coin2012.wikipulse.identification.newscreation.NewsCreator;
 import com.coin2012.wikipulse.identification.newsselection.AuthorsWithNews;
 import com.coin2012.wikipulse.identification.newsselection.CommonAuthors;
 import com.coin2012.wikipulse.identification.newsselection.DomainExperts;
+import com.coin2012.wikipulse.identification.newsselection.RecentChanges;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;
 import com.coin2012.wikipulse.models.Page;
@@ -62,7 +63,7 @@ public class IdentificationRunnable implements Runnable {
 		
 		while (true) {
 			try {
-				Thread.sleep(WikipulseConstants.IDENTIFICATION_RUNNER_SLEEP * 50);
+				Thread.sleep(WikipulseConstants.IDENTIFICATION_RUNNER_SLEEP * 30);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -113,6 +114,7 @@ public class IdentificationRunnable implements Runnable {
 			AuthorsWithNews.rankPages(pages, 0);
 			DomainExperts.rankPages(pages, 1);
 			CommonAuthors.rankPages(pages, 2);
+			RecentChanges.rankPages(pages, 3);
 			
 			current = System.currentTimeMillis() / 1000;
 		    diff = current - last;
@@ -123,8 +125,8 @@ public class IdentificationRunnable implements Runnable {
 			// save ranking data to textfile
 			if (WikipulseConstants.WRITE_RANK_DATA_FILE) {
 				for (Page p: pages) {
-					fileWriter.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]+";"+p.getRelYesterday());
-					System.out.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]+";"+p.getRelYesterday()); // TODO
+					fileWriter.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]+";"+p.getRelYesterday()+";"+p.getRanks()[3]);
+					System.out.println((new Date()).getTime()+";"+p.getPageId()+";"+p.getTitle()+";"+p.getTotalRank()+";"+p.getRanks()[0]+";"+p.getRanks()[1]+";"+p.getRanks()[2]+";"+p.getRelYesterday()+";"+p.getRanks()[3]); // TODO
 				}
 				fileWriter.flush();
 			}

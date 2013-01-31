@@ -36,4 +36,5 @@ public abstract class WikipulseConstants {
 	public static final double DOMAIN_EXPERTS_MODIFIER = 2d;
 	public static final double COMMON_AUTHROS_MODIFIER = 2d;
 	public static final double RELEVANCE_MODIFIER = 1d;
+	public static final double RECENT_CHANGES_MODIFIER = 0.05d;
 }
