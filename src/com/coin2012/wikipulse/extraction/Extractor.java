@@ -30,7 +30,7 @@ import com.coin2012.wikipulse.models.WikiEdit;
  * 
  */
 public class Extractor implements Extractable {
-	
+
 	Logger logger = Logger.getLogger(Extractor.class.toString());
 
 	private ObjectSaver saver = new ObjectSaver();
@@ -38,7 +38,7 @@ public class Extractor implements Extractable {
 
 	@Override
 	public List<Page> getPagesForIdentification(Timespan timespan, int minChanges) {
-		//TODO switch to conf file
+		logger.info("Retrieving pages for identification with at least " + minChanges + " changes."); 
 		List<AggregatedChanges> recentChanges = this.getRecentChangesForTimespan(minChanges, timespan);
 		List<String> pageids = new ArrayList<String>();
 		for (AggregatedChanges aggregatedChanges : recentChanges) {
@@ -47,7 +47,7 @@ public class Extractor implements Extractable {
 		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForPageIds(pageids);
 		for (Page page : pages) {
 			for (AggregatedChanges aggregated : recentChanges) {
-				if(aggregated.getPageid().equals(page.getPageId())){
+				if (aggregated.getPageid().equals(page.getPageId())) {
 					page.setRecentChanges(aggregated.getCount());
 					break;
 				}
@@ -56,7 +56,7 @@ public class Extractor implements Extractable {
 		WikipediaExtractor.updatePagesWithEditsInTimespan(pages, timespan);
 		List<Page> crapList = new ArrayList<Page>();
 		for (Page page : pages) {
-			if (page.getEdits().size() == 0){
+			if (page.getEdits().size() == 0) {
 				crapList.add(page);
 			}
 		}
@@ -202,22 +202,22 @@ public class Extractor implements Extractable {
 	public List<Category> getCategories(int limit) {
 		return retriever.getCategoriesWithHighestNewsCount(limit);
 	}
-	
+
 	@Override
-	public List<Editor> getDomainExperts(Category category, int minEditsInCategory){
-		List<Editor> editors =retriever.getDomainExperts(category, minEditsInCategory);
+	public List<Editor> getDomainExperts(Category category, int minEditsInCategory) {
+		List<Editor> editors = retriever.getDomainExperts(category, minEditsInCategory);
 		return editors;
 	}
-	
+
 	@Override
-	public List<Editor> getTopContributors(int limit){
-		List<Editor> editors =retriever.getTopEditors(limit);
+	public List<Editor> getTopContributors(int limit) {
+		List<Editor> editors = retriever.getTopEditors(limit);
 		return editors;
 	}
-	
+
 	@Override
-	public List<Editor> getNewsContributors(int minNews){
-		List<Editor> editors =retriever.getNewsContributors(minNews);
+	public List<Editor> getNewsContributors(int minNews) {
+		List<Editor> editors = retriever.getNewsContributors(minNews);
 		return editors;
 	}
 }

@@ -125,8 +125,13 @@ public class WikipediaExtractor {
 		for (String pageid : pageids) {
 			ClientResource resource = WikipediaQueries.buildQueryForPageWithCategoriesByPageId(pageid);
 			String result = QueryUtils.executeQueryToResource(resource);
+			try{
 			Page page = WikipediaResultParser.parseResultToPage(result, pageid);
 			pages.add(page);
+			}catch(Exception e){
+				logger.warning("Pageid '"+pageid+"' could not be created. " + e.getStackTrace());
+			}
+			
 		}
 		return pages;
 	}

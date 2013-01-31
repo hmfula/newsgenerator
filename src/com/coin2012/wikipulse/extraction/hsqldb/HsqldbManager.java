@@ -138,6 +138,7 @@ public class HsqldbManager {
 
 	public static HashMap<String, AggregatedChanges> getAllAggregatedChangesFromMemDB(Timespan timespan) {
 		timespan.setEnd(getTimestampForLastSavedChange());
+		logger.info("Retrieving recent changes between " + timespan.getStart() + " and " + timespan.getEnd());
 		HashMap<String, AggregatedChanges> map = new HashMap<String, AggregatedChanges>();
 		Connection connection = null;
 		PreparedStatement prepStatement = null;
@@ -149,15 +150,15 @@ public class HsqldbManager {
 			prepStatement.setString(2, timespan.getStart());
 			ResultSet rs = prepStatement.executeQuery();
 			while (rs.next()) {
-					String title = rs.getString(2);
-					String pageid = rs.getString(3);
-					
-					AggregatedChanges change = map.get(title);
-					if (change == null) {
-						map.put(title, new AggregatedChanges(title, pageid));
-					} else {
-						change.addToCount();
-					}
+				String title = rs.getString(2);
+				String pageid = rs.getString(3);
+
+				AggregatedChanges change = map.get(title);
+				if (change == null) {
+					map.put(title, new AggregatedChanges(title, pageid));
+				} else {
+					change.addToCount();
+				}
 			}
 		} catch (SQLException e) {
 			logger.warning("Failed to aggregate all changes from the database because of : " + e.getCause());
