@@ -1,6 +1,5 @@
 package com.coin2012.wikipulse.api;
 
-
 /**
  * Defines the interface for the logic that is offered through the REST routes
  * in the WikipulseResource class.
@@ -15,23 +14,30 @@ public interface WikipulseService {
 	 * 
 	 * @param minChanges
 	 *            - amount of changes necessary for a page to added to the
-	 *            return string. Default value is 10.
-	 * @return list of pages with recent changes as JSON string-
+	 *            return string.
+	 * @return list of pages with recent changes as JSON string
 	 */
-	public String getRecentChanges(String minChanges);
+	public String getRecentChanges(int minChanges);
 
 	/**
-	 * Return a list of news as string in JSON format.
+	 * Return a list of news as string in JSON format. The list can be sorted by
+	 * either views or time(default) and the amount of News can be set;
 	 * 
-	 * @param nprop
-	 *            - specifies additional content for the returned news sperated
-	 *            by |. img = news includes images
-	 *            relevance rating.
-	 * @param limit 
+	 * @param sort
+	 *            - either views or time(default)
+	 * @param limit
+	 *            - amount of News returned
 	 * @return list of news as JSON string.
 	 */
-	public String getNews(String sort, String limit);
+	public String getNews(String sort, int limit);
 
+	/**
+	 * Returns the News for the given newsId as String
+	 * 
+	 * @param newsId
+	 *            - id of the news
+	 * @return a News as String
+	 */
 	public String getNews(String newsId);
 
 	/**
@@ -43,14 +49,20 @@ public interface WikipulseService {
 	 */
 	public String getNewsForCategory(String category);
 
-	public void saveUserInteraction(String News);
+	/**
+	 * Saves the click of a user on the News with the given id.
+	 * 
+	 * @param newsId
+	 *            - id of the clicked News.
+	 */
+	public void saveUserInteraction(String newsId);
 
 	/**
-	 * Return a list of categories as string in JSON format.
+	 * Returns a list of categories as string in JSON format. Amount of returned categories is limited.
 	 * 
-	 * @param nprop
-	 *            - currently not used
+	 * @param limit
+	 *            - amount of categories returned
 	 * @return list of categories as JSON string.
 	 */
-	public String getCategories(String nprop);	
+	public String getCategories(int limit);
 }

@@ -51,28 +51,27 @@ public class WikipulseResource implements SparkApplication {
 		createRESTRoutes();
 		createInMemDb();
 		startIdentificationThread();
+
 	}
 
 	/**
-	 * Defines all alvailable REST routes. There are three routes offered. The
-	 * first route /news offers news without focusing on any topic. This route
-	 * can be parameterized by the query parameter nprop. nprop can have
-	 * multiple values separated by |. The currently possible values are img.
-	 * img includes images into the news. The second route is /news/:category
-	 * which offers news for a given category. This route also allows the query
-	 * parameter nprop. The third offered route is /changes which offer a list
-	 * of wikipedia pages with recent changes. The list can be reduced by adding
-	 * the query parameter minChanges. If minChanges is set only pages with
-	 * atleast that amount of changes are returned.
+	 * Creates all available REST routes.
 	 */
 	private static void createRESTRoutes() {
 		get(new Route("/news") {
 			@Override
 			public Object handle(Request request, Response response) {
-				String sort = request.queryParams("sort");
-				String limit = request.queryParams("limit");
-				response.type("application/json; charset=utf-8");
-				return wikipulseService.getNews(sort, limit);
+				try {
+					String sort = request.queryParams("sort");
+					int limit = Integer.valueOf(request.queryParams("limit"));
+					response.type("application/json; charset=utf-8");
+					return wikipulseService.getNews(sort, limit);
+				} catch (Exception e) {
+					response.status(400);
+					response.body("Query parameters sort and limit have to be set. limit needs to be an integer");
+					return response;
+				}
+
 			}
 		});
 
@@ -88,18 +87,30 @@ public class WikipulseResource implements SparkApplication {
 		get(new Route("/changes") {
 			@Override
 			public Object handle(Request request, Response response) {
-				response.type("application/json; charset=utf-8");
-				String minChanges = request.queryParams("minchanges");
-				return wikipulseService.getRecentChanges(minChanges);
+				try {
+					int minChanges = Integer.valueOf(request.queryParams("minchanges"));
+					response.type("application/json; charset=utf-8");
+					return wikipulseService.getRecentChanges(minChanges);
+				} catch (Exception e) {
+					response.status(400);
+					response.body("Query parameter limit has to be set. limit needs to be an integer");
+					return response;
+				}
 			}
 		});
 
 		get(new Route("/categories") {
 			@Override
 			public Object handle(Request request, Response response) {
-				String limit = request.queryParams("limit");
-				response.type("application/json; charset=utf-8");
-				return wikipulseService.getCategories(limit);
+				try {
+					int limit = Integer.valueOf(request.queryParams("limit"));
+					response.type("application/json; charset=utf-8");
+					return wikipulseService.getCategories(limit);
+				} catch (Exception e) {
+					response.status(400);
+					response.body("Query parameter limit has to be set. limit needs to be an integer");
+					return response;
+				}
 			}
 		});
 
@@ -143,10 +154,8 @@ public class WikipulseResource implements SparkApplication {
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
 			Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:wikipulsememdb", "SA", "");
-			connection
-					.createStatement()
-					.execute(
-							"CREATE TABLE changes (timestamp bigint, pageTitle varchar(255), pageid varchar(255), UNIQUE (timestamp, pageTitle, pageid))");
+			connection.createStatement().execute(
+					"CREATE TABLE changes (timestamp bigint, pageTitle varchar(255), pageid varchar(255), UNIQUE (timestamp, pageTitle, pageid))");
 			new Thread(new RecentChangesRunnable()).start();
 			addShutdownHook(connection);
 		} catch (SQLException e) {
@@ -184,6 +193,9 @@ public class WikipulseResource implements SparkApplication {
 
 	}
 
+	/**
+	 * Starts the thread for the identification of news.
+	 */
 	private static void startIdentificationThread() {
 		Identifier.startIdentificationThread();
 	}

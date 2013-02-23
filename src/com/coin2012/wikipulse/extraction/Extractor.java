@@ -1,19 +1,8 @@
 package com.coin2012.wikipulse.extraction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.extraction.hsqldb.AggregatedChanges;
-import com.coin2012.wikipulse.extraction.hsqldb.HsqldbManager;
-import com.coin2012.wikipulse.extraction.neo4j.ObjectRetriever;
-import com.coin2012.wikipulse.extraction.neo4j.ObjectSaver;
-import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
-import com.coin2012.wikipulse.extraction.statsgrok.StatsGrokExtractor;
-import com.coin2012.wikipulse.extraction.wikipedia.WikipediaExtractor;
 import com.coin2012.wikipulse.identification.Timespan;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.Editor;
@@ -22,202 +11,125 @@ import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.PageSummary;
 import com.coin2012.wikipulse.models.ShortNews;
 import com.coin2012.wikipulse.models.WikiEdit;
-
 /**
- * Represents an Extractor component used to interact with Wikipedia API.
- * 
- * @author Karsten
- * 
+ * Handles the extraction of data from external sources and handles the interaction with databases. 
  */
-public class Extractor implements Extractable {
-
-	Logger logger = Logger.getLogger(Extractor.class.toString());
-
-	private ObjectSaver saver = new ObjectSaver();
-	private ObjectRetriever retriever = new ObjectRetriever();
-
-	@Override
-	public List<Page> getPagesForIdentification(Timespan timespan, int minChanges) {
-		logger.info("Retrieving pages for identification with at least " + minChanges + " changes."); 
-		List<AggregatedChanges> recentChanges = this.getRecentChangesForTimespan(minChanges, timespan);
-		List<String> pageids = new ArrayList<String>();
-		for (AggregatedChanges aggregatedChanges : recentChanges) {
-			pageids.add(aggregatedChanges.getPageid());
-		}
-		List<Page> pages = WikipediaExtractor.getPagesWithCategoriesForPageIds(pageids);
-		for (Page page : pages) {
-			for (AggregatedChanges aggregated : recentChanges) {
-				if (aggregated.getPageid().equals(page.getPageId())) {
-					page.setRecentChanges(aggregated.getCount());
-					break;
-				}
-			}
-		}
-		WikipediaExtractor.updatePagesWithEditsInTimespan(pages, timespan);
-		List<Page> crapList = new ArrayList<Page>();
-		for (Page page : pages) {
-			if (page.getEdits().size() == 0) {
-				crapList.add(page);
-			}
-		}
-		for (Page page : crapList) {
-			pages.remove(page);
-			logger.info("Removing page:" + page.getPageId());
-		}
-		timespan.setStart(timespan.getEnd());
-		return pages;
-	}
-
-	private List<AggregatedChanges> getRecentChangesForTimespan(int minChanges, Timespan timer) {
-		HashMap<String, AggregatedChanges> map = HsqldbManager.getAllAggregatedChangesFromMemDB(timer);
-		List<AggregatedChanges> aggregatedChanges = cleanUpAggregatedChanges(map, minChanges);
-		this.sortAggregatedChanges(aggregatedChanges);
-		return aggregatedChanges;
-	}
-
-	@Override
-	public void enhanceEditsWithContent(List<WikiEdit> edits) {
-		WikipediaExtractor.updateEditsWithContent(edits);
-	}
-
-	@Override
-	public void enhancePagesWithRelevance(List<Page> pages) {
-		StatsGrokExtractor.updatePagesWithRelevance(pages);
-	}
-
-	@Override
-	public void enhanceNewsWithImages(List<News> news) {
-		WikipediaExtractor.enhanceNewsWithImages(news);
-	}
-
-	@Override
-	public List<AggregatedChanges> getRecentChanges(int minChanges) {
-		HashMap<String, AggregatedChanges> map = HsqldbManager.getAllAggregatedChangesFromMemDB();
-		List<AggregatedChanges> aggregatedChanges = cleanUpAggregatedChanges(map, minChanges);
-		this.sortAggregatedChanges(aggregatedChanges);
-		return aggregatedChanges;
-	}
+public interface Extractor {
 
 	/**
-	 * Includes only AggregatedChanges with a count greater than one
-	 * 
-	 * @param map
-	 * @return
+	 * Returns a list of pages with edits that have at least the given amount of changes in the specified timespan.  
+	 * @param timer - timespan
+	 * @param minChanges - amount of changes
+	 * @return list of pages
 	 */
-	private List<AggregatedChanges> cleanUpAggregatedChanges(HashMap<String, AggregatedChanges> map, int minChanges) {
-		List<AggregatedChanges> resultList = new ArrayList<AggregatedChanges>();
-		for (String key : map.keySet()) {
-			AggregatedChanges aggregatedChanges = map.get(key);
-			int count = aggregatedChanges.getCount();
-			if (count >= minChanges) {
-				resultList.add(aggregatedChanges);
-			}
-		}
-		return resultList;
-	}
+	public List<Page> getPagesForIdentification(Timespan timer, int minChanges);
 
 	/**
-	 * Sorts list of AggregatedChanges by counted changes
-	 * 
-	 * @param aggregatedChanges
+	 * Enhances each news, if possible, with images from the page on which the news is based.
+	 * @param news - list of news to be enhanced
 	 */
-	private void sortAggregatedChanges(List<AggregatedChanges> aggregatedChanges) {
-		Collections.sort(aggregatedChanges, new Comparator<AggregatedChanges>() {
-			public int compare(AggregatedChanges s1, AggregatedChanges s2) {
-				return (new Integer(s1.getCount()).compareTo(new Integer(s2.getCount()))) * -1;
-			}
-		});
-	}
+	public void enhanceNewsWithImages(List<News> news);
 
-	// TODO move to Identification?
-	public boolean doArticlesHaveAtleastOneCommonEditor(Page firstArticle, Page secondArticle) {
+	/**
+	 * Enhances each edit with the content of the edit on wikipedia.
+	 * @param edits - list of edits to be enhanced
+	 */
+	public void enhanceEditsWithContent(List<WikiEdit> edits);
 
-		boolean doArticlesHaveAtleastOneCommonEditor = false;
-		List<String> users = new ArrayList<String>();
-		List<WikiEdit> firstArticleEdits = firstArticle.getEdits();
+	/**
+	 * Enhances each page with a relevance value based on the yesterday views in relation to the views of the last 30 days. Extracted from statsgrok.
+	 * @param pages - list of pages to be enhanced
+	 */
+	public void enhancePagesWithRelevance(List<Page> pages);
+	
+	/**
+	 * Returns a list of AggregatedChanges that have at least the given amount of changes from the in-memory db.
+	 * @param minChanges - amount of changes
+	 * @return list of AggregatedChanges
+	 */
+	public List<AggregatedChanges> getRecentChanges(int minChanges);
+	
+	//TODO  remove or fix
+	/**
+	 * Summarizes a page
+	 * @param url of the  page 
+	 * @param length number sentences.  The minimum is 6 sentences.
+	 * @return PageSummary object  that contain the summary of the page
+	 */
+	public PageSummary summarizeArticle(String url, String length);
 
-		List<WikiEdit> secondArticleEdits = secondArticle.getEdits();
-		for (WikiEdit wikiedit : secondArticleEdits) {
-			users.add(wikiedit.getUser());
-		}
+	/**
+	 * Saves a list of pages in the graph database.
+	 * @param pages - list of pages
+	 */
+	public void savePages(List<Page> pages);
 
-		for (WikiEdit currentEdit : firstArticleEdits) {
-			if (users.contains(currentEdit.getUser())) {
-				doArticlesHaveAtleastOneCommonEditor = true;
-				break;
-			}
+	/**
+	 * Saves a list of pages in the graph database.
+	 * @param newsList - list of news
+	 */
+	public void saveNews(List<News> newsList);
 
-		}
-		return doArticlesHaveAtleastOneCommonEditor;
-	}
+	/**
+	 * Updates the click count for the news with the given id in the graph database.
+	 * @param newsId - id of the news
+	 */
+	public void saveUserInteraction(String newsId);
 
-	@Override
-	public PageSummary summarizeArticle(String url, String length) {
-		PageSummary pageSummary = PageSummarizer.summarizeArticle(url, length);
-		return pageSummary;
-	}
+	/**
+	 * Returns the list of most viewed news from the graph db. Limited by the given amount. 
+	 * @param limit - maximum amount
+	 * @return list of most viewed news
+	 */
+	public List<ShortNews> getMostViewedNews(int limit);
 
-	@Override
-	public void savePages(List<Page> pages) {
-		for (Page page : pages) {
-			saver.saveOrUpdatePage(page);
-		}
-	}
+	/**
+	 * Returns the list of latest news from the graph db. Limited by the given amount. 
+	 * @param limit - maximum amount
+	 * @return list of latest news
+	 */
+	public List<ShortNews> getLatestNews(int limit);
 
-	@Override
-	public void saveNews(List<News> newsList) {
-		for (News news : newsList) {
-			saver.saveNews(news);
-		}
-	}
+	/**
+	 * Returns the news for the given id from the graph db.
+	 * @param newsId - id of the news
+	 * @return the news
+	 */
+	public News getNews(String newsId);
 
-	@Override
-	public void saveUserInteraction(String newsId) {
-		saver.updateViewCount(newsId);
-	}
+	/**
+	 * Returns a list of news for the given category from the graph db.
+	 * @param category - category of the news
+	 * @return list of news
+	 */
+	public List<ShortNews> getNewsForCategory(String category);
 
-	@Override
-	public List<ShortNews> getMostViewedNews(int limit) {
-		return retriever.getMostViewedNews(limit);
-	}
+	/**
+	 * Returns a list of categories from the graph db. The amount is limited by the given value.
+	 * @param limit - maximum amount
+	 * @return list of categories
+	 */
+	public List<Category> getCategories(int limit);
 
-	@Override
-	public List<ShortNews> getLatestNews(int limit) {
-		return retriever.getLatetestNews(limit);
-	}
+	/**
+	 * Returns a list of editors that did at least the given amount of edits in the given category from the graph db.
+	 * @param category - category
+	 * @param minEditsInCategory - minimum edits in category
+	 * @return list of editors
+	 */
+	public List<Editor> getDomainExperts(Category category, int minEditsInCategory);
 
-	@Override
-	public News getNews(String newsId) {
-		return retriever.getSingleNews(newsId);
-	}
+	/**
+	 * Returns the list of the editors with the most edits from the graph db. The given limit sets the maximum of how many editors are returned.
+	 * @param limit -  maximum amount of editors
+	 * @return list of editors
+	 */
+	public List<Editor> getTopContributors(int limit);
 
-	@Override
-	public List<ShortNews> getNewsForCategory(String title) {
-		Category category = new Category();
-		category.setTitle(title);
-		return retriever.getNewsByCategory(category);
-	}
-
-	@Override
-	public List<Category> getCategories(int limit) {
-		return retriever.getCategoriesWithHighestNewsCount(limit);
-	}
-
-	@Override
-	public List<Editor> getDomainExperts(Category category, int minEditsInCategory) {
-		List<Editor> editors = retriever.getDomainExperts(category, minEditsInCategory);
-		return editors;
-	}
-
-	@Override
-	public List<Editor> getTopContributors(int limit) {
-		List<Editor> editors = retriever.getTopEditors(limit);
-		return editors;
-	}
-
-	@Override
-	public List<Editor> getNewsContributors(int minNews) {
-		List<Editor> editors = retriever.getNewsContributors(minNews);
-		return editors;
-	}
+	/**
+	 * Returns the list of editors with at least the given amount of news from the graph db.
+	 * @param minNews - minimum amount of news
+	 * @return list of editors
+	 */
+	public List<Editor> getNewsContributors(int minNews);
 }

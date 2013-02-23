@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.coin2012.wikipulse.extraction.Extractable;
 import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.ExtractorImpl;
 import com.coin2012.wikipulse.models.Page;
 import com.coin2012.wikipulse.models.WikiEdit;
 
@@ -20,7 +20,7 @@ public class TestExperiment {
 //	private static final String FRUIT_FLY = "Fruit fly";
 //	private static final String FILE_WIKTIONARY_LOGO_EN_SVG = "File:Wiktionary-logo-en.svg";
 //	private static final String FILE_DISAMBIG_GRAY_SVG = "File:Disambig gray.svg";
-	private Extractable extractor;
+	private Extractor extractor;
 	private Page firstArticle;
 	private Page secondArticle;
 	private WikiEdit wikiedit1;
@@ -33,7 +33,7 @@ public class TestExperiment {
 	@Before
 	public void setUp() throws Exception {
 		
-		extractor = Mockito.mock(Extractable.class);
+		extractor = Mockito.mock(Extractor.class);
 		firstArticle = Mockito.mock(Page.class);
 		secondArticle = Mockito.mock(Page.class);
 		wikiedit1 =  Mockito.mock(WikiEdit.class);
@@ -49,7 +49,7 @@ public class TestExperiment {
 	@Test
 	public void articlesWithAtleastOneCommonEditorReturnTrue() {
 		String author1 = "author1";
-		Extractable extractor = new Extractor();
+		Extractor extractor = new ExtractorImpl();
 		Page firstArticle = new Page();
 		Page secondArticle = new Page();
 		WikiEdit wikiedit1 = new WikiEdit();

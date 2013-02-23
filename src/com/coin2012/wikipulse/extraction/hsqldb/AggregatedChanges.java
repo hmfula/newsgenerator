@@ -1,5 +1,9 @@
 package com.coin2012.wikipulse.extraction.hsqldb;
 
+/**
+ * Used to aggregated the changes of a page.
+ *
+ */
 public class AggregatedChanges {
 
 	private final String title;

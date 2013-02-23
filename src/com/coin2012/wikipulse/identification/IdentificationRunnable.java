@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.coin2012.wikipulse.conf.WikipulseConstants;
-import com.coin2012.wikipulse.extraction.Extractable;
+import com.coin2012.wikipulse.extraction.Extractor;
 import com.coin2012.wikipulse.identification.newscreation.NewsCreator;
 import com.coin2012.wikipulse.identification.newsselection.AuthorsWithNews;
 import com.coin2012.wikipulse.identification.newsselection.CommonAuthors;
@@ -27,10 +27,10 @@ public class IdentificationRunnable implements Runnable {
 	public static final String FILENAME ="rankData.csv";
 	private PrintWriter fileWriter;
 
-	private Extractable ex;
+	private Extractor ex;
 	private Timespan timer;
 
-	public IdentificationRunnable(Extractable extractor) {
+	public IdentificationRunnable(Extractor extractor) {
 		ex = extractor;
 		timer = new Timespan();
 	}

@@ -21,7 +21,7 @@ import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage;
 import org.jsoup.Jsoup;
 
-import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.ExtractorImpl;
 import com.coin2012.wikipulse.extraction.smmry.SentenceFinder;
 import com.coin2012.wikipulse.extraction.smmry.Summarizer;
 import com.coin2012.wikipulse.models.Category;
@@ -36,7 +36,7 @@ public class NewsCreator {
 
 	public List<News> createNews(List<Page> pages) {
 		List<News> news = new ArrayList<News>();
-		Extractor extractor = new Extractor();
+		ExtractorImpl extractor = new ExtractorImpl();
 		// possible doubles
 		List<String> topEditors = new ArrayList<String>();
 		// TODO constant

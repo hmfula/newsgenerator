@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.coin2012.wikipulse.conf.WikipulseConstants;
-import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.ExtractorImpl;
 import com.coin2012.wikipulse.extraction.neo4j.ObjectRetriever;
 import com.coin2012.wikipulse.extraction.neo4j.ObjectSaver;
 import com.coin2012.wikipulse.extraction.smmry.PageSummarizer;
@@ -120,7 +120,7 @@ public class EditClassifierTest {
 		categories.add(a);
 		categories.add(b);
 		
-		Extractor extractor =  new Extractor();
+		ExtractorImpl extractor =  new ExtractorImpl();
 		ObjectRetriever objectRetriever = mock(ObjectRetriever.class); 
 		
 		Editor editor1 =  new Editor();
@@ -286,7 +286,7 @@ public class EditClassifierTest {
 		categories.add(a);
 		categories.add(b);
 		
-		Extractor extractor =  new Extractor();
+		ExtractorImpl extractor =  new ExtractorImpl();
 		ObjectRetriever objectRetriever = mock(ObjectRetriever.class); 
 		
 		Editor editor1 =  new Editor();

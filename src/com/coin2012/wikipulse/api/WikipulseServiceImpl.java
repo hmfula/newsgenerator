@@ -1,9 +1,8 @@
 package com.coin2012.wikipulse.api;
 
 import java.util.List;
-import java.util.logging.Logger;
 
-import com.coin2012.wikipulse.extraction.Extractor;
+import com.coin2012.wikipulse.extraction.ExtractorImpl;
 import com.coin2012.wikipulse.extraction.hsqldb.AggregatedChanges;
 import com.coin2012.wikipulse.models.Category;
 import com.coin2012.wikipulse.models.News;
@@ -16,41 +15,48 @@ import com.google.gson.Gson;
  */
 public class WikipulseServiceImpl implements WikipulseService {
 
-	private Logger logger = Logger.getLogger(WikipulseServiceImpl.class.toString());
-	private Extractor extractor = new Extractor();
+	private ExtractorImpl extractor = new ExtractorImpl();
 	private Gson gson = new Gson();
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coin2012.wikipulse.api.WikipulseService#getRecentChanges(java.lang
+	 * .String)
+	 */
 	@Override
-	public String getRecentChanges(String minChanges) {
-		int minimumAmountOfChanges;
-		try {
-			minimumAmountOfChanges = Integer.valueOf(minChanges);
-		} catch (Exception e) {
-			minimumAmountOfChanges = 10;
-		}
-		List<AggregatedChanges> listOfAggregatedChanges = extractor.getRecentChanges(minimumAmountOfChanges);
+	public String getRecentChanges(int minChanges) {
+		List<AggregatedChanges> listOfAggregatedChanges = extractor.getRecentChanges(minChanges);
 		String result = gson.toJson(listOfAggregatedChanges);
-
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coin2012.wikipulse.api.WikipulseService#getNews(java.lang.String,
+	 * java.lang.String)
+	 */
 	@Override
-	public String getNews(String sort, String limit) {
-		try {
+	public String getNews(String sort, int limit) {
 			List<ShortNews> shortNews;
 			if (sort.equals("views")) {
-				shortNews = extractor.getMostViewedNews(Integer.valueOf(limit));
+				shortNews = extractor.getMostViewedNews(limit);
 			} else {
-				shortNews = extractor.getLatestNews(Integer.valueOf(limit));
+				shortNews = extractor.getLatestNews(limit);
 			}
 			String result = gson.toJson(shortNews);
 			return result;
-		} catch (NumberFormatException e) {
-			logger.warning("The given limit: " + limit + " is not an Integer");
-			return null;
-		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coin2012.wikipulse.api.WikipulseService#getNews(java.lang.String)
+	 */
 	@Override
 	public String getNews(String newsId) {
 		News news = extractor.getNews(newsId);
@@ -58,6 +64,13 @@ public class WikipulseServiceImpl implements WikipulseService {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coin2012.wikipulse.api.WikipulseService#getNewsForCategory(java.lang
+	 * .String)
+	 */
 	@Override
 	public String getNewsForCategory(String category) {
 		List<ShortNews> shortNews = extractor.getNewsForCategory(category);
@@ -65,21 +78,30 @@ public class WikipulseServiceImpl implements WikipulseService {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coin2012.wikipulse.api.WikipulseService#saveUserInteraction(java.
+	 * lang.String)
+	 */
 	@Override
 	public void saveUserInteraction(String newsId) {
 		extractor.saveUserInteraction(newsId);
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.coin2012.wikipulse.api.WikipulseService#getCategories(java.lang.String
+	 * )
+	 */
 	@Override
-	public String getCategories(String limit) {
-		try {
-			List<Category> categories = extractor.getCategories(new Integer(limit));
-			String result = gson.toJson(categories);
-			return result;
-		} catch (Exception e) {
-			logger.warning("The given limit: " + limit + " is not an Integer");
-			return null;
-		}
+	public String getCategories(int limit) {
+		List<Category> categories = extractor.getCategories(limit);
+		String result = gson.toJson(categories);
+		return result;
 	}
 }
