@@ -1,4 +1,4 @@
 wikipulse
 =========
 
-Telling the story behind news though the eyes of Wikipedia
+Telling the story through the eyes of Wikipedia
